@@ -1,127 +1,56 @@
-var DEBUG = true;
+var activePlayers = {};
 
-var players = {};
-
-function log(text) {
+function log(text){
     console.log(text);
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if(request.type == 'log') {
-        if (DEBUG) {
-            if (request.value) {
-                log(request.value);
-            }
-        }
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
+    if(request[YTT_MESSAGE_TYPE_KEY] == YTT_LOG_EVENT){
+        if (YTT_DEBUG)
+            log(request[YTT_MESSAGE_VALUE_KEY] || "undefined");
     }
-    else if(request.type == 'playerChange')
-    {
-        request.value.ID = sender.tab.id;
-        playerStateChange(request.value);
+    else if(request[YTT_MESSAGE_TYPE_KEY] == YTT_STATE_EVENT){
+        request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
+        playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
     }
-    else if(request.type == 'playerDuration')
-    {
-        setVideoDuration(request.value)
-    }
+    else if(request[YTT_MESSAGE_TYPE_KEY] == YTT_DURATION_EVENT)
+        setVideoDuration(request[YTT_MESSAGE_VALUE_KEY])
 });
 
-function playerStateChange(event) {
-    if(event.state == 1)
-    {
-        log("Started playing at " + event.time + "s");
-        players[event.ID] = event.time;
+function playerStateChange(event){
+    if(event[YTT_STATE_EVENT_STATE_KEY] == 1){
+        log("Started playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
+        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = event[YTT_STATE_EVENT_TIME_KEY];
     }
-    else if((event.state == 2 || event.state == 0) && players[event.ID] != null)
-    {
-        log("Ended playing at " + event.time + "s");
-        var duration = {milliseconds: parseInt((event.time - players[event.ID]) * 1000)};
-        players[event.ID] = null;
-        chrome.storage.sync.get(['YTT_RealTime'], function (result){
-            duration = addDurations(duration, result.YTT_RealTime);
-            log("New real time: " + getDurationTime(duration));
-            chrome.storage.sync.set({
-                'YTT_RealTime': duration
-            });
+    else if((event[YTT_STATE_EVENT_STATE_KEY] == 2 || event[YTT_STATE_EVENT_STATE_KEY] == 0) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] != null){
+        log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
+        var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
+        var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]) * 1000)};
+        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
+        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY], function (config){
+            var newConfig = {};
+            newConfig[YTT_CONFIG_REAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_REAL_TIME_KEY]);
+            newConfig[REAL_TODAY_KEY] = YTTAddDurations(duration, config[REAL_TODAY_KEY]);
+            chrome.storage.sync.set(newConfig);
+            log("Added real time: " + YTTGetDurationString(duration));
         });
     }
 }
 
-function addDurations(d1, d2) {
-    if(!d1)
-    {
-        d1 = {};
-    }
-    if(!d2)
-    {
-        d2 = {};
-    }
-    var d = {
-        milliseconds: 0,
-        seconds: 0,
-        minutes: 0,
-        hours: 0,
-        days: 0
-    };
-
-    d.milliseconds += (d1.milliseconds || 0) + (d2.milliseconds || 0);
-
-    d.seconds += (d1.seconds || 0) + (d2.seconds  || 0) + parseInt(d.milliseconds / 1000);
-    d.milliseconds %= 1000;
-
-    d.minutes = (d1.minutes || 0) + (d2.minutes || 0) + parseInt(d.seconds / 60);
-    d.seconds %= 60;
-
-    d.hours = (d1.hours || 0) + (d2.hours || 0) + parseInt(d.minutes / 60);
-    d.minutes %= 60;
-
-    d.days = (d1.days || 0) + (d2.days || 0) + parseInt(d.hours / 24);
-    d.hours %= 24;
-
-    return d;
-}
-
-function getDurationTime(duration) {
-    if(!duration)
-    {
-        return '0S';
-    }
-    var text = '';
-
-    if(duration.days)
-    {
-        text += duration.days + 'D ';
-    }
-    if(duration.hours)
-    {
-        text += duration.hours + 'H ';
-    }
-    if(duration.minutes)
-    {
-        text += duration.minutes + 'M ';
-    }
-    if(duration.seconds)
-    {
-        text += duration.seconds + 'S';
-    }
-    return text;
-}
-
-function setVideoDuration(event) {
-    chrome.storage.sync.get(['YTT_IDS', 'YTT_Start', 'YTT_TotalTime'], function (result)
-    {
-        if (!result.YTT_IDS || result.YTT_IDS.indexOf(event.ID) === -1)
-        {
-            var IDS = result.YTT_IDS;
-            if (!IDS)
-                IDS = [];
-            IDS.push(event.ID);
-            var duration = addDurations({milliseconds: parseInt(event.duration * 1000)}, result.YTT_TotalTime);
-            log("New time: " + getDurationTime(duration));
-            chrome.storage.sync.set({
-                'YTT_TotalTime': duration,
-                'YTT_IDS': IDS,
-                'YTT_Start': result.YTT_Start || new Date().getTime()
-            });
+function setVideoDuration(event){
+    var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
+    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY], function (config){
+        var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || [];
+        if (!IDS || IDS.indexOf(event[YTT_DURATION_EVENT_ID_KEY]) === -1){
+            IDS.push(event[YTT_DURATION_EVENT_ID_KEY]);
+            var duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
+            var newConfig = {};
+            newConfig[YTT_CONFIG_TOTAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_TOTAL_TIME_KEY]);
+            newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
+            newConfig[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
+            newConfig[TOTAL_TODAY_KEY] = YTTAddDurations(duration ,config[TOTAL_TODAY_KEY]);
+            chrome.storage.sync.set(newConfig);
+            log("New total time: " + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY]));
         }
     });
 }

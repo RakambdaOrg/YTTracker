@@ -1,60 +1,70 @@
-function message(type, text){
-    chrome.runtime.sendMessage({
-        type: type,
-        value: text
-    });
-}
-
-function getChangeState()
+function YTTGetChangeState()
 {
-    var values = $('#YTTPlayer').text().split('@');
-    change('playerChange', {state:values[0], time:values[1]});
+    var values = $('#' + YTT_DOM_PLAYER_STATE).text().split(YTT_DOM_SPLITTER);
+    var event = {};
+    event[YTT_STATE_EVENT_STATE_KEY] = values[0];
+    event[YTT_STATE_EVENT_TIME_KEY] = values[1];
+    YTTMessage(YTT_STATE_EVENT, event);
 }
 
-function getChangeInfos()
+function YTTGetChangeInfos()
 {
-    var values = $('#YTTPlayerInfos').text().split('@');
-    change('playerDuration', {ID:values[0], duration:values[1]});
+    var values = $('#' + YTT_DOM_PLAYER_INFOS).text().split(YTT_DOM_SPLITTER);
+    var event = {};
+    event[YTT_DURATION_EVENT_ID_KEY] = values[0];
+    event[YTT_DURATION_EVENT_DURATION_KEY] = values[1];
+    YTTMessage(YTT_DURATION_EVENT, event);
 }
 
-function change(type, event){
-    message(type, event);
+/**
+ * @return {string}
+ */
+function YTTGetInjectDiv(id, def){
+    return '<div id="' + id + '" style="display: none;">' + def + '</div>'
 }
 
 function injectCode() {
     var body = $("body");
-    body.append('<div id="YTTPlayer" style="display: none;">0</div>');
-    body.append('<div id="YTTPlayerInfos" style="display: none;"></div>');
-    body.append('<div id="YTTPlayerTime" style="display: none;">0</div>');
-    body.append('<div id="YTTPlayerTime2" style="display: none;">0</div>');
+    body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_STATE, 0));
+    body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_INFOS, ''));
+    body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_1, 0));
+    body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_2, 0));
 
     $(window).on('unload', function(){
-        change({state:2, time:$('#YTTPlayerTime2').text()});
+        var event = {};
+        event[YTT_STATE_EVENT_STATE_KEY] = 2;
+        event[YTT_STATE_EVENT_TIME_KEY] = $(YTT_DOM_PLAYER_TIME_2).text();
+        YTTMessage(YTT_STATE_EVENT, event);
     });
 
-    var utilsInj = document.createElement('script');
+    var yttUtilsInj = document.createElement('script');
+    var hookerUtilsInj = document.createElement('script');
     var hookerInj = document.createElement('script');
     var docFrag = document.createDocumentFragment();
 
-    utilsInj.type = "text/javascript";
-    utilsInj.src = chrome.extension.getURL('js/utils.js');
+    yttUtilsInj.type = 'text/javascript';
+    yttUtilsInj.src = chrome.extension.getURL('js/YTTUtils.js');
 
-    hookerInj.type = "text/javascript";
+    hookerUtilsInj.type = 'text/javascript';
+    hookerUtilsInj.src = chrome.extension.getURL('js/hookerUtils.js');
+
+    hookerInj.type = 'text/javascript';
     hookerInj.src = chrome.extension.getURL('js/hooker.js');
 
-    docFrag.appendChild(utilsInj);
+    docFrag.appendChild(yttUtilsInj);
+    docFrag.appendChild(hookerUtilsInj);
     docFrag.appendChild(hookerInj);
     (document.head || document.documentElement).appendChild(docFrag);
 
-    $('#YTTPlayer').bind("DOMSubtreeModified", function () {
-        getChangeState();
+    $('#' + YTT_DOM_PLAYER_STATE).bind("DOMSubtreeModified", function () {
+        YTTGetChangeState();
     });
 
-    $('#YTTPlayerInfos').bind("DOMSubtreeModified", function () {
-        getChangeInfos();
+    $('#' + YTT_DOM_PLAYER_INFOS).bind("DOMSubtreeModified", function () {
+        YTTGetChangeInfos();
     });
 
-    message("log", "Player hooked");
+    YTTLog("Player hooked");
 }
 
 $(document).ready(injectCode);

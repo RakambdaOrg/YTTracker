@@ -5,10 +5,16 @@
     <title>YouTube Tracker</title>
     <link rel="stylesheet" href="css/popup.css">
     <script src="js/jquery.js"></script>
+    <script src="js/YTTUtils.js"></script>
     <script src="js/popup.js"></script>
 </head>
 <body>
     <div id="infos">
+        <p>
+            Total playing time today: <span id="realdurationtoday"></span><br/>
+            Total time of opened videos today: <span id="durationtoday"></span>
+        </p>
+        <hr/>
         <p>
             Total playing time: <span id="realduration"></span><br/>
             Total time of opened videos: <span id="duration"></span><br/>

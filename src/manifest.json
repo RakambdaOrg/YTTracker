@@ -27,14 +27,14 @@
 
   "content_scripts": [{
     "matches": ["https://www.youtube.com/watch*"],
-    "js": ["js/jquery.js", "js/content.js"],
+    "js": ["js/jquery.js", "js/YTTUtils.js", "js/content.js"],
     "run_at": "document_start",
     "all_frames": true
   }],
 
   "background": {
-    "scripts": ["js/background.js"]
+    "scripts": ["js/YTTUtils.js", "js/background.js"]
   },
 
-  "web_accessible_resources": ["js/utils.js", "js/hooker.js"]
+  "web_accessible_resources": ["js/YTTUtils.js", "js/hookerUtils.js", "js/hooker.js"]
 }
