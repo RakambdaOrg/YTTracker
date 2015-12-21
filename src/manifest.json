@@ -2,8 +2,9 @@
   "manifest_version": 2,
 
   "name": "YouTube Tracker",
+  "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
-  "version": "0.1",
+  "version": "0.0.0.1",
 
   "icons": {
     "16": "assets/icon16.png",
@@ -12,6 +13,7 @@
   },
 
   "author": "MrCraftCod",
+  "homepage_url": "https://github.com/MrCraftCod/YTTracker",
 
   "permissions": [
     "https://www.youtube.com/watch*",
