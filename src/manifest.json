@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+
+  "name": "YouTube Tracker",
+  "description": "This extension will track your time on YouTube",
+  "version": "0.1",
+
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+
+  "author": "MrCraftCod",
+
+  "permissions": [
+    "https://www.youtube.com/watch*",
+    "storage"
+  ],
+
+  "browser_action": {
+    "default_icon": "assets/icon128.png",
+    "default_popup": "popup.html"
+  },
+
+  "content_scripts": [{
+    "matches": ["https://www.youtube.com/watch*"],
+    "js": ["js/jquery.js", "js/content.js"],
+    "run_at": "document_start",
+    "all_frames": true
+  }],
+
+  "background": {
+    "scripts": ["js/background.js"]
+  },
+
+  "web_accessible_resources": ["js/utils.js", "js/hooker.js"]
+}
