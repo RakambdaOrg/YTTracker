@@ -1,13 +1,13 @@
 var activePlayers = {};
 
 function log(text){
-    console.log(text);
+    if (YTT_DEBUG)
+        console.log(text);
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
     if(request[YTT_MESSAGE_TYPE_KEY] == YTT_LOG_EVENT){
-        if (YTT_DEBUG)
-            log(request[YTT_MESSAGE_VALUE_KEY] || "undefined");
+        log(request[YTT_MESSAGE_VALUE_KEY] || "undefined");
     }
     else if(request[YTT_MESSAGE_TYPE_KEY] == YTT_STATE_EVENT){
         request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
