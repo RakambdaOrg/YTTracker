@@ -10,13 +10,12 @@ function changeDOMInfos(event){
 }
 
 function changeVideo() {
-    if(YTTGetPlayer().getVideoData && YTTGetPlayer().getVideoData()['video_id'] != (document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML.split(YTT_DOM_SPLITTER)[0] || '') && YTTGetPlayer().getCurrentTime && YTTGetPlayer().getDuration) {
+    if(YTTGetPlayer().getVideoData && YTTGetPlayer().getVideoData()['video_id'] !== (document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML.split(YTT_DOM_SPLITTER)[0] || '') && YTTGetPlayer().getCurrentTime && YTTGetPlayer().getDuration) {
         changeDOMTime(2);
         var event = {};
         event[YTT_DURATION_EVENT_ID_KEY] = YTTPlayer.getVideoData()['video_id'];
         event[YTT_DURATION_EVENT_DURATION_KEY] = YTTPlayer.getDuration();
         changeDOMInfos(event);
-        YTTLog('Player rehooked');
     }
 }
 

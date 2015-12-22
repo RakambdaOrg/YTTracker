@@ -30,11 +30,12 @@ function injectCode() {
     body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_1, 0));
     body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_2, 0));
 
-    $(window).on('unload', function(){
+    $(window).on('beforeunload', function(){
         var event = {};
         event[YTT_STATE_EVENT_STATE_KEY] = 2;
-        event[YTT_STATE_EVENT_TIME_KEY] = $(YTT_DOM_PLAYER_TIME_2).text();
+        event[YTT_STATE_EVENT_TIME_KEY] = $('#' + YTT_DOM_PLAYER_TIME_2).text();
         YTTMessage(YTT_STATE_EVENT, event);
+        return undefined;
     });
 
     var yttUtilsInj = document.createElement('script');

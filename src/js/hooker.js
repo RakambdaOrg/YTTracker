@@ -3,7 +3,7 @@ function YTTHookProcess()
     var YTTPlayerTemp;
     if(yt && yt.player && yt.player.getPlayerByElement)
         YTTPlayerTemp = yt.player.getPlayerByElement('player-api')
-    if(hookYTTPlayer(YTTPlayerTemp))
+    if(YTTPlayerTemp && hookYTTPlayer && hookYTTPlayer(YTTPlayerTemp))
         setInterval(YTTUpdateDOM, 100);
     else
         setTimeout(YTTHookProcess, 200);
