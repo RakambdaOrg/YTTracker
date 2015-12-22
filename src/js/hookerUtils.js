@@ -15,8 +15,11 @@ function YTTGetPlayer(){
 
 function hookYTTPlayer(player)
 {
+    console.log(player);
     if(YTTHooked || typeof player !== 'object')
-        return;
+        return false;
+    if(!(player.getCurrentTime || player.getData || player.getDuration))
+        return false;
     YTTLog("Player hooked");
     YTTHooked = true;
     YTTPlayer = player;
@@ -28,4 +31,5 @@ function hookYTTPlayer(player)
     changeDOMInfos(baseInfos);
     changeDOMTime(YTTPlayer.getPlayerState());
     YTTPlayer.addEventListener('onStateChange', changeDOMTime);
+    return true;
 }
