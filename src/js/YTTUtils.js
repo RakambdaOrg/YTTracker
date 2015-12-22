@@ -24,11 +24,7 @@ var YTT_DOM_SPLITTER = '@';
  */
 function YTTGetDurationAsMillisec(d){
     if(!d) return 0;
-    d.hours += (d.days || 0) * 24;
-    d.minutes += (d.hours || 0) * 60;
-    d.seconds += (d.minutes || 0) * 60;
-    d.milliseconds += (d.seconds || 0) * 1000;
-    return (d.milliseconds || 0);
+    return (((((d.days || 0) * 24 + (d.hours || 0)) * 60 + (d.minutes || 0)) * 60 + (d.seconds || 0)) * 1000 + (d.milliseconds || 0)) || 0;
 }
 
 function YTTGetValidDuration(d){
