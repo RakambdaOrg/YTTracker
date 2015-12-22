@@ -23,12 +23,14 @@ function playerStateChange(event){
         chrome.browserAction.setBadgeText({text:"P"});
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = event[YTT_STATE_EVENT_TIME_KEY];
     }
-    else if((event[YTT_STATE_EVENT_STATE_KEY] == 2 || event[YTT_STATE_EVENT_STATE_KEY] == 0) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] != null){
-        chrome.browserAction.setBadgeText({text:""});
+    else if((event[YTT_STATE_EVENT_STATE_KEY] == 2 || event[YTT_STATE_EVENT_STATE_KEY] == 0 || event[YTT_STATE_EVENT_STATE_KEY] == -5) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] != null){
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
         var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]) * 1000)};
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
+        var size = 0, key;
+        for (key in activePlayers) if(activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
+        if(size < 1)chrome.browserAction.setBadgeText({text:""});
         chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY], function (config){
             var newConfig = {};
             newConfig[YTT_CONFIG_REAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_REAL_TIME_KEY]);
