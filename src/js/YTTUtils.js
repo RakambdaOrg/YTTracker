@@ -1,4 +1,4 @@
-var YTT_DEBUG = false;
+var YTT_DEBUG = true;
 var YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 var YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
 var YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
@@ -19,11 +19,27 @@ var YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 var YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 var YTT_DOM_SPLITTER = '@';
 
+/**
+ * @return {number}
+ */
+function YTTGetDurationAsMillisec(d){
+    if(!d) return 0;
+    d.hours += (d.days || 0) * 24;
+    d.minutes += (d.hours || 0) * 60;
+    d.seconds += (d.minutes || 0) * 60;
+    d.milliseconds += (d.seconds || 0) * 1000;
+    return (d.milliseconds || 0);
+}
+
+function YTTGetValidDuration(d){
+    if(!d) return {};
+    if(YTTGetDurationAsMillisec(d) < 0) return {};
+    return d;
+}
+
 function YTTAddDurations(d1, d2){
-    if(!d1)
-        d1 = {};
-    if(!d2)
-        d2 = {};
+    d1 = YTTGetValidDuration(d1);
+    d2 = YTTGetValidDuration(d2);
     var d = {
         milliseconds: 0,
         seconds: 0,
