@@ -27,6 +27,11 @@ function YTTGetDurationAsMillisec(d){
     return (((((d.days || 0) * 24 + (d.hours || 0)) * 60 + (d.minutes || 0)) * 60 + (d.seconds || 0)) * 1000 + (d.milliseconds || 0)) || 0;
 }
 
+function YTTGetDurationAsMinutes(d){
+    return parseInt(YTTGetDurationAsMillisec(d) / (60 * 1000));
+}
+
+
 function YTTGetValidDuration(d){
     if(!d) return {};
     if(YTTGetDurationAsMillisec(d) < 0) return {};
