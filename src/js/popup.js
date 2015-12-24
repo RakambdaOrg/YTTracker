@@ -20,8 +20,19 @@ $(document).ready(function(){
         YTTLog('RESETED TODAY STATS');
         showValue();
     });
+
+    addTooltip('textrealdurationtoday', 'Time of playing videos today');
+    addTooltip('texttotaldurationtoday', 'Time of new videos watched today');
+    addTooltip('textrealduration', 'Time of playing videos');
+    addTooltip('texttotalduration', 'Time of new videos');
+    addTooltip('textsince', 'Date since the first record');
+
     showValue();
 });
+
+function addTooltip(id, text){
+    $('#' + id).tipsy({gravity: 'n', html: true, title: function(){return text}});
+}
 
 function showValue(){
     YTTLog('UPDATING PRINTED VALUE');
