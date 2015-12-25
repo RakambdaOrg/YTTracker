@@ -29,7 +29,7 @@
 
   "content_scripts": [{
     "matches": ["https://www.youtube.com/watch*"],
-    "js": ["js/jquery.js", "js/YTTUtils.js", "js/content.js"],
+    "js": ["js/lib/jquery.js", "js/YTTUtils.js", "js/content.js"],
     "run_at": "document_start",
     "all_frames": true
   }],
