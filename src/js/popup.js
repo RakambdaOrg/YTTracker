@@ -21,6 +21,14 @@ $(document).ready(function(){
         showValue();
     });
 
+    $('#openoptions').click(function(){
+        if (chrome.runtime.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+        } else {
+            window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
+
     addTooltip('textrealdurationtoday', 'Time of playing videos today');
     addTooltip('texttotaldurationtoday', 'Time of new videos watched today');
     addTooltip('textrealduration', 'Time of playing videos');
