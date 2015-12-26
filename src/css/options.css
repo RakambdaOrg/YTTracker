@@ -1,13 +1,46 @@
-body { background: #DDDDDD; }
+body {
+    background: #DDDDDD;
+}
 
-.ct-chart .ct-series.ct-series-a .ct-line { stroke: orange; stroke-width: 3px; }
-.ct-chart .ct-series.ct-series-a .ct-point{stroke-width:8; stroke:red;}
+.ct-chart .ct-series.ct-series-a .ct-line {
+    stroke: orange;
+    stroke-width: 3px;
+}
+.ct-chart .ct-series.ct-series-a .ct-point{
+    stroke-width:8;
+    stroke:red;
+}
 
-.ct-chart .ct-series.ct-series-b .ct-line { stroke: green; stroke-width: 3px; }
-.ct-chart .ct-series.ct-series-b .ct-point{stroke-width:8; stroke:blue;}
+.ct-chart .ct-series.ct-series-b .ct-line {
+    stroke: green;
+    stroke-width: 3px;
+}
+.ct-chart .ct-series.ct-series-b .ct-point{
+    stroke-width:8;
+    stroke:blue;
+}
 
-.ct-label-end{fill:rgba(0,0,0,.7);color:rgba(0,0,0,.4);font-size:.80rem;line-height:1;font-weight: bold;}
+.ct-label-end{
+    fill:rgba(0,0,0,.7);
+    color:rgba(0,0,0,.4);
+    font-size:.80rem;
+    line-height:1;
+    font-weight: bold;
+}
+
+.ct-perfect-fourth:before{
+    padding-bottom:33%;
+}
 
 #chartYTT{
     margin: 5px;
+}
+
+#importDiv{
+    display: block;
+    float: left;
+}
+
+#exportButton{
+    float: right;
 }

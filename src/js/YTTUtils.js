@@ -82,23 +82,23 @@ function YTTGetDurationString(duration){
 /**
  * @return {string}
  */
-function YTTGetDayConfigKey(){
-    var now = new Date();
+function YTTGetDayConfigKey(now){
+    now = now || new Date();
     return "day" + Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) + now.getFullYear();
 }
 
 /**
  * @return {string}
  */
-function YTTGetTotalDayConfigKey(){
-    return YTTGetDayConfigKey() + 'T';
+function YTTGetTotalDayConfigKey(now){
+    return YTTGetDayConfigKey(now) + 'T';
 }
 
 /**
  * @return {string}
  */
-function YTTGetRealDayConfigKey(){
-    return YTTGetDayConfigKey() + 'R';
+function YTTGetRealDayConfigKey(now){
+    return YTTGetDayConfigKey(now) + 'R';
 }
 
 /**

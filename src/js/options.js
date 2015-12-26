@@ -8,14 +8,75 @@ $(document).ready(function(){
                 dataObject[key.substring(3, key.length - 1)][key.substring(key.length - 1)] = config[key];
             }
         }
-        plot(parseData(dataObject));
+        var datas = parseData(dataObject);
+        plot(datas);
+
+        $('#exportButton').click(function(){
+            var result = JSON.stringify(datas);
+            var url = 'data:application/json;base64,' + btoa(result);
+            chrome.downloads.download({
+                url: url,
+                filename: 'YTTExport.json'
+            });
+        });
+
+        $('#importButton').change(function(event){
+            var f = event.target.files[0];
+            if(f)
+            {
+                var reader = new FileReader();
+                reader.onload = function(e){importData(e.target.result);};
+                reader.readAsText(f);
+            }
+        });
     });
 });
+
+function importData(data) {
+    var dataObject;
+    try{
+        dataObject = JSON.parse(data);
+    }
+    catch(err){
+        alert("Corrupted file!");
+        return;
+    }
+    if(!dataObject || !dataObject.labels || !dataObject.seriesLabels || !dataObject.series)
+    {
+        alert("Corrupted file!");
+        return;
+    }
+    if(!confirm("Be careful, if a day is already saved, it will be replaced by the one in the imported file!\nAre you sure to continue?"))
+        return;
+    var config = {};
+    var realIndex;
+    var totalIndex;
+    if(dataObject.seriesLabels[0][0] == 'T')
+    {
+        totalIndex = 0;
+        realIndex = 1;
+    }
+    else
+    {
+        totalIndex = 1;
+        realIndex = 0;
+    }
+    for(var dateIndex = 0; dateIndex < dataObject.labels.length; dateIndex++)
+    {
+        var dateElements = dataObject.labels[dateIndex].split('-');
+        var dateObj = new Date(dateElements[2], parseInt(dateElements[1]) - 1, dateElements[0]);
+        console.log(dateObj);
+        config[YTTGetRealDayConfigKey(dateObj)] = {minutes:dataObject.series[realIndex][dateIndex]};
+        config[YTTGetTotalDayConfigKey(dateObj)] = {minutes:dataObject.series[totalIndex][dateIndex]};
+    }
+    chrome.storage.sync.set(config);
+    location.reload();
+}
 
 function parseData(dataObject){
     var datas = {};
     datas['labels'] = [];
-    datas['seriesLabels'] = ['Playing time', 'Real time']
+    datas['seriesLabels'] = ['Playing time', 'Total time'];
     datas['series'] = [[],[]];
     for (var key in dataObject)
         if (dataObject.hasOwnProperty(key)){
