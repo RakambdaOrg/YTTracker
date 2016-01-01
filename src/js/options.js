@@ -74,17 +74,30 @@ function importData(data) {
 }
 
 function parseData(dataObject){
+    var objects = [];
     var datas = {};
     datas['labels'] = [];
     datas['seriesLabels'] = ['Playing time', 'Total time'];
     datas['series'] = [[],[]];
     for (var key in dataObject)
-        if (dataObject.hasOwnProperty(key)){
-            datas['labels'].push(dateFromDay(key));
-            datas['series'][0].push(YTTGetDurationAsMinutes(dataObject[key]['R']));
-            datas['series'][1].push(YTTGetDurationAsMinutes(dataObject[key]['T']));
+        if (dataObject.hasOwnProperty(key))
+            objects.push({key:dateFromDay(key), real: YTTGetDurationAsMinutes(dataObject[key]['R']), total: YTTGetDurationAsMinutes(dataObject[key]['T'])});
+    objects.sort(function(a, b){
+        return getDateFromTime(a['key']).getTime() - getDateFromTime(b['key']).getTime();
+    });
+    for(var object in objects)
+        if(objects.hasOwnProperty(object))
+        {
+            datas['labels'].push(objects[object]['key']);
+            datas['series'][0].push(objects[object]['real']);
+            datas['series'][1].push(objects[object]['total']);
         }
     return datas;
+}
+
+function getDateFromTime(time){
+    var parts = time.split('-');
+    return new Date(parts[2], parts[1], parts[0]);
 }
 
 function dateFromDay(str){
