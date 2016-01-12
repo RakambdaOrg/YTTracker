@@ -1,17 +1,19 @@
 function YTTHookProcess()
 {
+    var hooked = false;
     try {
         var YTTPlayerTemp;
         if (yt && yt.player && yt.player.getPlayerByElement)
-            YTTPlayerTemp = yt.player.getPlayerByElement('player-api');
-        if (YTTPlayerTemp && hookYTTPlayer && hookYTTPlayer(YTTPlayerTemp))
-            setInterval(YTTUpdateDOM, 100);
-        else
-            setTimeout(YTTHookProcess, 200);
+            YTTPlayerTemp = yt.player.getPlayerByElement('player-api')
+        if (YTTPlayerTemp && hookYTTPlayer)
+            hooked = hookYTTPlayer(YTTPlayerTemp);
     }
-    catch(err){
-        setTimeout(YTTHookProcess, 200);
+    catch (err){
     }
+    if(hooked)
+        YTTUpdateDOM();
+    else
+        setTimeout(YTTHookProcess, 250);
 }
 
 function YTTUpdateDOM(){

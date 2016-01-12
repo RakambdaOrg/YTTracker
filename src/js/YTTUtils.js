@@ -1,23 +1,23 @@
-var YTT_DEBUG = false;
-var YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
-var YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
-var YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
-var YTT_CONFIG_REAL_TIME_KEY = 'YTT_RealTime';
-var YTT_MESSAGE_TYPE_KEY = 'type';
-var YTT_MESSAGE_VALUE_KEY = 'value';
-var YTT_LOG_EVENT = 'log';
-var YTT_DURATION_EVENT = 'playerDuration';
-var YTT_DURATION_EVENT_ID_KEY = 'ID';
-var YTT_DURATION_EVENT_DURATION_KEY = 'duration';
-var YTT_STATE_EVENT = 'playerStateChange';
-var YTT_STATE_EVENT_ID_KEY = 'ID';
-var YTT_STATE_EVENT_STATE_KEY = 'state';
-var YTT_STATE_EVENT_TIME_KEY = 'time';
-var YTT_DOM_PLAYER_STATE = 'YTTPlayerState';
-var YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
-var YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
-var YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
-var YTT_DOM_SPLITTER = '@';
+const YTT_DEBUG = false;
+const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
+const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
+const YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
+const YTT_CONFIG_REAL_TIME_KEY = 'YTT_RealTime';
+const YTT_MESSAGE_TYPE_KEY = 'type';
+const YTT_MESSAGE_VALUE_KEY = 'value';
+const YTT_LOG_EVENT = 'log';
+const YTT_DURATION_EVENT = 'playerDuration';
+const YTT_DURATION_EVENT_ID_KEY = 'ID';
+const YTT_DURATION_EVENT_DURATION_KEY = 'duration';
+const YTT_STATE_EVENT = 'playerStateChange';
+const YTT_STATE_EVENT_ID_KEY = 'ID';
+const YTT_STATE_EVENT_STATE_KEY = 'state';
+const YTT_STATE_EVENT_TIME_KEY = 'time';
+const YTT_DOM_PLAYER_STATE = 'YTTPlayerState';
+const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
+const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
+const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
+const YTT_DOM_SPLITTER = '@';
 
 /**
  * @return {number}
@@ -115,7 +115,11 @@ function YTTMessage(type, value){
     var message = {};
     message[YTT_MESSAGE_TYPE_KEY] = type;
     message[YTT_MESSAGE_VALUE_KEY] = value;
-    chrome.runtime.sendMessage(message);
+    try{
+        chrome.runtime.sendMessage(message);
+    }
+    catch(err){
+    }
 }
 
 function YTTLog(text){
