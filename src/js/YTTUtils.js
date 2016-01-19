@@ -1,8 +1,9 @@
-const YTT_DEBUG = false;
+var YTT_DEBUG = false;
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
 const YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
 const YTT_CONFIG_REAL_TIME_KEY = 'YTT_RealTime';
+const YTT_CONFIG_DEBUG_KEY = 'YTT_Debug';
 const YTT_MESSAGE_TYPE_KEY = 'type';
 const YTT_MESSAGE_VALUE_KEY = 'value';
 const YTT_LOG_EVENT = 'log';
@@ -18,6 +19,11 @@ const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
 const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 const YTT_DOM_SPLITTER = '@';
+
+function YTTSetDebug(state){
+    YTTLog('Set debug to: ' + state);
+    YTT_DEBUG = state;
+}
 
 /**
  * @return {number}

@@ -44,3 +44,7 @@ body {
 #exportButton{
     float: right;
 }
+
+#checkDiv{
+    text-align: center;
+}
