@@ -43,21 +43,21 @@ function playerStateChange(event){
 
 function setVideoDuration(event){
     var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY], function (config){
-        var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || [];
-        if (IDS.indexOf(event[YTT_DURATION_EVENT_ID_KEY]) === -1){
-            IDS.push(event[YTT_DURATION_EVENT_ID_KEY]);
+    chrome.storage.sync.get([/*YTT_CONFIG_IDS_WATCHED_KEY, */YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY], function (config){
+        //var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || [];
+        //if (IDS.indexOf(event[YTT_DURATION_EVENT_ID_KEY]) === -1){
+            //IDS.push(event[YTT_DURATION_EVENT_ID_KEY]);
             var duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
             var newConfig = {};
             newConfig[YTT_CONFIG_TOTAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_TOTAL_TIME_KEY]);
-            newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
+            //newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
             newConfig[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
             newConfig[TOTAL_TODAY_KEY] = YTTAddDurations(duration ,config[TOTAL_TODAY_KEY]);
             chrome.storage.sync.set(newConfig);
             log("New total time: " + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY]));
-        }
-        else
-            log("Video isn't new");
+        //}
+        //else
+        //    log("Video isn't new");
     });
 }
 
