@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>YTT Options</title>
-    <link rel="stylesheet" href="css/chartist.min.css">
     <link rel="stylesheet" href="css/options.css">
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/chartist.min.js"></script>
-    <script type="text/javascript" src="js/lib/chartist-plugin-axistitle.min.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
 </head>
 <body>
-    <div id="importDiv">Import data: <input type="file" id="importButton" value=""/></div><button type="button" id="exportButton">Export data</button>
-    <div id="checkDiv"><input type="checkbox" id="debugCheck">Activate log (restart recquired)?</div>
+    <canvas id="chartYTT"></canvas>
     <br/>
-    <div id="chartYTT" class="ct-chart ct-perfect-fourth"></div>
+    <div id="importDiv">Import data: <input type="file" id="importButton" value=""/></div><button type="button" id="exportButton">Export data</button>
+    <div id="checkDiv"><input type="checkbox" id="debugCheck">Activate log (restart required)?</div>
 </body>
 </html>
