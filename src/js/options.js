@@ -120,10 +120,9 @@ function parseData(dataObject){
         if(objects.hasOwnProperty(object))
         {
             datas['labels'].push(objects[object]['key']);
-            datas['datasets'][0]['data'].push(Number(objects[object]['real']/parseFloat(60)).toFixed(2));
-            datas['datasets'][1]['data'].push(Number(objects[object]['total']/parseFloat(60)).toFixed(2));
+            datas['datasets'][0]['data'].push(objects[object]['real']/parseFloat(60));
+            datas['datasets'][1]['data'].push(objects[object]['total']/parseFloat(60));
         }
-    console.log(datas);
     return datas;
 }
 
@@ -142,6 +141,11 @@ function dateFromDay(str){
 
 function plot(data){
     var opt = {
+        tooltips:{
+            callbacks:{
+                label:function(tooltipItem, data) {return YTTGetDurationString({seconds:3600*tooltipItem['yLabel']});}
+            }
+        }
     };
     var div = $('#chartYTT');
     var chart = new Chart(div, {
