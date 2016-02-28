@@ -1,3 +1,5 @@
+var ratio = 60;
+
 $(document).ready(function(){
     chrome.storage.sync.get(null, function(config) {
         var dataObject = {};
@@ -120,8 +122,8 @@ function parseData(dataObject){
         if(objects.hasOwnProperty(object))
         {
             datas['labels'].push(objects[object]['key']);
-            datas['datasets'][0]['data'].push(objects[object]['real']/parseFloat(60));
-            datas['datasets'][1]['data'].push(objects[object]['total']/parseFloat(60));
+            datas['datasets'][0]['data'].push(objects[object]['real']/ratio);
+            datas['datasets'][1]['data'].push(objects[object]['total']/ratio);
         }
     return datas;
 }
@@ -143,8 +145,17 @@ function plot(data){
     var opt = {
         tooltips:{
             callbacks:{
-                label:function(tooltipItem, data) {return YTTGetDurationString({seconds:3600*tooltipItem['yLabel']});}
+                label:function(tooltipItem) {return YTTGetDurationString({minutes:ratio*tooltipItem['yLabel']});}
             }
+        },
+        scales: {
+            yAxes:[{
+                ticks:{
+                    autoSkip: false,
+                    beginAtZero: true,
+                    userCallback:function(data){return YTTGetDurationString({minutes:ratio*data});}
+                }
+            }]
         }
     };
     var div = $('#chartYTT');
