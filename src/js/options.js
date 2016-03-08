@@ -1,3 +1,5 @@
+var ratio = 1;
+
 $(document).ready(function(){
     chrome.storage.sync.get(null, function(config) {
         var dataObject = {};
@@ -12,10 +14,17 @@ $(document).ready(function(){
         plot(datas);
 
         $('#exportButton').click(function(){
-            var result = JSON.stringify(datas);
-            var url = 'data:application/json;base64,' + btoa(result);
+            var setsData = {};
+            setsData['ratio'] = ratio;
+            for (var index in datas['datasets'])
+                if (datas['datasets'].hasOwnProperty(index))
+                    setsData[datas['datasets'][index]['label']] = datas['datasets'][index]['data'];
+            var result = JSON.stringify({
+                'labels': datas['labels'],
+                'sets': setsData
+            });
             chrome.downloads.download({
-                url: url,
+                url: 'data:application/json;base64,' + btoa(result),
                 filename: 'YTTExport.json'
             });
         });
@@ -48,7 +57,7 @@ function importData(data) {
         alert("Corrupted file!");
         return;
     }
-    if(!dataObject || !dataObject.labels || !dataObject.seriesLabels || !dataObject.series)
+    if(!dataObject || !dataObject['labels'] || !dataObject['sets'])
     {
         alert("Corrupted file!");
         return;
@@ -56,26 +65,18 @@ function importData(data) {
     if(!confirm("Be careful, if a day is already saved, it will be replaced by the one in the imported file!\nAre you sure to continue?"))
         return;
     var config = {};
-    var realIndex;
-    var totalIndex;
-    if(dataObject.seriesLabels[0][0] == 'T')
-    {
-        totalIndex = 0;
-        realIndex = 1;
-    }
-    else
-    {
-        totalIndex = 1;
-        realIndex = 0;
-    }
-    for(var dateIndex = 0; dateIndex < dataObject.labels.length; dateIndex++)
-    {
-        var dateElements = dataObject.labels[dateIndex].split('-');
-        var dateObj = new Date(dateElements[2], parseInt(dateElements[1]) - 1, dateElements[0]);
-        console.log(dateObj);
-        config[YTTGetRealDayConfigKey(dateObj)] = {minutes:dataObject.series[realIndex][dateIndex]};
-        config[YTTGetTotalDayConfigKey(dateObj)] = {minutes:dataObject.series[totalIndex][dateIndex]};
-    }
+
+    for (var key in dataObject['sets'])
+        if (dataObject['sets'].hasOwnProperty(key))
+        {
+            for(var dateIndex = 0; dateIndex < dataObject.labels.length; dateIndex++)
+            {
+                var dateElements = dataObject['labels'][dateIndex].split('-');
+                var dateObj = new Date(dateElements[2], parseInt(dateElements[1]) - 1, dateElements[0]);
+                config[key[0] == 'T' ? YTTGetTotalDayConfigKey(dateObj) : YTTGetRealDayConfigKey(dateObj)] = {milliseconds:(dataObject['ratio'] || 1)*dataObject['sets'][key][dateIndex]};
+            }
+        }
+
     chrome.storage.sync.set(config);
     location.reload();
 }
@@ -112,7 +113,8 @@ function parseData(dataObject){
     ];
     for (var key in dataObject)
         if (dataObject.hasOwnProperty(key))
-            objects.push({key:dateFromDay(key), real: YTTGetDurationAsMinutes(dataObject[key]['R']), total: YTTGetDurationAsMinutes(dataObject[key]['T'])});
+            objects.push({key:dateFromDay(key), real: YTTGetDurationAsMillisec(dataObject[key]['R']), total: YTTGetDurationAsMillisec(dataObject[key]['T'])});
+
     objects.sort(function(a, b){
         return getDateFromTime(a['key']).getTime() - getDateFromTime(b['key']).getTime();
     });
@@ -120,10 +122,9 @@ function parseData(dataObject){
         if(objects.hasOwnProperty(object))
         {
             datas['labels'].push(objects[object]['key']);
-            datas['datasets'][0]['data'].push(Number(objects[object]['real']/parseFloat(60)).toFixed(2));
-            datas['datasets'][1]['data'].push(Number(objects[object]['total']/parseFloat(60)).toFixed(2));
+            datas['datasets'][0]['data'].push(objects[object]['real']/ratio);
+            datas['datasets'][1]['data'].push(objects[object]['total']/ratio);
         }
-    console.log(datas);
     return datas;
 }
 
@@ -142,6 +143,20 @@ function dateFromDay(str){
 
 function plot(data){
     var opt = {
+        tooltips:{
+            callbacks:{
+                label:function(tooltipItem) {return YTTGetDurationString({milliseconds:ratio*tooltipItem['yLabel']});}
+            }
+        },
+        scales: {
+            yAxes:[{
+                ticks:{
+                    autoSkip: false,
+                    beginAtZero: true,
+                    userCallback:function(data){return YTTGetDurationString({milliseconds:ratio*data});}
+                }
+            }]
+        }
     };
     var div = $('#chartYTT');
     var chart = new Chart(div, {
