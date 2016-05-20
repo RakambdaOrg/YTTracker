@@ -29,6 +29,15 @@ $(document).ready(function(){
             });
         });
 
+        $('#exportPNGButton').click(function(){
+            var canvas = document.getElementById("chartYTT");
+            var img = canvas.toDataURL("image/png");
+            chrome.downloads.download({
+                url: img,
+                filename: 'YTTExport.png'
+            });
+        });
+
         $('#importButton').change(function(event){
             var f = event.target.files[0];
             if(f)
