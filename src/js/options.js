@@ -154,14 +154,18 @@ function plot(data){
     var opt = {
         tooltips:{
             callbacks:{
-                label:function(tooltipItem) {return YTTGetDurationString({milliseconds:ratio*tooltipItem['yLabel']});}
+                label:function(tooltipItem) {
+                    return YTTGetDurationString({milliseconds:ratio*tooltipItem['yLabel']});
+                }
             }
         },
         scales: {
             yAxes:[{
-                ticks:{
+                type: "linear",
+                ticks: {
                     autoSkip: false,
                     beginAtZero: true,
+                    fixedStepSize: 3600 * 1000,
                     userCallback:function(data){return YTTGetDurationString({milliseconds:ratio*data});}
                 }
             }]
