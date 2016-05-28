@@ -1,5 +1,38 @@
 var ratio = 1;
 
+function getAverage(values) {
+    var total = 0;
+    for (var value in values)
+        if(values.hasOwnProperty(value))
+            total += values[value];
+    return total / values.length;
+}
+
+function canvasToImage(backgroundColor)
+{
+    var canvas = document.getElementById("chartYTT");
+    var context = canvas.getContext("2d");
+    var w = canvas.width;
+    var h = canvas.height;
+    var data;
+    if(backgroundColor)
+    {
+        data = context.getImageData(0, 0, w, h);
+        var compositeOperation = context.globalCompositeOperation;
+        context.globalCompositeOperation = "destination-over";
+        context.fillStyle = backgroundColor;
+        context.fillRect(0,0,w,h);
+    }
+    var imageData = canvas.toDataURL("image/png");
+    if(backgroundColor)
+    {
+        context.clearRect (0,0,w,h);
+        context.putImageData(data, 0,0);
+        context.globalCompositeOperation = compositeOperation;
+    }
+    return imageData;
+}
+
 $(document).ready(function(){
     chrome.storage.sync.get(null, function(config) {
         var dataObject = {};
@@ -11,6 +44,7 @@ $(document).ready(function(){
             }
         }
         var datas = parseData(dataObject);
+        var average = getAverage(datas['datasets'][0]['data']);
         plot(datas);
 
         $('#exportButton').click(function(){
@@ -30,10 +64,15 @@ $(document).ready(function(){
         });
 
         $('#exportPNGButton').click(function(){
-            var canvas = document.getElementById("chartYTT");
-            var img = canvas.toDataURL("image/png");
             chrome.downloads.download({
-                url: img,
+                url: canvasToImage(),
+                filename: 'YTTExport.png'
+            });
+        });
+
+        $('#exportPNGBACKButton').click(function(){
+            chrome.downloads.download({
+                url: canvasToImage("#FFFFFF"),
                 filename: 'YTTExport.png'
             });
         });
@@ -54,6 +93,8 @@ $(document).ready(function(){
             config[YTT_CONFIG_DEBUG_KEY] = $(this).is(':checked');
             chrome.storage.sync.set(config);
         });
+
+        $('#averageHolder').text("" + YTTGetDurationString({milliseconds:ratio*average}));
     });
 });
 
