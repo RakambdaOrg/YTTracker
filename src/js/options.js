@@ -45,6 +45,18 @@ $(document).ready(function(){
         }
         var datas = parseData(dataObject);
         var average = getAverage(datas['datasets'][0]['data']);
+        datas['datasets'].push({
+            borderColor: "rgba(255,255,0,0.5)",
+            backgroundColor: "rgba(255,255,0,0.5)",
+            pointBorderColor: "rgba(255,255,0,0.5)",
+            pointBackgroundColor: "rgba(255,255,0,0.5)",
+            pointBorderWidth: 0.1,
+            pointHoverRadius: 1,
+            tension: 0.4,
+            fill:false,
+            label:'Average played time',
+            data:Array.apply(null, new Array(datas['datasets'][0]['data'].length)).map(function () { return average; })
+        });
         plot(datas);
 
         $('#exportButton').click(function(){
@@ -135,7 +147,7 @@ function parseData(dataObject){
     var objects = [];
     var datas = {};
     datas['labels'] = [];
-    datas['seriesLabels'] = ['Playing time', 'Total time'];
+    datas['seriesLabels'] = ['Playing time', 'Total time', 'Average played time'];
     datas['datasets'] = [
         {
             borderColor: "rgba(255,136,0,1)",
