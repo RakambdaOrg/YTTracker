@@ -63,12 +63,21 @@ $(document).ready(function(){
             var setsData = {};
             setsData['ratio'] = ratio;
             for (var index in datas['datasets'])
+            {
                 if (datas['datasets'].hasOwnProperty(index))
+                {
+                    if(datas['datasets'][index]['label'][0] === 'A')
+                    {
+                        continue;
+                    }
                     setsData[datas['datasets'][index]['label']] = datas['datasets'][index]['data'];
+                }
+            }
             var result = JSON.stringify({
                 'labels': datas['labels'],
                 'sets': setsData
             });
+            console.log(result);
             chrome.downloads.download({
                 url: 'data:application/json;base64,' + btoa(result),
                 filename: 'YTTExport.json'
@@ -131,6 +140,10 @@ function importData(data) {
     for (var key in dataObject['sets'])
         if (dataObject['sets'].hasOwnProperty(key))
         {
+            if(key === 'ratio' || key[0] === 'A')
+            {
+                continue;
+            }
             for(var dateIndex = 0; dateIndex < dataObject.labels.length; dateIndex++)
             {
                 var dateElements = dataObject['labels'][dateIndex].split('-');
