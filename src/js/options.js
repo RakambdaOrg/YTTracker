@@ -212,8 +212,10 @@ function parseData(dataObject){
         }
 
     var current = min;
-    while(YTTCompareConfigDate(max, current) < 0)
+    var i = 0;
+    while(YTTCompareConfigDate(max, current) < 0 && i < 36500)
     {
+        i++;
         current = getNextConfigDate(current);
         if(!dataObject.hasOwnProperty(current))
         {
