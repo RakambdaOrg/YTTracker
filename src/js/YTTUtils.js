@@ -119,6 +119,33 @@ function YTTGetDateString(time){
     return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 }
 
+/**
+ * @return {number}
+ */
+function YTTCompareConfigDate(base, test){
+    var baseObj = YTTConvertConfigDateToObject(base);
+    var testObj = YTTConvertConfigDateToObject(test);
+    return testObj.year != baseObj.year ? (testObj.year - baseObj.year) * 365 : testObj.day - baseObj.day;
+}
+
+/**
+ * @returns {{year: number, day: number}}
+ */
+function YTTConvertConfigDateToObject(date) {
+    var year = 0;
+    var day = 0;
+    if(date.length > 4)
+    {
+        year = parseFloat(date.toString().substring(date.toString().length - 4));
+        day = parseFloat(date.toString().substring(0, date.toString().length - 4));
+    }
+    else
+    {
+        year = parseFloat(date.toString());
+    }
+    return {year: year, day: day};
+}
+
 function YTTMessage(type, value){
     var message = {};
     message[YTT_MESSAGE_TYPE_KEY] = type;

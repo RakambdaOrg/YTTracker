@@ -156,6 +156,14 @@ function importData(data) {
     location.reload();
 }
 
+function getNextConfigDate(date) {
+    var year = parseFloat(date.substring(date.length - 4));
+    var days = parseFloat(date.substring(0, date.length - 4));
+    var dateObj = new Date(year, 0);
+    dateObj.setDate(days + 1);
+    return YTTGetDayConfigKey(dateObj).substr(3);
+}
+
 function parseData(dataObject){
     var objects = [];
     var datas = {};
@@ -186,9 +194,32 @@ function parseData(dataObject){
             data:[]
         }
     ];
+
+    var min = "19999";
+    var max = "0";
     for (var key in dataObject)
         if (dataObject.hasOwnProperty(key))
+        {
+            if(YTTCompareConfigDate(min, key) < 0)
+            {
+                min = key;
+            }
+            if(YTTCompareConfigDate(max, key) > 0)
+            {
+                max = key;
+            }
             objects.push({key:dateFromDay(key), real: YTTGetDurationAsMillisec(dataObject[key]['R']), total: YTTGetDurationAsMillisec(dataObject[key]['T'])});
+        }
+
+    var current = min;
+    while(YTTCompareConfigDate(max, current) < 0)
+    {
+        current = getNextConfigDate(current);
+        if(!dataObject.hasOwnProperty(current))
+        {
+            objects.push({key:dateFromDay(current), real: 0, total: 0});
+        }
+    }
 
     objects.sort(function(a, b){
         return getDateFromTime(a['key']).getTime() - getDateFromTime(b['key']).getTime();
