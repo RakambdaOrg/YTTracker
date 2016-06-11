@@ -108,7 +108,11 @@ $(document).ready(function(){
             }
         });
 
-        $('#averageHolder').text("" + YTTGetDurationString({milliseconds:ratio*average}));
+        $('#averageHolder').text(YTTGetDurationString({milliseconds:ratio*average}));
+        var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
+        chrome.storage.sync.get([REAL_TODAY_KEY], function (result){
+            $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
+        });
     });
 });
 

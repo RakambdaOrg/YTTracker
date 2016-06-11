@@ -14,13 +14,16 @@
     <body>
         <header id="topContainer">
             <ul>
-                <li class="inline"><a href="javascript: void(0)" id="exportPNGButton">Save as PNG</a></li>
-                <li class="inline"><a href="javascript: void(0)" id="exportPNGBACKButton">Save as PNG (with background)</a></li>
-                <li class="inline leftnav"><a class="inputWrapper" href="javascript: void(0)">Import JSON<input type="file" class="fileInput" id="importButton" value=""/></a></li>
-                <li class="inline leftnav"><a href="javascript: void(0)" id="exportButton">Export data</a></li>
+                <li><a href="javascript: void(0)" id="exportPNGButton">Save as PNG</a></li>
+                <li><a href="javascript: void(0)" id="exportPNGBACKButton">Save as PNG (with background)</a></li>
+                <li class="leftnav"><a class="inputWrapper" href="javascript: void(0)">Import JSON<input type="file" class="fileInput" id="importButton" value=""/></a></li>
+                <li class="leftnav"><a href="javascript: void(0)" id="exportButton">Export data</a></li>
             </ul>
         </header>
-        <p>Average watched time: <span id="averageHolder"></span></p>
+        <div id="infosHolder">
+            <p class="inline">Average watched: <span id="averageHolder"></span></p>
+            <p class="inline">Watched today: <span id="watchedHolder"></span></p>
+        </div>
         <div id="chartHolder">
             <canvas id="chartYTT"></canvas>
         </div>
