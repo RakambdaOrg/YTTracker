@@ -1,5 +1,7 @@
 body {
-    background: #DDDDDD;
+    background: #BBBBBB;
+    text-align: center;
+    margin: auto;
 }
 
 .ct-chart .ct-series.ct-series-a .ct-line {
@@ -33,20 +35,54 @@ body {
 }
 
 #chartHolder{
-    width: 96%;
-    height: 96%;
+    width: 85%;
+    height: 85%;
     margin: auto;
 }
 
-#importDiv{
-    display: block;
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
     float: left;
 }
 
-#exportButton{
-    float: right;
+.leftnav{
+    float: right!important;
 }
 
-#checkDiv{
+li a{
+    display: block;
+    color: white;
     text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.inputWrapper {
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.fileInput {
+    cursor: pointer;
+    height: 100%;
+    position:absolute;
+    top: 0;
+    right: 0;
+    z-index: 99;
+    font-size:50px;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0)
 }

@@ -7,18 +7,22 @@
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/moment-with-locales.js"></script>
     <script type="text/javascript" src="js/lib/Chart.min.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.Zoom.min.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
 </head>
-<body>
-    <div id="chartHolder">
-        <canvas id="chartYTT"></canvas>
-    </div>
-    <p>Average watched time: <span id="averageHolder"></span></p>
-    <div id="importDiv">Import data: <input type="file" id="importButton" value=""/></div>
-    <button type="button" id="exportButton">Export data</button>
-    <button type="button" id="exportPNGButton">Save as PNG</button>
-    <button type="button" id="exportPNGBACKButton">Save as PNG (with background)</button>
-    <div id="checkDiv"><input type="checkbox" id="debugCheck">Activate log (restart required)?</div>
-</body>
+    <body>
+        <header id="topContainer">
+            <ul>
+                <li class="inline"><a href="javascript: void(0)" id="exportPNGButton">Save as PNG</a></li>
+                <li class="inline"><a href="javascript: void(0)" id="exportPNGBACKButton">Save as PNG (with background)</a></li>
+                <li class="inline leftnav"><a class="inputWrapper" href="javascript: void(0)">Import JSON<input type="file" class="fileInput" id="importButton" value=""/></a></li>
+                <li class="inline leftnav"><a href="javascript: void(0)" id="exportButton">Export data</a></li>
+            </ul>
+        </header>
+        <p>Average watched time: <span id="averageHolder"></span></p>
+        <div id="chartHolder">
+            <canvas id="chartYTT"></canvas>
+        </div>
+    </body>
 </html>

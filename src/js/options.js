@@ -108,13 +108,6 @@ $(document).ready(function(){
             }
         });
 
-        $('#debugCheck').prop('checked', config[YTT_CONFIG_DEBUG_KEY]);
-        $('#debugCheck').click(function(){
-            var config = {};
-            config[YTT_CONFIG_DEBUG_KEY] = $(this).is(':checked');
-            chrome.storage.sync.set(config);
-        });
-
         $('#averageHolder').text("" + YTTGetDurationString({milliseconds:ratio*average}));
     });
 });
