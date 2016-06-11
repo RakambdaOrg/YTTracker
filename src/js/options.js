@@ -261,6 +261,14 @@ function plot(data){
                     userCallback:function(data){return YTTGetDurationString({milliseconds:ratio*data});}
                 }
             }]
+        },
+        pan: {
+            enabled: true,
+            mode: 'x'
+        },
+        zoom: {
+            enabled: true,
+            mode: 'x'
         }
     };
     var div = $('#chartYTT');
