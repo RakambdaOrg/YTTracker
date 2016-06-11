@@ -20,6 +20,22 @@ const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 const YTT_DOM_SPLITTER = '@';
 
+Date.prototype.isLeapYear = function() {
+    var year = this.getFullYear();
+    if((year & 3) != 0) return false;
+    return ((year % 100) != 0 || (year % 400) == 0);
+};
+
+// Get Day of Year
+Date.prototype.getDOY = function() {
+    var dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    var mn = this.getMonth();
+    var dn = this.getDate();
+    var dayOfYear = dayCount[mn] + dn;
+    if(mn > 1 && this.isLeapYear()) dayOfYear++;
+    return dayOfYear;
+};
+
 function YTTSetDebug(state){
     YTTLog('Set debug to: ' + state);
     YTT_DEBUG = state;
@@ -92,7 +108,7 @@ function YTTGetDurationString(duration){
  */
 function YTTGetDayConfigKey(now){
     now = now || new Date();
-    return "day" + Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) + now.getFullYear();
+    return "day" + now.getDOY() + now.getFullYear();
 }
 
 /**

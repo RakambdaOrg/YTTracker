@@ -213,7 +213,7 @@ function parseData(dataObject){
 
     var current = min;
     var i = 0;
-    while(YTTCompareConfigDate(max, current) < 0 && i < 36500)
+    while(YTTCompareConfigDate(max, current) < 0 && i < 365 * 10)
     {
         i++;
         current = getNextConfigDate(current);
