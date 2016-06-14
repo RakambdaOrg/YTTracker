@@ -53,10 +53,44 @@ function YTTGetDurationAsMinutes(d){
     return parseInt(YTTGetDurationAsMillisec(d) / (60 * 1000));
 }
 
+function YTTGetDurationAsSeconds(d){
+    return parseInt(YTTGetDurationAsMillisec(d) / 1000);
+}
+
+/**
+ * @return {number}
+ */
+function YTTGetDurationAsHours(d){
+    return YTTGetDurationAsMillisec(d) / (60 * 60 * 1000);
+}
+
 
 function YTTGetValidDuration(d){
     if(!d) return {};
     if(YTTGetDurationAsMillisec(d) < 0) return {};
+    if(d.days) {
+        var temp = d.days - Math.floor(d.days);
+        d.days = Math.floor(d.days);
+        d.hours = (d.hours || 0) + temp * 24;
+    }
+    if(d.hours) {
+        var temp = d.hours - Math.floor(d.hours);
+        d.hours = Math.floor(d.hours);
+        d.minutes = (d.minutes || 0) + temp * 60;
+    }
+    if(d.minutes) {
+        var temp = d.minutes - Math.floor(d.minutes);
+        d.minutes = Math.floor(d.minutes);
+        d.secondes = (d.secondes || 0) + temp * 60;
+    }
+    if(d.secondes) {
+        var temp = d.secondes - Math.floor(d.secondes);
+        d.secondes = Math.floor(d.secondes);
+        d.milliseconds = (d.milliseconds || 0) + temp * 1000;
+    }
+    if(d.milliseconds){
+        d.milliseconds = Math.floor(d.milliseconds);
+    }
     return d;
 }
 
@@ -132,7 +166,10 @@ function YTTGetDateString(time){
     if(!time)
         return '';
     var date = new Date(time);
-    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    var y = date.getFullYear();
+    var m = ("0"+(date.getMonth()+1)).slice(-2);
+    var d = ("0" + date.getDate()).slice(-2);
+    return y + "-" + m + "-" + d;
 }
 
 /**

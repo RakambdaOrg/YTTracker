@@ -8,5 +8,8 @@ Two kind of time are recorded:
 
 Those times can then be viewed by the popup icon showing you them as text and in a chart.
 
+## Libraries
+Amcharts - [www.amcharts.com](www.amcharts.com)
+
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/MrCraftCod/YTTracker/issues).
