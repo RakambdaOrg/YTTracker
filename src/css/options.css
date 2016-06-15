@@ -56,14 +56,14 @@ header>ul>li>a:hover{
 .fileInput{
     cursor: pointer;
     height: 100%;
-    position:absolute;
+    position: absolute;
     top: 0;
     right: 0;
     z-index: 99;
-    font-size:50px;
+    font-size: 50px;
     opacity: 0;
     -moz-opacity: 0;
-    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0)
+    filter:progid: DXImageTransform.Microsoft.Alpha(opacity=0)
 }
 
 .inline{
