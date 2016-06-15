@@ -4,7 +4,7 @@
   "name": "YouTube Tracker",
   "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
-  "version": "0.0.4.0",
+  "version": "0.0.4.1",
 
   "icons": {
     "16": "assets/icon16.png",
@@ -32,7 +32,7 @@
 
   "content_scripts": [{
     "matches": ["https://www.youtube.com/*"],
-    "js": ["js/lib/jquery.js", "js/YTTUtils.js", "js/content.js"],
+    "js": ["js/lib/jquery/jquery.js", "js/YTTUtils.js", "js/content.js"],
     "run_at": "document_start",
     "all_frames": true
   }],
