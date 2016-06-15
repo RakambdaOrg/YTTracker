@@ -1,17 +1,21 @@
-body {
+html,body{
+    height:100%;
+}
+
+body{
     background: #BBBBBB;
     text-align: center;
     margin: auto;
 }
 
 #chartHolder{
-    width: 85%;
+    width: 95%;
     height: 85%;
     margin: auto;
 }
 
 #chartdiv{
-     height: 850px;
+    width: 100%;
  }
 
 header>ul{
