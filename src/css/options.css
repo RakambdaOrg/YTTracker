@@ -70,6 +70,10 @@ header>ul>li>a:hover{
     display: inline-block;
 }
 
+.amcharts-export-canvas{
+    display: none;
+}
+
 #infosHolder>p{
     margin-left: 5px;
     margin-right: 5px;
