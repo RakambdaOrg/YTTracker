@@ -321,7 +321,7 @@ $(document).ready(function(){
                 }
             });
 
-            $('#averageRatioHolder').text(average['ratio'].toFixed(2));
+            $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
             var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
