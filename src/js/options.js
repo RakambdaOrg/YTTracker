@@ -52,23 +52,28 @@ $(document).ready(function(){
                 parsedConfigOrdered.push(conf);
             });
 
+            var datas = buildData(parsedConfigOrdered);
+
             //Build Chart
             function getAverages(list){
                 var totalR = 0;
                 var totalT = 0;
+                var totalRatio = 0;
                 for(var key in list){
                     if(list.hasOwnProperty(key)){
-                        totalR += YTTGetDurationAsMillisec(list[key]['R']);
-                        totalT += YTTGetDurationAsMillisec(list[key]['T']);
+                        totalR += YTTGetDurationAsMillisec({hours: list[key]['real']});
+                        totalT += YTTGetDurationAsMillisec({hours: list[key]['total']});
+                        totalRatio += list[key]['ratio'];
                     }
                 }
-                return {R: totalR / list.length, T: totalT / list.length};
+                return {real: totalR / list.length, total: totalT / list.length, ratio: totalRatio / list.length};
             }
 
-            var avgs = getAverages(parsedConfigOrdered);
+            var avgs = getAverages(datas);
             var average = {
-                R: {milliseconds: avgs['R']},
-                T: {milliseconds: avgs['T']}
+                real: {milliseconds: avgs['real']},
+                total: {milliseconds: avgs['total']},
+                ratio: avgs['ratio']
             };
 
             var chart = AmCharts.makeChart(chartdiv, {
@@ -80,9 +85,11 @@ $(document).ready(function(){
                     useGraphSettings: true,
                     valueAlign: 'left',
                     valueWidth: 60,
-                    valueFunction: function(graphDataItem){return graphDataItem && graphDataItem.values && graphDataItem.values.value ? YTTGetDurationString({hours: graphDataItem.values.value}) : '';}
+                    valueFunction: function(graphDataItem){return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && graphDataItem.values.value ? (
+                        graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' : YTTGetDurationString({hours: graphDataItem.values.value})
+                    ) : '';}
                 },
-                dataProvider: buildData(parsedConfigOrdered),
+                dataProvider: datas,
                 valueAxes: [{
                     id: 'durationAxis',
                     duration: 'hh',
@@ -93,13 +100,19 @@ $(document).ready(function(){
                         ss: 's'
                     },
                     guides: [{
-                        value: YTTGetDurationAsHours(average['T']),
+                        value: YTTGetDurationAsHours(average['total']),
                         dashLength: 5,
-                        above: true
+                        above: false,
+                        label: 'Opened avg.',
+                        lineThickness: 2,
+                        inside: true
                     }, {
-                        value: YTTGetDurationAsHours(average['R']),
+                        value: YTTGetDurationAsHours(average['real']),
                         dashLength: 5,
-                        above: true
+                        above: false,
+                        label: 'Watched avg.',
+                        lineThickness: 2,
+                        inside: true
                     }],
                     axisAlpha: 0.5,
                     gridAlpha: 0.2,
@@ -108,6 +121,26 @@ $(document).ready(function(){
                     title: 'Duration',
                     labelFrequency: 2,
                     labelFunction: function(value){return YTTGetDurationString({hours: value});}
+                },{
+                    id: 'ratioAxis',
+                    minimum: 0,
+                    //maximum: 1,
+                    axisAlpha: 0,
+                    gridAlpha: 0,
+                    guides: [{
+                        value: average['ratio'],
+                        dashLength: 3,
+                        above: false,
+                        label: '',
+                        lineThickness: 2,
+                        inside: true
+                    }],
+                    labelsEnabled: false,
+                    inside: false,
+                    position: 'left',
+                    title: '',
+                    labelFrequency: 2,
+                    labelFunction: function(value){return (100 * value).toFixed(2) + '%';}
                 }],
                 graphs: [{
                     bullet: 'circle',
@@ -137,6 +170,22 @@ $(document).ready(function(){
                     lineThickness: 2,
                     bulletSize: 8,
                     balloonFunction: function(graphDataItem){return 'Watched<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + YTTGetDurationString({hours: graphDataItem.values.value}) + '</span></b>';}
+                }, {
+                    bullet: 'circle',
+                    bulletAlpha: 0.5,
+                    bulletBorderAlpha: 0.75,
+                    bulletBorderThickness: 1,
+                    dashLengthField: 'dashLength',
+                    legendValueText: '[[value]]',
+                    title: 'Ratio',
+                    fillAlphas: 0,
+                    valueField: 'ratio',
+                    valueAxis: 'ratioAxis',
+                    type: 'smoothedLine',
+                    lineThickness: 1,
+                    lineAlpha: 0.5,
+                    bulletSize: 2,
+                    balloonFunction: function(graphDataItem){return 'Ratio<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + (100 * graphDataItem.values.value).toFixed(2) + '%' + '</span></b>';}
                 }],
                 chartScrollbar: {
                     autoGridCount: true,
@@ -201,7 +250,8 @@ $(document).ready(function(){
                         data.push({
                             date: dateFromDay(config[key]['day']),
                             real: YTTGetDurationAsHours(config[key]['R']),
-                            total: YTTGetDurationAsHours(config[key]['T'])
+                            total: YTTGetDurationAsHours(config[key]['T']),
+                            ratio: YTTGetDurationAsMinutes(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMinutes(config[key]['R'])/YTTGetDurationAsMinutes(config[key]['T'])
                         });
                     }
                 }
@@ -271,8 +321,9 @@ $(document).ready(function(){
                 }
             });
 
-            $('#averageWatchedHolder').text(YTTGetDurationString(average['R']));
-            $('#averageOpenedHolder').text(YTTGetDurationString(average['T']));
+            $('#averageRatioHolder').text(average['ratio'].toFixed(2));
+            $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
+            $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
             var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
             chrome.storage.sync.get([REAL_TODAY_KEY], function(result){
                 $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
