@@ -53,17 +53,23 @@ $(document).ready(function(){
             });
 
             //Build Chart
-            function getAverageWatched(list){
-                var total = 0;
+            function getAverages(list){
+                var totalR = 0;
+                var totalT = 0;
                 for(var key in list){
                     if(list.hasOwnProperty(key)){
-                        total += YTTGetDurationAsMillisec(list[key]['R']);
+                        totalR += YTTGetDurationAsMillisec(list[key]['R']);
+                        totalT += YTTGetDurationAsMillisec(list[key]['T']);
                     }
                 }
-                return total / list.length;
+                return {R: totalR / list.length, T: totalT / list.length};
             }
 
-            var average = {milliseconds: getAverageWatched(parsedConfigOrdered)};
+            var avgs = getAverages(parsedConfigOrdered);
+            var average = {
+                R: {milliseconds: avgs['R']},
+                T: {milliseconds: avgs['T']}
+            };
 
             var chart = AmCharts.makeChart(chartdiv, {
                 type: 'serial',
@@ -87,8 +93,13 @@ $(document).ready(function(){
                         ss: 's'
                     },
                     guides: [{
-                        value: YTTGetDurationAsHours(average),
-                        dashLength: 5
+                        value: YTTGetDurationAsHours(average['T']),
+                        dashLength: 5,
+                        above: true
+                    }, {
+                        value: YTTGetDurationAsHours(average['R']),
+                        dashLength: 5,
+                        above: true
                     }],
                     axisAlpha: 0.5,
                     gridAlpha: 0.2,
@@ -260,7 +271,8 @@ $(document).ready(function(){
                 }
             });
 
-            $('#averageHolder').text(YTTGetDurationString(average));
+            $('#averageWatchedHolder').text(YTTGetDurationString(average['R']));
+            $('#averageOpenedHolder').text(YTTGetDurationString(average['T']));
             var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
             chrome.storage.sync.get([REAL_TODAY_KEY], function(result){
                 $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
