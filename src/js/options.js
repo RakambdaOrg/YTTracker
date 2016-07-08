@@ -233,7 +233,7 @@ $(document).ready(function(){
 
             zoomChart();
 
-            function zoomChart(){chart.zoomToIndexes(parsedConfigOrdered.length - 40, parsedConfigOrdered.length - 1);}
+            function zoomChart(){chart.zoomToIndexes(parsedConfigOrdered.length - 7, parsedConfigOrdered.length - 1);}
 
             function dateFromDay(str){
                 var year = parseFloat(str.substring(str.length - 4));
