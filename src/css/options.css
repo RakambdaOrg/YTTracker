@@ -74,7 +74,7 @@ header>ul>li>a:hover{
     display: none;
 }
 
-#infosHolder>p{
+.infosHolder>p{
     margin-left: 5px;
     margin-right: 5px;
     padding-left: 5px;

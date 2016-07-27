@@ -189,7 +189,11 @@ $(document).ready(function(){
                 }],
                 chartScrollbar: {
                     autoGridCount: true,
-                    scrollbarHeight: 40
+                    scrollbarHeight: 40,
+                    listeners: [{
+                        event: 'zoomed',
+                        method: onChartZoomed
+                    }]
                 },
                 chartCursor: {
                     categoryBalloonDateFormat: 'YYYY-MM-DD',
@@ -197,7 +201,13 @@ $(document).ready(function(){
                     cursorColor: '#000000',
                     fullWidth: true,
                     valueBalloonsEnabled: true,
-                    zoomable: true
+                    zoomable: true,
+                    listeners: [{
+                        event: 'zoomed',
+                        method: function (event) {
+                            console.log(event);
+                        }
+                    }]
                 },
                 dataDateFormat: 'YYYY-MM-DD',
                 categoryField: 'date',
@@ -233,7 +243,61 @@ $(document).ready(function(){
 
             zoomChart();
 
-            function zoomChart(){chart.zoomToIndexes(parsedConfigOrdered.length - 7, parsedConfigOrdered.length - 1);}
+            function updateCurrentInfos(datas) {
+                var totalRatio = 0;
+                var totalOpened = 0;
+                var totalWatched = 0;
+                for(var key in datas){
+                    if(datas.hasOwnProperty(key)){
+                        var data = datas[key];
+                        totalRatio += data['ratio'];
+                        totalWatched += data['real'];
+                        totalOpened += data['total'];
+                    }
+                }
+                $('#averageRatioHolderSelect').text((100 * (totalRatio / datas.length)).toFixed(2) + '%');
+                $('#averageWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched / datas.length}));
+                $('#averageOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened / datas.length}));
+                $('#totalWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched}));
+                $('#totalOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened}));
+            }
+
+            function onChartZoomed(event) {
+                var datas = [];
+                for(var i in event.chart.dataProvider){
+                    if(event.chart.dataProvider.hasOwnProperty(i)){
+                        var data = event.chart.dataProvider[i];
+                        var parts = data['date'].split('-');
+                        var date = new Date(parts[0], parts[1] - 1, parts[2]);
+                        if(date.getTime() >= event.start && date.getTime() <= event.end){
+                            datas.push(data);
+                        }
+                    }
+                }
+                updateCurrentInfos(datas);
+            }
+
+            function zoomChart(){
+                chart.zoomToIndexes(parsedConfigOrdered.length - 7, parsedConfigOrdered.length - 1);
+                var datas = [];
+                var raw = parsedConfigOrdered.slice(parsedConfigOrdered.length - 7, parsedConfigOrdered.length);
+                for(var key in raw){
+                    if(raw.hasOwnProperty(key)){
+                        var dataRaw = raw[key];
+                        var data = {};
+                        if(YTTGetDurationAsMillisec(dataRaw['T']) === 0){
+                            data['ratio'] = 1;
+                        }
+                        else{
+                            data['ratio'] = YTTGetDurationAsMillisec(dataRaw['R']) / YTTGetDurationAsMillisec(dataRaw['T']);
+                        }
+                        data['real'] = YTTGetDurationAsHours(dataRaw['R']);
+                        data['total'] = YTTGetDurationAsHours(dataRaw['T']);
+                        datas.push(data);
+                    }
+                }
+                updateCurrentInfos(datas);
+            }
 
             function dateFromDay(str){
                 var year = parseFloat(str.substring(str.length - 4));
@@ -251,7 +315,7 @@ $(document).ready(function(){
                             date: dateFromDay(config[key]['day']),
                             real: YTTGetDurationAsHours(config[key]['R']),
                             total: YTTGetDurationAsHours(config[key]['T']),
-                            ratio: YTTGetDurationAsMinutes(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMinutes(config[key]['R'])/YTTGetDurationAsMinutes(config[key]['T'])
+                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R'])/YTTGetDurationAsMillisec(config[key]['T'])
                         });
                     }
                 }
