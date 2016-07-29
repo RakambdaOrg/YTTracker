@@ -244,17 +244,20 @@ $(document).ready(function(){
             zoomChart();
 
             function updateCurrentInfos(datas) {
+                var days = 0;
                 var totalRatio = 0;
                 var totalOpened = 0;
                 var totalWatched = 0;
                 for(var key in datas){
                     if(datas.hasOwnProperty(key)){
                         var data = datas[key];
+                        days += 1;
                         totalRatio += data['ratio'];
                         totalWatched += data['real'];
                         totalOpened += data['total'];
                     }
                 }
+                $('#daysHolderSelect').text(days);
                 $('#averageRatioHolderSelect').text((100 * (totalRatio / datas.length)).toFixed(2) + '%');
                 $('#averageWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched / datas.length}));
                 $('#averageOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened / datas.length}));
