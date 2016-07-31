@@ -13,6 +13,7 @@ deploy:
   provider: script
   script: npm run release
   on:
+    all_branches: true
     tags: true
 env:
   global:
