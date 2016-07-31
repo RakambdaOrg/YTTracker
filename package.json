@@ -1,0 +1,32 @@
+{
+  "name": "YTTracker",
+  "version": "0.5.1",
+  "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
+  "description": "This extension will track your time on YouTube",
+  "homepage": "https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb",
+  "files": [
+    "/src"
+  ],
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/MrCraftCod/YTTracker.git"
+  },
+  "scripts": {
+    "zip": "zip -r extension.zip src/",
+    "release": "npm run zip && webstore upload --file extension.zip --extension-id 'knnlnielflnfhdohmihofhdelgahgjdb' --auto-publish",
+    "test": "xo src/*.js"
+  },
+  "devDependencies": {
+    "chrome-webstore-upload-cli": "^0.2.0",
+    "xo": "*"
+  },
+  "xo": {
+    "envs": [
+      "browser"
+    ],
+    "space": true,
+    "rules": {
+      "camelcase": 0
+    }
+  }
+}

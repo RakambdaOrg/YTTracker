@@ -1,10 +1,9 @@
-$(document).ready(function(){
+$(document).ready(function () {
     var themeDOM;
 
-    chrome.storage.sync.get([YTT_CONFIG_THEME], function (config){
-        console.log(config);
+    chrome.storage.sync.get([YTT_CONFIG_THEME], function (config) {
         function setTheme(theme) {
-            if(themeDOM){
+            if (themeDOM) {
                 themeDOM.remove();
             }
             themeDOM = $('<link rel="stylesheet" href="css/themes/' + theme + '.css">');
@@ -17,8 +16,7 @@ $(document).ready(function(){
             $('#' + theme).prop('selected', true);
         }
 
-        switch(config[YTT_CONFIG_THEME])
-        {
+        switch (config[YTT_CONFIG_THEME]) {
             case 'clear':
                 setTheme('clear');
                 setSelected('clearTheme');
@@ -27,15 +25,14 @@ $(document).ready(function(){
             default:
                 setTheme('dark');
                 setSelected('darkTheme');
-
         }
 
-        $('#themeSelect').change(function(){
+        $('#themeSelect').change(function () {
             var theme = $('#themeSelect').find(":selected").val();
             // setTheme(theme);
             var newConfig = {};
             newConfig[YTT_CONFIG_THEME] = theme;
-            chrome.storage.sync.set(newConfig, function(){
+            chrome.storage.sync.set(newConfig, function () {
                 location.reload();
             });
         });
@@ -44,11 +41,12 @@ $(document).ready(function(){
     //Resize chart to fit height
     var chartHolder = document.getElementById('chartHolder');
     var chartdiv = document.getElementById('chartdiv');
-    new ResizeSensor(chartHolder, function(){chartdiv.style.height = '' + chartHolder.clientHeight + 'px';});
+    new ResizeSensor(chartHolder, function () {
+        chartdiv.style.height = '' + chartHolder.clientHeight + 'px';
+    });
 
-    function getChartColors(theme){
-        switch(theme)
-        {
+    function getChartColors(theme) {
+        switch (theme) {
             case 'clear':
                 return {
                     theme: 'light',
@@ -69,25 +67,25 @@ $(document).ready(function(){
         }
     }
 
-    AmCharts.ready(function(){
-        chrome.storage.sync.get(null, function (config){
+    AmCharts.ready(function () {
+        chrome.storage.sync.get(null, function (config) {
             var chartColors = getChartColors(config[YTT_CONFIG_THEME]);
 
             //Get days from config
             const parsedConfig = {};
             var minDate = '19999';
             var maxDate = '0';
-            for(var key in config){
-                if(config.hasOwnProperty(key) && key.substring(0, 3) == 'day'){
+            for (var key in config) {
+                if (config.hasOwnProperty(key) && key.substring(0, 3) == 'day') {
                     var day = key.substring(3, key.length - 1);
-                    if(!parsedConfig[day]){
+                    if (!parsedConfig[day]) {
                         parsedConfig[day] = {R: 0, T: 0};
                     }
                     parsedConfig[day][key.substring(key.length - 1)] = config[key];
-                    if(YTTCompareConfigDate(minDate, day) < 0){
+                    if (YTTCompareConfigDate(minDate, day) < 0) {
                         minDate = day;
                     }
-                    if(YTTCompareConfigDate(maxDate, day) > 0){
+                    if (YTTCompareConfigDate(maxDate, day) > 0) {
                         maxDate = day;
                     }
                 }
@@ -95,25 +93,25 @@ $(document).ready(function(){
             //Add missing dates
             var current = minDate;
             var i = 0;
-            var getNextConfigDate = function(date){
+            var getNextConfigDate = function (date) {
                 var year = parseFloat(date.substring(date.length - 4));
                 var days = parseFloat(date.substring(0, date.length - 4));
                 var dateObj = new Date(year, 0);
                 dateObj.setDate(days + 1);
                 return YTTGetDayConfigKey(dateObj).substr(3);
             };
-            while(YTTCompareConfigDate(maxDate, current) < 0 && i < 365 * 10){
+            while (YTTCompareConfigDate(maxDate, current) < 0 && i < 365 * 10) {
                 i++;
                 current = getNextConfigDate(current);
-                if(!parsedConfig.hasOwnProperty(current)){
+                if (!parsedConfig.hasOwnProperty(current)) {
                     parsedConfig[current] = {R: 0, T: 0};
                 }
             }
             //Reorder dates
             const parsedConfigOrdered = [];
-            Object.keys(parsedConfig).sort(function(a, b){
+            Object.keys(parsedConfig).sort(function (a, b) {
                 return YTTCompareConfigDate(b, a);
-            }).forEach(function(key){
+            }).forEach(function (key) {
                 var conf = parsedConfig[key];
                 conf['day'] = key;
                 parsedConfigOrdered.push(conf);
@@ -122,12 +120,12 @@ $(document).ready(function(){
             var datas = buildData(parsedConfigOrdered);
 
             //Build Chart
-            function getAverages(list){
+            function getAverages(list) {
                 var totalR = 0;
                 var totalT = 0;
                 var totalRatio = 0;
-                for(var key in list){
-                    if(list.hasOwnProperty(key)){
+                for (var key in list) {
+                    if (list.hasOwnProperty(key)) {
                         totalR += YTTGetDurationAsMillisec({hours: list[key]['real']});
                         totalT += YTTGetDurationAsMillisec({hours: list[key]['total']});
                         totalRatio += list[key]['ratio'];
@@ -152,9 +150,11 @@ $(document).ready(function(){
                     useGraphSettings: true,
                     valueAlign: 'left',
                     valueWidth: 60,
-                    valueFunction: function(graphDataItem){return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && graphDataItem.values.value ? (
-                        graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' : YTTGetDurationString({hours: graphDataItem.values.value})
-                    ) : '';}
+                    valueFunction: function (graphDataItem) {
+                        return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && graphDataItem.values.value ? (
+                            graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' : YTTGetDurationString({hours: graphDataItem.values.value})
+                        ) : '';
+                    }
                 },
                 dataProvider: datas,
                 valueAxes: [{
@@ -171,6 +171,7 @@ $(document).ready(function(){
                         dashLength: 5,
                         above: false,
                         label: 'Opened avg.',
+                        position: 'left',
                         lineThickness: 2,
                         inside: true
                     }, {
@@ -178,17 +179,20 @@ $(document).ready(function(){
                         dashLength: 5,
                         above: false,
                         label: 'Watched avg.',
+                        position: 'left',
                         lineThickness: 2,
                         inside: true
                     }],
                     axisAlpha: 0.5,
                     gridAlpha: 0.2,
                     inside: false,
-                    position: 'left',
+                    position: 'right',
                     title: 'Duration',
                     labelFrequency: 2,
-                    labelFunction: function(value){return YTTGetDurationString({hours: value});}
-                },{
+                    labelFunction: function (value) {
+                        return YTTGetDurationString({hours: value});
+                    }
+                }, {
                     id: 'ratioAxis',
                     minimum: 0,
                     //maximum: 1,
@@ -207,7 +211,9 @@ $(document).ready(function(){
                     position: 'left',
                     title: '',
                     labelFrequency: 2,
-                    labelFunction: function(value){return (100 * value).toFixed(2) + '%';}
+                    labelFunction: function (value) {
+                        return (100 * value).toFixed(2) + '%';
+                    }
                 }],
                 graphs: [{
                     bullet: 'circle',
@@ -222,7 +228,9 @@ $(document).ready(function(){
                     type: 'smoothedLine',
                     lineThickness: 2,
                     bulletSize: 8,
-                    balloonFunction: function(graphDataItem){return 'Opened<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + YTTGetDurationString({hours: graphDataItem.values.value}) + '</span></b>';}
+                    balloonFunction: function (graphDataItem) {
+                        return 'Opened<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + YTTGetDurationString({hours: graphDataItem.values.value}) + '</span></b>';
+                    }
                 }, {
                     bullet: 'circle',
                     bulletBorderAlpha: 1,
@@ -236,7 +244,9 @@ $(document).ready(function(){
                     type: 'smoothedLine',
                     lineThickness: 2,
                     bulletSize: 8,
-                    balloonFunction: function(graphDataItem){return 'Watched<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + YTTGetDurationString({hours: graphDataItem.values.value}) + '</span></b>';}
+                    balloonFunction: function (graphDataItem) {
+                        return 'Watched<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + YTTGetDurationString({hours: graphDataItem.values.value}) + '</span></b>';
+                    }
                 }, {
                     bullet: 'circle',
                     bulletAlpha: 0.5,
@@ -252,7 +262,9 @@ $(document).ready(function(){
                     lineThickness: 1,
                     lineAlpha: 0.5,
                     bulletSize: 2,
-                    balloonFunction: function(graphDataItem){return 'Ratio<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + (100 * graphDataItem.values.value).toFixed(2) + '%' + '</span></b>';}
+                    balloonFunction: function (graphDataItem) {
+                        return 'Ratio<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + (100 * graphDataItem.values.value).toFixed(2) + '%' + '</span></b>';
+                    }
                 }],
                 chartScrollbar: {
                     autoGridCount: true,
@@ -319,8 +331,8 @@ $(document).ready(function(){
                 var totalRatio = 0;
                 var totalOpened = 0;
                 var totalWatched = 0;
-                for(var key in datas){
-                    if(datas.hasOwnProperty(key)){
+                for (var key in datas) {
+                    if (datas.hasOwnProperty(key)) {
                         var data = datas[key];
                         days += 1;
                         totalRatio += data['ratio'];
@@ -338,12 +350,12 @@ $(document).ready(function(){
 
             function onChartZoomed(event) {
                 var datas = [];
-                for(var i in event.chart.dataProvider){
-                    if(event.chart.dataProvider.hasOwnProperty(i)){
+                for (var i in event.chart.dataProvider) {
+                    if (event.chart.dataProvider.hasOwnProperty(i)) {
                         var data = event.chart.dataProvider[i];
                         var parts = data['date'].split('-');
                         var date = new Date(parts[0], parts[1] - 1, parts[2]);
-                        if(date.getTime() >= event.start && date.getTime() <= event.end){
+                        if (date.getTime() >= event.start && date.getTime() <= event.end) {
                             datas.push(data);
                         }
                     }
@@ -351,18 +363,18 @@ $(document).ready(function(){
                 updateCurrentInfos(datas);
             }
 
-            function zoomChart(){
+            function zoomChart() {
                 chart.zoomToIndexes(parsedConfigOrdered.length - 7, parsedConfigOrdered.length - 1);
                 var datas = [];
                 var raw = parsedConfigOrdered.slice(parsedConfigOrdered.length - 7, parsedConfigOrdered.length);
-                for(var key in raw){
-                    if(raw.hasOwnProperty(key)){
+                for (var key in raw) {
+                    if (raw.hasOwnProperty(key)) {
                         var dataRaw = raw[key];
                         var data = {};
-                        if(YTTGetDurationAsMillisec(dataRaw['T']) === 0){
+                        if (YTTGetDurationAsMillisec(dataRaw['T']) === 0) {
                             data['ratio'] = 1;
                         }
-                        else{
+                        else {
                             data['ratio'] = YTTGetDurationAsMillisec(dataRaw['R']) / YTTGetDurationAsMillisec(dataRaw['T']);
                         }
                         data['real'] = YTTGetDurationAsHours(dataRaw['R']);
@@ -373,7 +385,7 @@ $(document).ready(function(){
                 updateCurrentInfos(datas);
             }
 
-            function dateFromDay(str){
+            function dateFromDay(str) {
                 var year = parseFloat(str.substring(str.length - 4));
                 var day = parseFloat(str.substring(0, str.length - 4));
                 var date = new Date(year, 0);
@@ -381,15 +393,15 @@ $(document).ready(function(){
                 return YTTGetDateString(date.getTime());
             }
 
-            function buildData(config){
+            function buildData(config) {
                 var data = [];
-                for(var key in config){
-                    if(config.hasOwnProperty(key)){
+                for (var key in config) {
+                    if (config.hasOwnProperty(key)) {
                         data.push({
                             date: dateFromDay(config[key]['day']),
                             real: YTTGetDurationAsHours(config[key]['R']),
                             total: YTTGetDurationAsHours(config[key]['T']),
-                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R'])/YTTGetDurationAsMillisec(config[key]['T'])
+                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T'])
                         });
                     }
                 }
@@ -397,16 +409,16 @@ $(document).ready(function(){
             }
 
             //Add interactions
-            $('#exportButton').click(function(){
+            $('#exportButton').click(function () {
                 chrome.downloads.download({
                     url: 'data:application/json;base64,' + btoa(JSON.stringify(parsedConfig)),
                     filename: 'YTTExport.json'
                 });
             });
 
-            $('#exportJPGButton').click(function(){
-                chart.export.capture({}, function(){
-                    this.toJPG({}, function(base64){
+            $('#exportJPGButton').click(function () {
+                chart.export.capture({}, function () {
+                    this.toJPG({}, function (base64) {
                         chrome.downloads.download({
                             url: base64,
                             filename: 'YTTExport.jpg'
@@ -414,9 +426,9 @@ $(document).ready(function(){
                     });
                 });
             });
-            $('#exportPNGButton').click(function(){
-                chart.export.capture({}, function(){
-                    this.toPNG({}, function(base64){
+            $('#exportPNGButton').click(function () {
+                chart.export.capture({}, function () {
+                    this.toPNG({}, function (base64) {
                         chrome.downloads.download({
                             url: base64,
                             filename: 'YTTExport.png'
@@ -426,26 +438,26 @@ $(document).ready(function(){
             });
 
 
-            $('#importButton').change(function(event){
+            $('#importButton').change(function (event) {
                 var file = event.target.files[0];
-                if(file){
+                if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(reader){
-                        var importData = function(data){
+                    reader.onload = function (reader) {
+                        var importData = function (data) {
                             var dataObject;
-                            try{
+                            try {
                                 dataObject = JSON.parse(data);
                             }
-                            catch(err){
+                            catch (err) {
                                 alert("Corrupted file!");
                                 return;
                             }
-                            if(!confirm("Be careful, if a day is already saved, it will be replaced by the one in the imported file!\nAre you sure to continue?")) {
+                            if (!confirm("Be careful, if a day is already saved, it will be replaced by the one in the imported file!\nAre you sure to continue?")) {
                                 return;
                             }
                             var config = {};
-                            for(var key in dataObject){
-                                if (dataObject.hasOwnProperty(key)){
+                            for (var key in dataObject) {
+                                if (dataObject.hasOwnProperty(key)) {
                                     config['day' + key + 'R'] = dataObject[key]['R'];
                                     config['day' + key + 'T'] = dataObject[key]['T'];
                                 }
@@ -463,7 +475,7 @@ $(document).ready(function(){
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
             var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
-            chrome.storage.sync.get([REAL_TODAY_KEY], function(result){
+            chrome.storage.sync.get([REAL_TODAY_KEY], function (result) {
                 $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
             });
         });
