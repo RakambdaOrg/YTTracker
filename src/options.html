@@ -21,8 +21,17 @@
             <ul>
                 <li><a href="javascript: void(0)" id="exportJPGButton">Save as JPG</a></li>
                 <li><a href="javascript: void(0)" id="exportPNGButton">Save as PNG</a></li>
-                <li class="leftnav"><a class="inputWrapper" href="javascript: void(0)">Import JSON<input type="file" class="fileInput" id="importButton" value=""/></a></li>
-                <li class="leftnav"><a href="javascript: void(0)" id="exportButton">Export data</a></li>
+                <li class="rightNav"><a class="inputWrapper" href="javascript: void(0)">Import JSON<input type="file" class="fileInput" id="importButton" value=""/></a></li>
+                <li class="rightNav"><a href="javascript: void(0)" id="exportButton">Export data</a></li>
+                <li class="rightNav">
+                    <a href="javascript: void(0)">
+                        Theme:&nbsp;
+                        <select title="Theme" id="themeSelect">
+                            <option value="dark" id="darkTheme" selected>Dark</option>
+                            <option value="clear" id="clearTheme">Clear</option>
+                        </select>
+                    </a>
+                </li>
             </ul>
         </header>
         <div class="infosHolder">
