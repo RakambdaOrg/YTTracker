@@ -1,11 +1,78 @@
 $(document).ready(function(){
+    var themeDOM;
+
+    chrome.storage.sync.get([YTT_CONFIG_THEME], function (config){
+        console.log(config);
+        function setTheme(theme) {
+            if(themeDOM){
+                themeDOM.remove();
+            }
+            themeDOM = $('<link rel="stylesheet" href="css/themes/' + theme + '.css">');
+            themeDOM.appendTo('head');
+        }
+
+        function setSelected(theme) {
+            $('#darkTheme').prop('selected', false);
+            $('#clearTheme').prop('selected', false);
+            $('#' + theme).prop('selected', true);
+        }
+
+        switch(config[YTT_CONFIG_THEME])
+        {
+            case 'clear':
+                setTheme('clear');
+                setSelected('clearTheme');
+                break;
+            case 'dark':
+            default:
+                setTheme('dark');
+                setSelected('darkTheme');
+
+        }
+
+        $('#themeSelect').change(function(){
+            var theme = $('#themeSelect').find(":selected").val();
+            // setTheme(theme);
+            var newConfig = {};
+            newConfig[YTT_CONFIG_THEME] = theme;
+            chrome.storage.sync.set(newConfig, function(){
+                location.reload();
+            });
+        });
+    });
+
     //Resize chart to fit height
     var chartHolder = document.getElementById('chartHolder');
     var chartdiv = document.getElementById('chartdiv');
     new ResizeSensor(chartHolder, function(){chartdiv.style.height = '' + chartHolder.clientHeight + 'px';});
 
+    function getChartColors(theme){
+        switch(theme)
+        {
+            case 'clear':
+                return {
+                    theme: 'light',
+                    selectedBackgroundColor: '#EFEFEF',
+                    gridColor: '#FFFFFF',
+                    color: '#FFFFFF',
+                    backgroundColor: '#D4D4D4'
+                };
+            case 'dark':
+            default:
+                return {
+                    theme: 'dark',
+                    selectedBackgroundColor: '#444444',
+                    gridColor: '#999999',
+                    color: '#111111',
+                    backgroundColor: '#666666'
+                };
+        }
+    }
+
     AmCharts.ready(function(){
         chrome.storage.sync.get(null, function (config){
+            var chartColors = getChartColors(config[YTT_CONFIG_THEME]);
+
             //Get days from config
             const parsedConfig = {};
             var minDate = '19999';
@@ -78,7 +145,7 @@ $(document).ready(function(){
 
             var chart = AmCharts.makeChart(chartdiv, {
                 type: 'serial',
-                theme: 'light',
+                theme: chartColors['theme'],
                 startDuration: 0.6,
                 legend: {
                     equalWidths: false,
@@ -193,7 +260,11 @@ $(document).ready(function(){
                     listeners: [{
                         event: 'zoomed',
                         method: onChartZoomed
-                    }]
+                    }],
+                    selectedBackgroundColor: chartColors['selectedBackgroundColor'],
+                    gridColor: chartColors['gridColor'],
+                    color: chartColors['color'],
+                    backgroundColor: chartColors['backgroundColor'],
                 },
                 chartCursor: {
                     categoryBalloonDateFormat: 'YYYY-MM-DD',

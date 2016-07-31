@@ -4,6 +4,7 @@ const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
 const YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
 const YTT_CONFIG_REAL_TIME_KEY = 'YTT_RealTime';
 const YTT_CONFIG_DEBUG_KEY = 'YTT_Debug';
+const YTT_CONFIG_THEME = 'YTTTheme';
 const YTT_MESSAGE_TYPE_KEY = 'type';
 const YTT_MESSAGE_VALUE_KEY = 'value';
 const YTT_LOG_EVENT = 'log';

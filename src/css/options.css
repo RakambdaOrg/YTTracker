@@ -4,7 +4,6 @@ body{
 }
 
 body{
-    background: #BBBBBB;
     text-align: center;
     margin: auto;
 }
@@ -31,13 +30,18 @@ header>ul>li{
     float: left;
 }
 
-.leftnav{
+.rightNav {
     float: right!important;
+}
+
+select{
+    background-color: #AAAAAA;
+    border-color: #CCCCCC;
 }
 
 header>ul>li>a{
     display: block;
-    color: white;
+    color: #CCCCCC;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
@@ -79,7 +83,6 @@ header>ul>li>a:hover{
     margin-right: 5px;
     padding-left: 5px;
     padding-right: 5px;
-    background-color: #CCCCCC;
     border-style: none;
     border-radius: 5px;
 }
