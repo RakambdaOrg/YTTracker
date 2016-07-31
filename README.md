@@ -1,4 +1,4 @@
-# YTTracker [![GitHub issues](https://img.shields.io/github/issues/mrcraftcod/yttracker.svg)](https://github.com/mrcraftcod/yttracker/issues)[![GitHub issues](https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20)](https://github.com/mrcraftcod/yttracker/releases)
+# YTTracker [![Build Status](https://travis-ci.org/MrCraftCod/YTTracker.svg?branch=master)](https://travis-ci.org/MrCraftCod/YTTracker) [![GitHub issues](https://img.shields.io/github/issues/mrcraftcod/yttracker.svg)](https://github.com/mrcraftcod/yttracker/issues)[![GitHub issues](https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20)](https://github.com/mrcraftcod/yttracker/releases)
 A Chrome extension to track time on YouTube
 
 ## Description
