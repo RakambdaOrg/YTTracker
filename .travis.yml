@@ -5,10 +5,6 @@ notifications:
   email: true
   on_success: always
   on_failure: always
-branches:
-  only:
-    - master
-    - develop
 deploy:
   provider: script
   script: npm run release
