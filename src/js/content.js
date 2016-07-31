@@ -1,5 +1,4 @@
-function YTTGetChangeState()
-{
+function YTTGetChangeState() {
     var values = $('#' + YTT_DOM_PLAYER_STATE).text().split(YTT_DOM_SPLITTER);
     var event = {};
     event[YTT_STATE_EVENT_STATE_KEY] = values[0];
@@ -7,8 +6,7 @@ function YTTGetChangeState()
     YTTMessage(YTT_STATE_EVENT, event);
 }
 
-function YTTGetChangeInfos()
-{
+function YTTGetChangeInfos() {
     var values = $('#' + YTT_DOM_PLAYER_INFOS).text().split(YTT_DOM_SPLITTER);
     var event = {};
     event[YTT_DURATION_EVENT_ID_KEY] = values[0];
@@ -19,7 +17,7 @@ function YTTGetChangeInfos()
 /**
  * @return {string}
  */
-function YTTGetInjectDiv(id, def){
+function YTTGetInjectDiv(id, def) {
     return '<div id="' + id + '" style="display: none;">' + def + '</div>'
 }
 
@@ -30,7 +28,7 @@ function injectCode() {
     body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_1, 0));
     body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_2, 0));
 
-    $(window).on('beforeunload', function(){
+    $(window).on('beforeunload', function () {
         var event = {};
         event[YTT_STATE_EVENT_STATE_KEY] = 2;
         event[YTT_STATE_EVENT_TIME_KEY] = $('#' + YTT_DOM_PLAYER_TIME_2).text();

@@ -1,7 +1,7 @@
-$(document).ready(function(){
-    if(YTT_DEBUG)$("#resettoday").show();
+$(document).ready(function () {
+    if (YTT_DEBUG)$("#resettoday").show();
 
-    $("#reset").click(function(){
+    $("#reset").click(function () {
         var resetConfig = {};
         resetConfig[YTT_CONFIG_TOTAL_TIME_KEY] = null;
         resetConfig[YTT_CONFIG_REAL_TIME_KEY] = null;
@@ -12,7 +12,7 @@ $(document).ready(function(){
         showValue();
     });
 
-    $("#resettoday").click(function(){
+    $("#resettoday").click(function () {
         var resetConfig = {};
         resetConfig[YTTGetTotalDayConfigKey()] = null;
         resetConfig[YTTGetRealDayConfigKey()] = null;
@@ -21,7 +21,7 @@ $(document).ready(function(){
         showValue();
     });
 
-    $('#openoptions').click(function(){
+    $('#openoptions').click(function () {
         if (chrome.runtime.openOptionsPage) {
             chrome.runtime.openOptionsPage();
         } else {
@@ -38,15 +38,19 @@ $(document).ready(function(){
     showValue();
 });
 
-function addTooltip(id, text){
-    $('#' + id).tipsy({gravity: 'n', html: true, title: function(){return text}});
+function addTooltip(id, text) {
+    $('#' + id).tipsy({
+        gravity: 'n', html: true, title: function () {
+            return text
+        }
+    });
 }
 
-function showValue(){
+function showValue() {
     YTTLog('UPDATING PRINTED VALUE');
     var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
     var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TOTAL_TODAY_KEY, REAL_TODAY_KEY], function (result){
+    chrome.storage.sync.get([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TOTAL_TODAY_KEY, REAL_TODAY_KEY], function (result) {
         $("#duration").text(YTTGetDurationString(result[YTT_CONFIG_TOTAL_TIME_KEY]));
         $("#realduration").text(YTTGetDurationString(result[YTT_CONFIG_REAL_TIME_KEY]));
         $("#durationtoday").text(YTTGetDurationString(result[TOTAL_TODAY_KEY]));

@@ -1,14 +1,14 @@
 var YTTHooked = false;
 var YTTPlayer;
 
-function changeDOMTime(event){
-    if(event == 1)
+function changeDOMTime(event) {
+    if (event == 1)
         document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = event + YTT_DOM_SPLITTER + YTTGetPlayer().getCurrentTime();
     else
         document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = event + YTT_DOM_SPLITTER + document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML;
 }
 
-function changeDOMInfos(){
+function changeDOMInfos() {
     var event = {};
     event[YTT_DURATION_EVENT_ID_KEY] = YTTPlayer.getVideoData()['video_id'];
     event[YTT_DURATION_EVENT_DURATION_KEY] = YTTPlayer.getDuration();
@@ -16,19 +16,18 @@ function changeDOMInfos(){
 }
 
 function changeVideo() {
-    if(YTTGetPlayer().getVideoData && YTTGetPlayer().getVideoData()['video_id'] !== (document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML.split(YTT_DOM_SPLITTER)[0] || '') && YTTGetPlayer().getCurrentTime && YTTGetPlayer().getDuration) {
+    if (YTTGetPlayer().getVideoData && YTTGetPlayer().getVideoData()['video_id'] !== (document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML.split(YTT_DOM_SPLITTER)[0] || '') && YTTGetPlayer().getCurrentTime && YTTGetPlayer().getDuration) {
         changeDOMTime(-5);
         changeDOMInfos();
     }
 }
 
-function YTTGetPlayer(){
+function YTTGetPlayer() {
     return YTTPlayer;
 }
 
-function hookYTTPlayer(player)
-{
-    if(YTTHooked || typeof player !== 'object' || !(player.getCurrentTime || player.getVideoData || player.getDuration || player.getPlayerState))
+function hookYTTPlayer(player) {
+    if (YTTHooked || typeof player !== 'object' || !(player.getCurrentTime || player.getVideoData || player.getDuration || player.getPlayerState))
         return false;
     YTTLog("Player hooked");
     YTTHooked = true;
