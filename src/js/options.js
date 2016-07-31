@@ -2,7 +2,6 @@ $(document).ready(function(){
     var themeDOM;
 
     chrome.storage.sync.get([YTT_CONFIG_THEME], function (config){
-        console.log(config);
         function setTheme(theme) {
             if(themeDOM){
                 themeDOM.remove();
