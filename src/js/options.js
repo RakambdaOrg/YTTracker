@@ -171,6 +171,7 @@ $(document).ready(function () {
                         dashLength: 5,
                         above: false,
                         label: 'Opened avg.',
+                        position: 'left',
                         lineThickness: 2,
                         inside: true
                     }, {
@@ -178,13 +179,14 @@ $(document).ready(function () {
                         dashLength: 5,
                         above: false,
                         label: 'Watched avg.',
+                        position: 'left',
                         lineThickness: 2,
                         inside: true
                     }],
                     axisAlpha: 0.5,
                     gridAlpha: 0.2,
                     inside: false,
-                    position: 'left',
+                    position: 'right',
                     title: 'Duration',
                     labelFrequency: 2,
                     labelFunction: function (value) {
