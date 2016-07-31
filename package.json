@@ -14,7 +14,7 @@
   "scripts": {
     "zip": "zip -r extension.zip src/",
     "release": "npm run zip && webstore upload --file extension.zip --extension-id 'knnlnielflnfhdohmihofhdelgahgjdb' --auto-publish",
-    "test": "xo"
+    "test": "xo src/*.js"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^0.2.0",
