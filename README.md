@@ -7,8 +7,7 @@
     <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg"/></a>
     <a alt="GitHub Release" href="https://github.com/mrcraftcod/yttracker/releases"><img alt="GitHub Release" src="https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20"/></a>
 </p>
-
-A Chrome extension to track time on YouTube
+<h2 align="center">A Chrome extension to track time on YouTube</h2>
 
 ## Description
 Two kind of time are recorded:
