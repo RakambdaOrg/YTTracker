@@ -1,5 +1,5 @@
 <p align="center>
-    <img alt="YTTracker logo" src="https://raw.githubusercontent.com/MrCraftCod/YTTracker/master/Extras/timer.svg"/>
+    <img alt="YTTracker logo" src="https://raw.githubusercontent.com/MrCraftCod/YTTracker/develop/Extras/timer.svg"/>
 </p>
 
 # YTTracker [![Build Status](https://travis-ci.org/MrCraftCod/YTTracker.svg?branch=master)](https://travis-ci.org/MrCraftCod/YTTracker) [![GitHub issues](https://img.shields.io/github/issues/mrcraftcod/yttracker.svg)](https://github.com/mrcraftcod/yttracker/issues) [![GitHub Release](https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20)](https://github.com/mrcraftcod/yttracker/releases)
