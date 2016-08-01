@@ -12,14 +12,14 @@ $(document).ready(function () {
 
         function setSelected(theme) {
             $('#darkTheme').prop('selected', false);
-            $('#clearTheme').prop('selected', false);
+            $('#lightTheme').prop('selected', false);
             $('#' + theme).prop('selected', true);
         }
 
         switch (config[YTT_CONFIG_THEME]) {
-            case 'clear':
-                setTheme('clear');
-                setSelected('clearTheme');
+            case 'light':
+                setTheme('light');
+                setSelected('lightTheme');
                 break;
             case 'dark':
             default:
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
     function getChartColors(theme) {
         switch (theme) {
-            case 'clear':
+            case 'light':
                 return {
                     theme: 'light',
                     selectedBackgroundColor: '#EFEFEF',
