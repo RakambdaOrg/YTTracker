@@ -13,7 +13,7 @@
   },
   "scripts": {
     "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
-    "release": "npm run zip && webstore upload --source extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "release": "npm run zip && webstore upload --file extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
     "test": "xo src/*.js"
   },
   "devDependencies": {
