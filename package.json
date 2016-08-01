@@ -12,8 +12,8 @@
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
-    "zip": "zip -r extension.zip src/",
-    "release": "npm run zip && webstore upload --file extension.zip --extension-id 'knnlnielflnfhdohmihofhdelgahgjdb' --auto-publish",
+    "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
+    "release": "npm run zip && webstore upload --file extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
     "test": "xo src/*.js"
   },
   "devDependencies": {
