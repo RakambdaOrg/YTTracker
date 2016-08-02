@@ -4,7 +4,6 @@ node_js:
 sudo: true
 notifications:
   email: true
-  on_success: always
   on_failure: always
 deploy:
   provider: script
