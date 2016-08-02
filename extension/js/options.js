@@ -53,7 +53,8 @@ $(document).ready(function () {
                     selectedBackgroundColor: '#EFEFEF',
                     gridColor: '#FFFFFF',
                     color: '#FFFFFF',
-                    backgroundColor: '#D4D4D4'
+                    backgroundColor: '#D4D4D4',
+                    labelColor: '#222222'
                 };
             case 'dark':
             default:
@@ -62,7 +63,8 @@ $(document).ready(function () {
                     selectedBackgroundColor: '#444444',
                     gridColor: '#999999',
                     color: '#111111',
-                    backgroundColor: '#666666'
+                    backgroundColor: '#666666',
+                    labelColor: '#DEDEDE'
                 };
         }
     }
@@ -186,6 +188,7 @@ $(document).ready(function () {
                     axisAlpha: 0.5,
                     gridAlpha: 0.2,
                     inside: true,
+                    color: chartColors['labelColor'],
                     position: 'right',
                     title: 'Duration',
                     labelFrequency: 2,
