@@ -185,7 +185,7 @@ $(document).ready(function () {
                     }],
                     axisAlpha: 0.5,
                     gridAlpha: 0.2,
-                    inside: false,
+                    inside: true,
                     position: 'right',
                     title: 'Duration',
                     labelFrequency: 2,
