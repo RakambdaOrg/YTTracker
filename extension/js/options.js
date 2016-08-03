@@ -64,7 +64,7 @@ $(document).ready(function () {
                     gridColor: '#999999',
                     color: '#111111',
                     backgroundColor: '#666666',
-                    labelColor: '#DEDEDE'
+                    labelColor: '#000000'
                 };
         }
     }
