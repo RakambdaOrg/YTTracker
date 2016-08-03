@@ -5,3 +5,7 @@ body{
 .infosHolder>p{
     background-color: #CCCCCC;
 }
+
+footer a, footer a:visited{
+    background-color: #999999;
+}
