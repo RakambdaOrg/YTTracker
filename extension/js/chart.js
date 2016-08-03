@@ -55,7 +55,7 @@ $(document).ready(function () {
 
     AmCharts.ready(function () {
         chrome.storage.sync.get(null, function (config) {
-            var chartColors = getChartColors(config[YTT_CONFIG_THEME], config[YTT_CONFIG_HANDDRAWN] !== 'true');
+            var chartColors = getChartColors(config[YTT_CONFIG_THEME], config[YTT_CONFIG_HANDDRAWN] === 'true');
 
             //Get days from config
             const parsedConfig = {};
