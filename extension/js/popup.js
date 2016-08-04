@@ -29,10 +29,10 @@ $(document).ready(function () {
         }
     });
 
-    addTooltip('textrealdurationtoday', 'Time of playing videos today');
-    addTooltip('texttotaldurationtoday', 'Time of new videos watched today');
-    addTooltip('textrealduration', 'Time of playing videos');
-    addTooltip('texttotalduration', 'Time of new videos');
+    addTooltip('textrealdurationtoday', 'Time of videos in the "playing state" today');
+    addTooltip('texttotaldurationtoday', 'Time of video pages opened today');
+    addTooltip('textrealduration', 'Time of videos in the "playing state"');
+    addTooltip('texttotalduration', 'Time of video pages opened');
     addTooltip('textsince', 'Date since the first record');
 
     showValue();
