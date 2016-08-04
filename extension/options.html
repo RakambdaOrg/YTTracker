@@ -4,27 +4,29 @@
     <meta charset="UTF-8">
     <title>YTTracker settings</title>
     <link rel="stylesheet" href="css/options.css">
+    <link rel="stylesheet" href="css/tipsy.css">
     <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="js/lib/Tipsy/jquery.tipsy.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
 </head>
 <body>
     <ul class="options">
-        <li>
-            <div class="option">
-                Theme:
+        <li class="option" id="optionTheme">
+            <div>
+                <span class="optionDesc">Theme:</span>
                 <select title="Theme" id="themeSelect">
                     <option value="dark" id="darkTheme" selected>Dark</option>
                     <option value="light" id="lightTheme">Light</option>
                 </select>
             </div>
         </li>
-        <li>
-            <div class="option">
-                Chart hand drawn:
+        <li class="option" id="optionHandDrawn">
+            <div>
+                <span class="optionDesc">Chart hand drawn:</span>
                 <select title="Chart hand drawn" id="handDrawnSelect">
-                    <option value="true" id="handDrawnTrue">True</option>
-                    <option value="false" id="handDrawnFalse" selected>False</option>
+                    <option value="true" id="handDrawnTrue">Yes</option>
+                    <option value="false" id="handDrawnFalse" selected>No</option>
                 </select>
             </div>
         </li>

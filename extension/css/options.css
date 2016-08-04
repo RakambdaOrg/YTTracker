@@ -2,7 +2,12 @@ ul {
     list-style-type: none;
 }
 
+li{
+    margin-bottom: 25px;
+}
+
 footer {
+    margin-top: 30px;
     color: black;
     font-size: 2em;
     text-align: center;
@@ -20,4 +25,5 @@ footer a, footer a:visited {
 
 .option {
     font-size: 1.3em;
+    text-align: center;
 }

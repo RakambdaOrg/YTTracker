@@ -1,6 +1,17 @@
 $(document).ready(function () {
     var themeDOM;
 
+    function addTooltip(id, text) {
+        $('#' + id + '>div>.optionDesc').tipsy({
+            gravity: 'n', html: true, title: function () {
+                return text;
+            }
+        });
+    }
+
+    addTooltip('optionHandDrawn', 'Draw the chart lines with an hand drawn style');
+    addTooltip('optionTheme', 'Choose the theme to apply');
+
     chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN], function (config) {
         function setTheme(theme) {
             if (themeDOM) {

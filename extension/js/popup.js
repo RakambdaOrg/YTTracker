@@ -39,9 +39,9 @@ $(document).ready(function () {
 });
 
 function addTooltip(id, text) {
-    $('#' + id).tipsy({
+    $('#' + id + '>').tipsy({
         gravity: 'n', html: true, title: function () {
-            return text
+            return text;
         }
     });
 }
