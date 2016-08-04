@@ -3,33 +3,15 @@ $(document).ready(function () {
         YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
     });
 
-    if (YTT_DEBUG)$("#resettoday").show();
-
-    $("#reset").click(function () {
-        var resetConfig = {};
-        resetConfig[YTT_CONFIG_TOTAL_TIME_KEY] = null;
-        resetConfig[YTT_CONFIG_REAL_TIME_KEY] = null;
-        resetConfig[YTT_CONFIG_START_TIME_KEY] = null;
-        resetConfig[YTT_CONFIG_IDS_WATCHED_KEY] = null;
-        chrome.storage.sync.set(resetConfig);
-        YTTLog('RESETED TOTAL STATS');
-        showValue();
-    });
-
-    $("#resettoday").click(function () {
-        var resetConfig = {};
-        resetConfig[YTTGetTotalDayConfigKey()] = null;
-        resetConfig[YTTGetRealDayConfigKey()] = null;
-        chrome.storage.sync.set(resetConfig);
-        YTTLog('RESETED TODAY STATS');
-        showValue();
-    });
-
     $('#openoptions').click(function () {
+        window.open(chrome.runtime.getURL('options.html'));
+    });
+
+    $('#openchart').click(function () {
         if (chrome.runtime.openOptionsPage) {
             chrome.runtime.openOptionsPage();
         } else {
-            window.open(chrome.runtime.getURL('options.html'));
+            window.open(chrome.runtime.getURL('chart.html'));
         }
     });
 
