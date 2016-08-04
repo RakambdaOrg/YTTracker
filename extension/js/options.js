@@ -10,7 +10,7 @@ $(document).ready(function () {
     }
 
     addTooltip('optionHandDrawn', 'Draw the chart lines with an hand drawn style');
-    addTooltip('optionTheme', 'Choose the theme to apply');
+    addTooltip('optionTheme', 'Choose the theme to apply<hr/><div align="center">Dark:<img style="width:100%;" src="https://raw.githubusercontent.com/MrCraftCod/YTTracker/master/extras/screenshots/chartDark.png"/></div><br/><div align="center">Light:<img style="width:100%;" src="https://raw.githubusercontent.com/MrCraftCod/YTTracker/master/extras/screenshots/chartLight.png"/></div>');
 
     chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN], function (config) {
         function setTheme(theme) {
