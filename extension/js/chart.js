@@ -1,25 +1,4 @@
 $(document).ready(function () {
-    var themeDOM;
-
-    chrome.storage.sync.get([YTT_CONFIG_THEME], function (config) {
-        function setTheme(theme) {
-            if (themeDOM) {
-                themeDOM.remove();
-            }
-            themeDOM = $('<link rel="stylesheet" href="css/themes/' + theme + '.css">');
-            themeDOM.appendTo('head');
-        }
-
-        switch (config[YTT_CONFIG_THEME]) {
-            case 'light':
-                setTheme('light');
-                break;
-            case 'dark':
-            default:
-                setTheme('dark');
-        }
-    });
-
     //Resize chart to fit height
     var chartHolder = document.getElementById('chartHolder');
     var chartdiv = document.getElementById('chartdiv');
@@ -55,6 +34,7 @@ $(document).ready(function () {
 
     AmCharts.ready(function () {
         chrome.storage.sync.get(null, function (config) {
+            YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
             var chartColors = getChartColors(config[YTT_CONFIG_THEME], config[YTT_CONFIG_HANDDRAWN] === 'true');
 
             //Get days from config
@@ -397,13 +377,6 @@ $(document).ready(function () {
             }
 
             //Add interactions
-            $('#exportButton').click(function () {
-                chrome.downloads.download({
-                    url: 'data:application/json;base64,' + btoa(JSON.stringify(parsedConfig)),
-                    filename: 'YTTExport.json'
-                });
-            });
-
             $('#exportJPGButton').click(function () {
                 chart.export.capture({}, function () {
                     this.toJPG({}, function (base64) {
@@ -423,40 +396,6 @@ $(document).ready(function () {
                         });
                     });
                 });
-            });
-
-
-            $('#importButton').change(function (event) {
-                var file = event.target.files[0];
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function (reader) {
-                        var importData = function (data) {
-                            var dataObject;
-                            try {
-                                dataObject = JSON.parse(data);
-                            }
-                            catch (err) {
-                                alert("Corrupted file!");
-                                return;
-                            }
-                            if (!confirm("Be careful, if a day is already saved, it will be replaced by the one in the imported file!\nAre you sure to continue?")) {
-                                return;
-                            }
-                            var config = {};
-                            for (var key in dataObject) {
-                                if (dataObject.hasOwnProperty(key)) {
-                                    config['day' + key + 'R'] = dataObject[key]['R'];
-                                    config['day' + key + 'T'] = dataObject[key]['T'];
-                                }
-                            }
-                            chrome.storage.sync.set(config);
-                            location.reload();
-                        };
-                        importData(reader.target.result);
-                    };
-                    reader.readAsText(file);
-                }
             });
 
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');

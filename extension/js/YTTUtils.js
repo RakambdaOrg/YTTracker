@@ -22,6 +22,31 @@ const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 const YTT_DOM_SPLITTER = '@';
 
+function YTTApplyThemeCSS(theme)
+{
+    if(!theme){
+        theme = 'dark';
+    }
+    var themeDOM = $('#YTTTheme');
+
+    function setTheme(theme) {
+        if (themeDOM) {
+            themeDOM.remove();
+        }
+        themeDOM = $('<link id="YTTTheme" rel="stylesheet" href="css/themes/' + theme + '.css">');
+        themeDOM.appendTo('head');
+    }
+
+    switch (theme) {
+        case 'light':
+            setTheme('light');
+            break;
+        case 'dark':
+        default:
+            setTheme('dark');
+    }
+}
+
 Date.prototype.isLeapYear = function () {
     var year = this.getFullYear();
     if ((year & 3) != 0) return false;

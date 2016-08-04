@@ -1,38 +1,24 @@
 $(document).ready(function () {
-    if (YTT_DEBUG)$("#resettoday").show();
-
-    $("#reset").click(function () {
-        var resetConfig = {};
-        resetConfig[YTT_CONFIG_TOTAL_TIME_KEY] = null;
-        resetConfig[YTT_CONFIG_REAL_TIME_KEY] = null;
-        resetConfig[YTT_CONFIG_START_TIME_KEY] = null;
-        resetConfig[YTT_CONFIG_IDS_WATCHED_KEY] = null;
-        chrome.storage.sync.set(resetConfig);
-        YTTLog('RESETED TOTAL STATS');
-        showValue();
-    });
-
-    $("#resettoday").click(function () {
-        var resetConfig = {};
-        resetConfig[YTTGetTotalDayConfigKey()] = null;
-        resetConfig[YTTGetRealDayConfigKey()] = null;
-        chrome.storage.sync.set(resetConfig);
-        YTTLog('RESETED TODAY STATS');
-        showValue();
+    chrome.storage.sync.get(YTT_CONFIG_THEME, function(config){
+        YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
     });
 
     $('#openoptions').click(function () {
+        window.open(chrome.runtime.getURL('options.html'));
+    });
+
+    $('#openchart').click(function () {
         if (chrome.runtime.openOptionsPage) {
             chrome.runtime.openOptionsPage();
         } else {
-            window.open(chrome.runtime.getURL('options.html'));
+            window.open(chrome.runtime.getURL('chart.html'));
         }
     });
 
-    addTooltip('textrealdurationtoday', 'Time of playing videos today');
-    addTooltip('texttotaldurationtoday', 'Time of new videos watched today');
-    addTooltip('textrealduration', 'Time of playing videos');
-    addTooltip('texttotalduration', 'Time of new videos');
+    addTooltip('textrealdurationtoday', 'Time of videos in the "playing state" today');
+    addTooltip('texttotaldurationtoday', 'Time of video pages opened today');
+    addTooltip('textrealduration', 'Time of videos in the "playing state"');
+    addTooltip('texttotalduration', 'Time of video pages opened');
     addTooltip('textsince', 'Date since the first record');
 
     showValue();
@@ -41,7 +27,7 @@ $(document).ready(function () {
 function addTooltip(id, text) {
     $('#' + id).tipsy({
         gravity: 'n', html: true, title: function () {
-            return text
+            return text;
         }
     });
 }

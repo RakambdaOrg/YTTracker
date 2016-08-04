@@ -2,8 +2,14 @@ body{
     background: #777777;
 }
 
-.infosHolder>p{
-    background-color: #999999;
+.infosHolder>p,
+button,
+select{
+    background-color: #ABABAB;
+}
+
+hr {
+    border-color: #BBBBBB;
 }
 
 footer a, footer a:visited{

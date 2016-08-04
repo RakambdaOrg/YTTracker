@@ -2,8 +2,10 @@ body{
     background: #BBBBBB;
 }
 
-.infosHolder>p{
-    background-color: #CCCCCC;
+.infosHolder>p,
+button,
+select{
+    background-color: #DFDFDF;
 }
 
 footer a, footer a:visited{

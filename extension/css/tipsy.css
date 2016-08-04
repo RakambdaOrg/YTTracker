@@ -8,7 +8,7 @@
 .tipsy-inner {
     background-color: #000;
     color: #FFF;
-    max-width: 200px;
+    max-width: 500px;
     padding: 5px 8px 4px 8px;
     text-align: center;
 }
@@ -20,8 +20,8 @@
     -webkit-border-radius: 3px;
 }
 
-/* Uncomment for shadow */
-/*.tipsy-inner { box-shadow: 0 0 5px #000000; -webkit-box-shadow: 0 0 5px #000000; -moz-box-shadow: 0 0 5px #000000; }*/
+ /*Uncomment for shadow*/
+.tipsy-inner { box-shadow: 0 0 5px #000000; -webkit-box-shadow: 0 0 5px #000000; -moz-box-shadow: 0 0 5px #000000; }
 
 .tipsy-arrow {
     position: absolute;
@@ -49,7 +49,7 @@
 }
 
 .tipsy-n .tipsy-arrow {
-    top: 0px;
+    top: 0;
     left: 50%;
     margin-left: -5px;
     border-bottom-style: solid;

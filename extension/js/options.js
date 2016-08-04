@@ -1,15 +1,67 @@
 $(document).ready(function () {
-    var themeDOM;
+    function addTooltip(id, text) {
+        $('#' + id + '>div>.optionDesc').tipsy({
+            gravity: 'n', html: true, title: function () {
+                return text;
+            }
+        });
+    }
+
+    addTooltip('optionHandDrawn', 'Draw the chart lines with an hand drawn style');
+    addTooltip('optionTheme', 'Choose the theme to apply<hr/><div align="center">Dark:<img style="width:100%;" src="https://raw.githubusercontent.com/MrCraftCod/YTTracker/master/extras/screenshots/chartDark.png"/></div><br/><div align="center">Light:<img style="width:100%;" src="https://raw.githubusercontent.com/MrCraftCod/YTTracker/master/extras/screenshots/chartLight.png"/></div>');
+    addTooltip('optionExport', 'Export your datas in a JSON file that you can download');
+    addTooltip('optionImport', 'Import a JSON file (!! HIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
+    addTooltip('optionReset', 'Reset all your current data (!! THIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
+
+    $('#backButton').click(function(){
+        document.location. href = 'chart.html';
+    });
+
+    $('#exportButton').click(function () {
+        chrome.storage.sync.get(null, function(config){
+            chrome.downloads.download({
+                url: 'data:application/json;base64,' + btoa(JSON.stringify(config)),
+                filename: 'YTTExport.json'
+            });
+        });
+    });
+
+    $('#importInput').change(function (event) {
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (reader) {
+                var importData = function (data) {
+                    var dataObject;
+                    try {
+                        dataObject = JSON.parse(data);
+                    }
+                    catch (err) {
+                        alert("Corrupted file!");
+                        return;
+                    }
+                    if (!confirm("This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?")) {
+                        return;
+                    }
+                    chrome.storage.sync.set(dataObject);
+                    location.reload();
+                };
+                importData(reader.target.result);
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    $('#resetButton').click(function () {
+        if (!confirm("This action will wipe all your data!\nAre you sure to continue?")) {
+            return;
+        }
+        chrome.storage.sync.clear(function () {
+            location.reload();
+        });
+    });
 
     chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN], function (config) {
-        function setTheme(theme) {
-            if (themeDOM) {
-                themeDOM.remove();
-            }
-            themeDOM = $('<link rel="stylesheet" href="css/themes/' + theme + '.css">');
-            themeDOM.appendTo('head');
-        }
-
         function setSelectedTheme(theme) {
             $('#darkTheme').prop('selected', false);
             $('#lightTheme').prop('selected', false);
@@ -22,14 +74,14 @@ $(document).ready(function () {
             $('#handDrawn' + state.charAt(0).toUpperCase() + state.slice(1)).prop('selected', true);
         }
 
+        YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
+
         switch (config[YTT_CONFIG_THEME]) {
             case 'light':
-                setTheme('light');
                 setSelectedTheme('lightTheme');
                 break;
             case 'dark':
             default:
-                setTheme('dark');
                 setSelectedTheme('darkTheme');
         }
 
@@ -44,7 +96,7 @@ $(document).ready(function () {
 
         $('#themeSelect').change(function () {
             var theme = $('#themeSelect').find(":selected").val();
-            setTheme(theme);
+            YTTApplyThemeCSS(theme);
             var newConfig = {};
             newConfig[YTT_CONFIG_THEME] = theme;
             chrome.storage.sync.set(newConfig);

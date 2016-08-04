@@ -40,5 +40,7 @@ JQuery tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy
 
 Moment JS - [https://github.com/moment/moment](https://github.com/moment/moment)
 
+Tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
+
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/MrCraftCod/YTTracker/issues).
