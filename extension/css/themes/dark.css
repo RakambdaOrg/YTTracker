@@ -2,7 +2,8 @@ body{
     background: #777777;
 }
 
-.infosHolder>p{
+.infosHolder>p,
+footer>button{
     background-color: #999999;
 }
 
