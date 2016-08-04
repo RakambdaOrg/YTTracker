@@ -4,7 +4,8 @@ ul {
 }
 
 li{
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 footer {
@@ -41,7 +42,7 @@ footer button{
     padding-left: 5px;
     padding-bottom: 1px;
     border-radius: 10px;
-    border: 1px solid;
+    /*border: 1px solid;*/
     color: black;
     text-decoration: none;
 }

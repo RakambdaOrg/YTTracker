@@ -3,8 +3,9 @@ body{
 }
 
 .infosHolder>p,
-footer>button{
-    background-color: #999999;
+button,
+select{
+    background-color: #ABABAB;
 }
 
 hr {
