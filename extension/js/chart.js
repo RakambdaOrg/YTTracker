@@ -1,25 +1,4 @@
 $(document).ready(function () {
-    var themeDOM;
-
-    chrome.storage.sync.get([YTT_CONFIG_THEME], function (config) {
-        function setTheme(theme) {
-            if (themeDOM) {
-                themeDOM.remove();
-            }
-            themeDOM = $('<link rel="stylesheet" href="css/themes/' + theme + '.css">');
-            themeDOM.appendTo('head');
-        }
-
-        switch (config[YTT_CONFIG_THEME]) {
-            case 'light':
-                setTheme('light');
-                break;
-            case 'dark':
-            default:
-                setTheme('dark');
-        }
-    });
-
     //Resize chart to fit height
     var chartHolder = document.getElementById('chartHolder');
     var chartdiv = document.getElementById('chartdiv');
@@ -55,6 +34,7 @@ $(document).ready(function () {
 
     AmCharts.ready(function () {
         chrome.storage.sync.get(null, function (config) {
+            YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
             var chartColors = getChartColors(config[YTT_CONFIG_THEME], config[YTT_CONFIG_HANDDRAWN] === 'true');
 
             //Get days from config

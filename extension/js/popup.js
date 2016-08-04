@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    chrome.storage.sync.get(YTT_CONFIG_THEME, function(config){
+        YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
+    });
+
     if (YTT_DEBUG)$("#resettoday").show();
 
     $("#reset").click(function () {

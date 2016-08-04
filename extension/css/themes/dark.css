@@ -6,6 +6,10 @@ body{
     background-color: #999999;
 }
 
+hr {
+    border-color: #BBBBBB;
+}
+
 footer a, footer a:visited{
     background-color: #666666;
 }

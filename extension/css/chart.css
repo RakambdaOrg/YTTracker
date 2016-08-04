@@ -5,10 +5,6 @@ body {
     margin: auto;
 }
 
-hr {
-    border-color: #BBBBBB;
-}
-
 #chartHolder {
     width: 95%;
     height: 85%;
