@@ -11,3 +11,8 @@ select{
 footer a, footer a:visited{
     background-color: #999999;
 }
+
+
+.option:hover{
+    background-color: #BFBFBF;
+}
