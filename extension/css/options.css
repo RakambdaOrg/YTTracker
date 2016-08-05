@@ -4,36 +4,13 @@ ul {
 }
 
 li{
-    margin-bottom: 20px;
-    margin-top: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
 }
 
 footer {
-    margin-top: 30px;
     color: black;
     text-align: center;
-}
-
-.fileInput {
-    cursor: pointer;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 99;
-    font-size: 50px;
-    opacity: 0;
-    -moz-opacity: 0;
-    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0)
-}
-
-
-.inputWrapper {
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    text-decoration: none;
-    color: black;
 }
 
 footer button{
@@ -42,7 +19,6 @@ footer button{
     padding-left: 5px;
     padding-bottom: 1px;
     border-radius: 10px;
-    /*border: 1px solid;*/
     color: black;
     text-decoration: none;
 }
@@ -51,3 +27,8 @@ footer button{
     font-size: 1.3em;
     text-align: center;
 }
+
+.option{
+    border-radius: 10px;
+}
+

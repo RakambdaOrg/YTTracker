@@ -15,3 +15,7 @@ hr {
 footer a, footer a:visited{
     background-color: #666666;
 }
+
+.option:hover{
+    background-color: #6F6F6F;
+}

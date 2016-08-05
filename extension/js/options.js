@@ -26,7 +26,11 @@ $(document).ready(function () {
         });
     });
 
-    $('#importInput').change(function (event) {
+    $('#importButton').click(function(){
+       $('#importFileInput').click();
+    });
+
+    $('#importFileInput').change(function (event) {
         var file = event.target.files[0];
         if (file) {
             var reader = new FileReader();
