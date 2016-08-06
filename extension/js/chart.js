@@ -14,9 +14,10 @@ $(document).ready(function () {
                     selectedBackgroundColor: '#EFEFEF',
                     gridColor: '#FFFFFF',
                     color: '#FFFFFF',
-                    backgroundColor: '#D4D4D4',
+                    scrollBarBackgroundColor: '#D4D4D4',
                     labelColor: '#222222',
-                    handDrawn: handwritten
+                    handDrawn: handwritten,
+                    backgroundColor: '#BBBBBB'
                 };
             case 'dark':
             default:
@@ -25,9 +26,10 @@ $(document).ready(function () {
                     selectedBackgroundColor: '#444444',
                     gridColor: '#999999',
                     color: '#111111',
-                    backgroundColor: '#666666',
+                    scrollBarBackgroundColor: '#666666',
                     labelColor: '#000000',
-                    handDrawn: handwritten
+                    handDrawn: handwritten,
+                    backgroundColor: '#777777'
                 };
         }
     }
@@ -110,6 +112,9 @@ $(document).ready(function () {
             var chart = AmCharts.makeChart(chartdiv, {
                 type: 'serial',
                 theme: chartColors['theme'],
+                backgroundAlpha: 1,
+                backgroundColor: chartColors['backgroundColor'],
+                fillColors: chartColors['backgroundColor'],
                 startDuration: 0.6,
                 handDrawn: chartColors['handDrawn'],
                 legend: {
@@ -117,6 +122,9 @@ $(document).ready(function () {
                     useGraphSettings: true,
                     valueAlign: 'left',
                     valueWidth: 60,
+                    backgroundAlpha: 1,
+                    backgroundColor: chartColors['backgroundColor'],
+                    fillColors: chartColors['backgroundColor'],
                     valueFunction: function (graphDataItem) {
                         return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && graphDataItem.values.value ? (
                             graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' : YTTGetDurationString({hours: graphDataItem.values.value})
@@ -244,7 +252,7 @@ $(document).ready(function () {
                     selectedBackgroundColor: chartColors['selectedBackgroundColor'],
                     gridColor: chartColors['gridColor'],
                     color: chartColors['color'],
-                    backgroundColor: chartColors['backgroundColor'],
+                    backgroundColor: chartColors['scrollBarBackgroundColor']
                 },
                 chartCursor: {
                     categoryBalloonDateFormat: 'YYYY-MM-DD',
@@ -284,7 +292,11 @@ $(document).ready(function () {
                     gridColor: '#FFFFFF'
                 },
                 export: {
+                    backgroundColor: chartColors['backgroundColor'],
                     enabled: true,
+                    drawing: {
+                        enabled: false
+                    },
                     menu: []
                 },
                 responsive: {
