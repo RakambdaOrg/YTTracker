@@ -64,3 +64,10 @@ header > ul > li > a:hover {
     border-style: none;
     border-radius: 5px;
 }
+
+.bottomRight {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    text-align: right;
+}

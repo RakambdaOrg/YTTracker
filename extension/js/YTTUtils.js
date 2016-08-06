@@ -1,4 +1,5 @@
 var YTT_DEBUG = false;
+const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
 const YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';

@@ -2,6 +2,9 @@ language: node_js
 node_js:
 - node
 sudo: true
+cache:
+  directories:
+    - node_modules
 notifications:
   email: true
   on_failure: always
