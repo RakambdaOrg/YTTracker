@@ -30,7 +30,7 @@ Those times can then be viewed by the popup icon showing you them as text and in
 
 
 ## Libraries
-Amcharts - [www.amcharts.com](www.amcharts.com)
+Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
 
 CSS Element Queries - [https://github.com/marcj/css-element-queries](https://github.com/marcj/css-element-queries)
 
