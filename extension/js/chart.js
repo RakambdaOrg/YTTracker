@@ -405,6 +405,7 @@ $(document).ready(function () {
             chrome.storage.sync.get([REAL_TODAY_KEY], function (result) {
                 $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
             });
+            $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         });
     });
 });

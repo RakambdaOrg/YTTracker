@@ -1,6 +1,9 @@
 'use strict';
 
 var activePlayers = {};
+var configVersion = {};
+configVersion[YTT_CONFIG_VERSION] = chrome.app.getDetails().version;
+chrome.storage.sync.set(configVersion);
 
 function log(text) {
     if (YTT_DEBUG)

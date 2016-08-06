@@ -13,12 +13,12 @@ $(document).ready(function () {
     addTooltip('optionImport', 'Import a JSON file (!! HIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
     addTooltip('optionReset', 'Reset all your current data (!! THIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
 
-    $('#backButton').click(function(){
-        document.location. href = 'chart.html';
+    $('#backButton').click(function () {
+        document.location.href = 'chart.html';
     });
 
     $('#exportButton').click(function () {
-        chrome.storage.sync.get(null, function(config){
+        chrome.storage.sync.get(null, function (config) {
             chrome.downloads.download({
                 url: 'data:application/json;base64,' + btoa(JSON.stringify(config)),
                 filename: 'YTTExport.json'
@@ -26,8 +26,8 @@ $(document).ready(function () {
         });
     });
 
-    $('#importButton').click(function(){
-       $('#importFileInput').click();
+    $('#importButton').click(function () {
+        $('#importFileInput').click();
     });
 
     $('#importFileInput').change(function (event) {
@@ -65,7 +65,7 @@ $(document).ready(function () {
         });
     });
 
-    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN], function (config) {
+    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION], function (config) {
         function setSelectedTheme(theme) {
             $('#darkTheme').prop('selected', false);
             $('#lightTheme').prop('selected', false);
@@ -97,6 +97,8 @@ $(document).ready(function () {
             default:
                 setSelectedHandDrawn('false');
         }
+
+        $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
 
         $('#themeSelect').change(function () {
             var theme = $('#themeSelect').find(":selected").val();

@@ -32,3 +32,10 @@ footer button{
     border-radius: 10px;
 }
 
+.bottomRight {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    text-align: right;
+}
+
