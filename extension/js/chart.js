@@ -58,6 +58,9 @@ $(document).ready(function () {
                     }
                 }
             }
+            if (YTTCompareConfigDate(maxDate, YTTGetDayConfigKey(new Date()).substr(3)) > 0) {
+                maxDate = YTTGetDayConfigKey(new Date()).substr(3);
+            }
             //Add missing dates
             var current = minDate;
             var i = 0;
