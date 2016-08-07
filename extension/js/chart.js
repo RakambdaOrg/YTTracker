@@ -256,8 +256,8 @@ $(document).ready(function () {
                     }
                 }, {
                     bullet: 'circle',
-                    bulletAlpha: 0.75,
-                    bulletBorderAlpha: 0.85,
+                    bulletAlpha: 1,
+                    bulletBorderAlpha: 1,
                     bulletBorderThickness: 1,
                     dashLengthField: 'dashLength',
                     legendValueText: '[[value]]',
@@ -266,8 +266,8 @@ $(document).ready(function () {
                     valueField: 'count',
                     valueAxis: 'countAxis',
                     type: 'smoothedLine',
-                    lineThickness: 1,
-                    lineAlpha: 0.75,
+                    lineThickness: 2,
+                    lineAlpha: 1,
                     bulletSize: 2,
                     balloonFunction: function (graphDataItem) {
                         return 'Count<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + graphDataItem.values.value + '</span></b>';
@@ -378,8 +378,11 @@ $(document).ready(function () {
                 updateCurrentInfos(datas);
             }
 
-            function zoomChart() {
-                chart.zoomToIndexes(parsedConfigOrdered.length - 7, parsedConfigOrdered.length - 1);
+            function zoomChart(range) {
+                if(!range){
+                    range = 7;
+                }
+                chart.zoomToIndexes(parsedConfigOrdered.length - range, parsedConfigOrdered.length - 1);
                 var datas = [];
                 var raw = parsedConfigOrdered.slice(parsedConfigOrdered.length - 7, parsedConfigOrdered.length);
                 for (var key in raw) {
@@ -445,6 +448,9 @@ $(document).ready(function () {
                         });
                     });
                 });
+            });
+            $('#zoomWeekButton').click(function () {
+                zoomChart();
             });
 
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
