@@ -180,14 +180,19 @@ $(document).ready(function () {
                     //maximum: 1,
                     axisAlpha: 0,
                     gridAlpha: 0,
-                    guides: [{
-                        value: average['ratio'],
-                        dashLength: 3,
-                        above: false,
-                        label: '',
-                        lineThickness: 2,
-                        inside: true
-                    }],
+                    labelsEnabled: false,
+                    inside: false,
+                    position: 'left',
+                    title: '',
+                    labelFrequency: 2,
+                    labelFunction: function (value) {
+                        return value;
+                    }
+                }, {
+                    id: 'countAxis',
+                    minimum: 0,
+                    axisAlpha: 0,
+                    gridAlpha: 0,
                     labelsEnabled: false,
                     inside: false,
                     position: 'left',
@@ -246,6 +251,24 @@ $(document).ready(function () {
                     bulletSize: 2,
                     balloonFunction: function (graphDataItem) {
                         return 'Ratio<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + (100 * graphDataItem.values.value).toFixed(2) + '%' + '</span></b>';
+                    }
+                }, {
+                    bullet: 'circle',
+                    bulletAlpha: 0.75,
+                    bulletBorderAlpha: 0.85,
+                    bulletBorderThickness: 1,
+                    dashLengthField: 'dashLength',
+                    legendValueText: '[[value]]',
+                    title: '# Opened',
+                    fillAlphas: 0,
+                    valueField: 'count',
+                    valueAxis: 'countAxis',
+                    type: 'smoothedLine',
+                    lineThickness: 1,
+                    lineAlpha: 0.75,
+                    bulletSize: 2,
+                    balloonFunction: function (graphDataItem) {
+                        return '# Opened<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + graphDataItem.values.value + '</span></b>';
                     }
                 }],
                 chartScrollbar: {
@@ -332,7 +355,7 @@ $(document).ready(function () {
                 $('#averageRatioHolderSelect').text((100 * (totalRatio / datas.length)).toFixed(2) + '%');
                 $('#averageWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched / datas.length}));
                 $('#averageOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened / datas.length}));
-                $('#averageCountOpenedHolderSelect').text(average['count']);
+                $('#averageCountOpenedHolderSelect').text((countTotal / datas.length).toFixed(2));
                 $('#totalWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched}));
                 $('#totalOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened}));
                 $('#totalCountOpenedHolderSelect').text(countTotal);
@@ -369,6 +392,7 @@ $(document).ready(function () {
                         }
                         data['real'] = YTTGetDurationAsHours(dataRaw['R']);
                         data['total'] = YTTGetDurationAsHours(dataRaw['T']);
+                        data['count'] = dataRaw['C'];
                         datas.push(data);
                     }
                 }
@@ -391,7 +415,8 @@ $(document).ready(function () {
                             date: dateFromDay(config[key]['day']),
                             real: YTTGetDurationAsHours(config[key]['R']),
                             total: YTTGetDurationAsHours(config[key]['T']),
-                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T'])
+                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T']),
+                            count: config[key]['C'] || 0
                         });
                     }
                 }
@@ -423,8 +448,8 @@ $(document).ready(function () {
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
-            $('#watchedHolder').text(YTTGetDurationString(config[YTTGetRealDayConfigKey]));
-            $('#openedHolder').text(config[YTTGetCountDayConfigKey]  || 0);
+            $('#watchedHolder').text(YTTGetDurationString(config[YTTGetRealDayConfigKey()]));
+            $('#openedHolder').text(config[YTTGetCountDayConfigKey()]  || 0);
             $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         });
     });
