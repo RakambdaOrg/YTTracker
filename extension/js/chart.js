@@ -132,8 +132,10 @@ $(document).ready(function () {
                     backgroundColor: chartColors['backgroundColor'],
                     fillColors: chartColors['backgroundColor'],
                     valueFunction: function (graphDataItem) {
-                        return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && graphDataItem.values.value ? (
-                            graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' : YTTGetDurationString({hours: graphDataItem.values.value})
+                        return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && (graphDataItem.values.value || graphDataItem.values.value === 0) ? (
+                            graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' :
+                                graphDataItem.graph.valueField === 'count' ? graphDataItem.values.value :
+                                    YTTGetDurationString({hours: graphDataItem.values.value})
                         ) : '';
                     }
                 },
@@ -186,7 +188,7 @@ $(document).ready(function () {
                     title: '',
                     labelFrequency: 2,
                     labelFunction: function (value) {
-                        return value;
+                        return (100 * value).toFixed(2) + '%';
                     }
                 }, {
                     id: 'countAxis',
@@ -199,7 +201,7 @@ $(document).ready(function () {
                     title: '',
                     labelFrequency: 2,
                     labelFunction: function (value) {
-                        return (100 * value).toFixed(2) + '%';
+                        return value;
                     }
                 }],
                 graphs: [{
@@ -259,7 +261,7 @@ $(document).ready(function () {
                     bulletBorderThickness: 1,
                     dashLengthField: 'dashLength',
                     legendValueText: '[[value]]',
-                    title: '# Opened',
+                    title: 'Count',
                     fillAlphas: 0,
                     valueField: 'count',
                     valueAxis: 'countAxis',
@@ -268,7 +270,7 @@ $(document).ready(function () {
                     lineAlpha: 0.75,
                     bulletSize: 2,
                     balloonFunction: function (graphDataItem) {
-                        return '# Opened<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + graphDataItem.values.value + '</span></b>';
+                        return 'Count<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + graphDataItem.values.value + '</span></b>';
                     }
                 }],
                 chartScrollbar: {
@@ -355,10 +357,10 @@ $(document).ready(function () {
                 $('#averageRatioHolderSelect').text((100 * (totalRatio / datas.length)).toFixed(2) + '%');
                 $('#averageWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched / datas.length}));
                 $('#averageOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened / datas.length}));
-                $('#averageCountOpenedHolderSelect').text((countTotal / datas.length).toFixed(2));
+                $('#averageCountHolderSelect').text((countTotal / datas.length).toFixed(2));
                 $('#totalWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched}));
                 $('#totalOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened}));
-                $('#totalCountOpenedHolderSelect').text(countTotal);
+                $('#totalCountHolderSelect').text(countTotal);
             }
 
             function onChartZoomed(event) {
@@ -449,7 +451,7 @@ $(document).ready(function () {
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
             $('#watchedHolder').text(YTTGetDurationString(config[YTTGetRealDayConfigKey()]));
-            $('#openedHolder').text(config[YTTGetCountDayConfigKey()]  || 0);
+            $('#countHolder').text(config[YTTGetCountDayConfigKey()]  || 0);
             $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         });
     });
