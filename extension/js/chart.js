@@ -47,7 +47,7 @@ $(document).ready(function () {
                 if (config.hasOwnProperty(key) && key.substring(0, 3) == 'day') {
                     var day = key.substring(3, key.length - 1);
                     if (!parsedConfig[day]) {
-                        parsedConfig[day] = {R: 0, T: 0};
+                        parsedConfig[day] = {R: 0, T: 0, C: 0};
                     }
                     parsedConfig[day][key.substring(key.length - 1)] = config[key];
                     if (YTTCompareConfigDate(minDate, day) < 0) {
@@ -75,7 +75,7 @@ $(document).ready(function () {
                 i++;
                 current = getNextConfigDate(current);
                 if (!parsedConfig.hasOwnProperty(current)) {
-                    parsedConfig[current] = {R: 0, T: 0};
+                    parsedConfig[current] = {R: 0, T: 0, C: 0};
                 }
             }
             //Reorder dates
@@ -94,22 +94,25 @@ $(document).ready(function () {
             function getAverages(list) {
                 var totalR = 0;
                 var totalT = 0;
+                var totalC = 0;
                 var totalRatio = 0;
                 for (var key in list) {
                     if (list.hasOwnProperty(key)) {
                         totalR += YTTGetDurationAsMillisec({hours: list[key]['real']});
                         totalT += YTTGetDurationAsMillisec({hours: list[key]['total']});
+                        totalC += YTTGetDurationAsMillisec({hours: list[key]['count']});
                         totalRatio += list[key]['ratio'];
                     }
                 }
-                return {real: totalR / list.length, total: totalT / list.length, ratio: totalRatio / list.length};
+                return {real: totalR / list.length, total: totalT / list.length, ratio: totalRatio / list.length, count: totalC / list.length};
             }
 
             var avgs = getAverages(datas);
             var average = {
                 real: {milliseconds: avgs['real']},
                 total: {milliseconds: avgs['total']},
-                ratio: avgs['ratio']
+                ratio: avgs['ratio'],
+                count: avgs['count']
             };
 
             var chart = AmCharts.makeChart(chartdiv, {
@@ -314,21 +317,25 @@ $(document).ready(function () {
                 var totalRatio = 0;
                 var totalOpened = 0;
                 var totalWatched = 0;
+                var countTotal = 0;
                 for (var key in datas) {
                     if (datas.hasOwnProperty(key)) {
                         var data = datas[key];
                         days += 1;
-                        totalRatio += data['ratio'];
-                        totalWatched += data['real'];
-                        totalOpened += data['total'];
+                        totalRatio += data['ratio'] || 0;
+                        totalWatched += data['real'] || 0;
+                        totalOpened += data['total'] || 0;
+                        countTotal += data['count'] || 0;
                     }
                 }
                 $('#daysHolderSelect').text(days);
                 $('#averageRatioHolderSelect').text((100 * (totalRatio / datas.length)).toFixed(2) + '%');
                 $('#averageWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched / datas.length}));
                 $('#averageOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened / datas.length}));
+                $('#averageCountOpenedHolderSelect').text(average['count']);
                 $('#totalWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched}));
                 $('#totalOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened}));
+                $('#totalCountOpenedHolderSelect').text(countTotal);
             }
 
             function onChartZoomed(event) {
@@ -416,10 +423,8 @@ $(document).ready(function () {
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
-            var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
-            chrome.storage.sync.get([REAL_TODAY_KEY], function (result) {
-                $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
-            });
+            $('#watchedHolder').text(YTTGetDurationString(config[YTTGetRealDayConfigKey]));
+            $('#openedHolder').text(config[YTTGetCountDayConfigKey]  || 0);
             $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         });
     });
