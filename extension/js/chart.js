@@ -47,7 +47,7 @@ $(document).ready(function () {
                 if (config.hasOwnProperty(key) && key.substring(0, 3) == 'day') {
                     var day = key.substring(3, key.length - 1);
                     if (!parsedConfig[day]) {
-                        parsedConfig[day] = {R: 0, T: 0};
+                        parsedConfig[day] = {R: 0, T: 0, C: 0};
                     }
                     parsedConfig[day][key.substring(key.length - 1)] = config[key];
                     if (YTTCompareConfigDate(minDate, day) < 0) {
@@ -57,6 +57,9 @@ $(document).ready(function () {
                         maxDate = day;
                     }
                 }
+            }
+            if (YTTCompareConfigDate(maxDate, YTTGetDayConfigKey(new Date()).substr(3)) > 0) {
+                maxDate = YTTGetDayConfigKey(new Date()).substr(3);
             }
             //Add missing dates
             var current = minDate;
@@ -72,7 +75,7 @@ $(document).ready(function () {
                 i++;
                 current = getNextConfigDate(current);
                 if (!parsedConfig.hasOwnProperty(current)) {
-                    parsedConfig[current] = {R: 0, T: 0};
+                    parsedConfig[current] = {R: 0, T: 0, C: 0};
                 }
             }
             //Reorder dates
@@ -91,22 +94,25 @@ $(document).ready(function () {
             function getAverages(list) {
                 var totalR = 0;
                 var totalT = 0;
+                var totalC = 0;
                 var totalRatio = 0;
                 for (var key in list) {
                     if (list.hasOwnProperty(key)) {
                         totalR += YTTGetDurationAsMillisec({hours: list[key]['real']});
                         totalT += YTTGetDurationAsMillisec({hours: list[key]['total']});
+                        totalC += YTTGetDurationAsMillisec({hours: list[key]['count']});
                         totalRatio += list[key]['ratio'];
                     }
                 }
-                return {real: totalR / list.length, total: totalT / list.length, ratio: totalRatio / list.length};
+                return {real: totalR / list.length, total: totalT / list.length, ratio: totalRatio / list.length, count: totalC / list.length};
             }
 
             var avgs = getAverages(datas);
             var average = {
                 real: {milliseconds: avgs['real']},
                 total: {milliseconds: avgs['total']},
-                ratio: avgs['ratio']
+                ratio: avgs['ratio'],
+                count: avgs['count']
             };
 
             var chart = AmCharts.makeChart(chartdiv, {
@@ -126,8 +132,10 @@ $(document).ready(function () {
                     backgroundColor: chartColors['backgroundColor'],
                     fillColors: chartColors['backgroundColor'],
                     valueFunction: function (graphDataItem) {
-                        return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && graphDataItem.values.value ? (
-                            graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' : YTTGetDurationString({hours: graphDataItem.values.value})
+                        return graphDataItem && graphDataItem.graph && graphDataItem.graph.valueField && graphDataItem.values && (graphDataItem.values.value || graphDataItem.values.value === 0) ? (
+                            graphDataItem.graph.valueField === 'ratio' ? (100 * graphDataItem.values.value).toFixed(2) + '%' :
+                                graphDataItem.graph.valueField === 'count' ? graphDataItem.values.value :
+                                    YTTGetDurationString({hours: graphDataItem.values.value})
                         ) : '';
                     }
                 },
@@ -174,14 +182,6 @@ $(document).ready(function () {
                     //maximum: 1,
                     axisAlpha: 0,
                     gridAlpha: 0,
-                    guides: [{
-                        value: average['ratio'],
-                        dashLength: 3,
-                        above: false,
-                        label: '',
-                        lineThickness: 2,
-                        inside: true
-                    }],
                     labelsEnabled: false,
                     inside: false,
                     position: 'left',
@@ -189,6 +189,19 @@ $(document).ready(function () {
                     labelFrequency: 2,
                     labelFunction: function (value) {
                         return (100 * value).toFixed(2) + '%';
+                    }
+                }, {
+                    id: 'countAxis',
+                    minimum: 0,
+                    axisAlpha: 0,
+                    gridAlpha: 0,
+                    labelsEnabled: false,
+                    inside: false,
+                    position: 'left',
+                    title: '',
+                    labelFrequency: 2,
+                    labelFunction: function (value) {
+                        return value;
                     }
                 }],
                 graphs: [{
@@ -240,6 +253,24 @@ $(document).ready(function () {
                     bulletSize: 2,
                     balloonFunction: function (graphDataItem) {
                         return 'Ratio<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + (100 * graphDataItem.values.value).toFixed(2) + '%' + '</span></b>';
+                    }
+                }, {
+                    bullet: 'circle',
+                    bulletAlpha: 1,
+                    bulletBorderAlpha: 1,
+                    bulletBorderThickness: 1,
+                    dashLengthField: 'dashLength',
+                    legendValueText: '[[value]]',
+                    title: 'Count',
+                    fillAlphas: 0,
+                    valueField: 'count',
+                    valueAxis: 'countAxis',
+                    type: 'smoothedLine',
+                    lineThickness: 2,
+                    lineAlpha: 1,
+                    bulletSize: 2,
+                    balloonFunction: function (graphDataItem) {
+                        return 'Count<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + graphDataItem.values.value + '</span></b>';
                     }
                 }],
                 chartScrollbar: {
@@ -311,21 +342,25 @@ $(document).ready(function () {
                 var totalRatio = 0;
                 var totalOpened = 0;
                 var totalWatched = 0;
+                var countTotal = 0;
                 for (var key in datas) {
                     if (datas.hasOwnProperty(key)) {
                         var data = datas[key];
                         days += 1;
-                        totalRatio += data['ratio'];
-                        totalWatched += data['real'];
-                        totalOpened += data['total'];
+                        totalRatio += data['ratio'] || 0;
+                        totalWatched += data['real'] || 0;
+                        totalOpened += data['total'] || 0;
+                        countTotal += data['count'] || 0;
                     }
                 }
                 $('#daysHolderSelect').text(days);
                 $('#averageRatioHolderSelect').text((100 * (totalRatio / datas.length)).toFixed(2) + '%');
                 $('#averageWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched / datas.length}));
                 $('#averageOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened / datas.length}));
+                $('#averageCountHolderSelect').text((countTotal / datas.length).toFixed(2));
                 $('#totalWatchedHolderSelect').text(YTTGetDurationString({hours: totalWatched}));
                 $('#totalOpenedHolderSelect').text(YTTGetDurationString({hours: totalOpened}));
+                $('#totalCountHolderSelect').text(countTotal);
             }
 
             function onChartZoomed(event) {
@@ -343,8 +378,11 @@ $(document).ready(function () {
                 updateCurrentInfos(datas);
             }
 
-            function zoomChart() {
-                chart.zoomToIndexes(parsedConfigOrdered.length - 7, parsedConfigOrdered.length - 1);
+            function zoomChart(range) {
+                if(!range){
+                    range = 7;
+                }
+                chart.zoomToIndexes(parsedConfigOrdered.length - range, parsedConfigOrdered.length - 1);
                 var datas = [];
                 var raw = parsedConfigOrdered.slice(parsedConfigOrdered.length - 7, parsedConfigOrdered.length);
                 for (var key in raw) {
@@ -359,6 +397,7 @@ $(document).ready(function () {
                         }
                         data['real'] = YTTGetDurationAsHours(dataRaw['R']);
                         data['total'] = YTTGetDurationAsHours(dataRaw['T']);
+                        data['count'] = dataRaw['C'];
                         datas.push(data);
                     }
                 }
@@ -381,7 +420,8 @@ $(document).ready(function () {
                             date: dateFromDay(config[key]['day']),
                             real: YTTGetDurationAsHours(config[key]['R']),
                             total: YTTGetDurationAsHours(config[key]['T']),
-                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T'])
+                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T']),
+                            count: config[key]['C'] || 0
                         });
                     }
                 }
@@ -409,14 +449,15 @@ $(document).ready(function () {
                     });
                 });
             });
+            $('#zoomWeekButton').click(function () {
+                zoomChart();
+            });
 
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
-            var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
-            chrome.storage.sync.get([REAL_TODAY_KEY], function (result) {
-                $('#watchedHolder').text(YTTGetDurationString(result[REAL_TODAY_KEY]));
-            });
+            $('#watchedHolder').text(YTTGetDurationString(config[YTTGetRealDayConfigKey()]));
+            $('#countHolder').text(config[YTTGetCountDayConfigKey()]  || 0);
             $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         });
     });
