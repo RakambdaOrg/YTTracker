@@ -190,6 +190,13 @@ function YTTGetRealDayConfigKey(now) {
 /**
  * @return {string}
  */
+function YTTGetCountDayConfigKey(now) {
+    return YTTGetDayConfigKey(now) + 'C';
+}
+
+/**
+ * @return {string}
+ */
 function YTTGetDateString(time) {
     if (!time)
         return '';

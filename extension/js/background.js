@@ -48,7 +48,8 @@ function playerStateChange(event) {
 
 function setVideoDuration(event) {
     var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY], function (config) {
+    var COUNT_TODAY_KEY = YTTGetCountDayConfigKey();
+    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY, COUNT_TODAY_KEY], function (config) {
         var toRemove = [];
         var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || {};
         for (var key in IDS) {
@@ -70,6 +71,7 @@ function setVideoDuration(event) {
             newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
             newConfig[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
             newConfig[TOTAL_TODAY_KEY] = YTTAddDurations(duration, config[TOTAL_TODAY_KEY]);
+            newConfig[COUNT_TODAY_KEY] = (config[COUNT_TODAY_KEY] ? config[COUNT_TODAY_KEY] : 0) + 1;
             chrome.storage.sync.set(newConfig);
             log("New total time: " + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY]));
         }

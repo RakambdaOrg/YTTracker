@@ -10,9 +10,13 @@
 <h2 align="center">A Chrome extension to track time on YouTube</h2>
 
 ## Description
-Two kind of time are recorded:
-* The total time of opened videos. This time is counted when the video page have been loaded.
-* The time time of playing videos. This time is counted when a video is playing.
+This application will track your time spent on YouTube. Those datas can be viwed rapidly in the popup icon or in a chart.
+
+The datas tracked are:
+* Two kind of time are recorded:
+  * The total time of opened videos. This time is counted when the video page have been loaded.
+  * The time time of playing videos. This time is counted when a video is playing.
+* The number of videos opened.
 
 Those times can then be viewed by the popup icon showing you them as text and in a chart.
 
