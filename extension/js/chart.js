@@ -17,7 +17,9 @@ $(document).ready(function () {
                     scrollBarBackgroundColor: '#D4D4D4',
                     labelColor: '#222222',
                     handDrawn: handwritten,
-                    backgroundColor: '#BBBBBB'
+                    backgroundColor: '#BBBBBB',
+                    ratioLineColor: '#196E1F',
+                    countLineColor: '#DE6231'
                 };
             case 'dark':
             default:
@@ -29,7 +31,9 @@ $(document).ready(function () {
                     scrollBarBackgroundColor: '#666666',
                     labelColor: '#000000',
                     handDrawn: handwritten,
-                    backgroundColor: '#777777'
+                    backgroundColor: '#777777',
+                    ratioLineColor: '#196E1F',
+                    countLineColor: '#214DD1'
                 };
         }
     }
@@ -248,7 +252,8 @@ $(document).ready(function () {
                     valueField: 'ratio',
                     valueAxis: 'ratioAxis',
                     type: 'smoothedLine',
-                    lineThickness: 1,
+                    lineColor: chartColors['ratioLineColor'],
+                    lineThickness: 1.5,
                     lineAlpha: 0.5,
                     bulletSize: 2,
                     balloonFunction: function (graphDataItem) {
@@ -266,8 +271,9 @@ $(document).ready(function () {
                     valueField: 'count',
                     valueAxis: 'countAxis',
                     type: 'smoothedLine',
+                    lineColor: chartColors['countLineColor'],
                     lineThickness: 2,
-                    lineAlpha: 1,
+                    lineAlpha: 0.6,
                     bulletSize: 2,
                     balloonFunction: function (graphDataItem) {
                         return 'Count<br>' + YTTGetDateString(graphDataItem.category.getTime()) + '<br><b><span style="font-size:14px;">' + graphDataItem.values.value + '</span></b>';
