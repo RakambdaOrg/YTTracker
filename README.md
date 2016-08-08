@@ -18,7 +18,7 @@ The datas tracked are:
   * The time time of playing videos. This time is counted when a video is playing.
 * The number of videos opened.
 
-Those times can then be viewed by the popup icon showing you them as text and in a chart.
+The count and time of videos opened are counted only one time per each hour maximum. This is to avoid having unintended reloads of the page bringing up the statistics.
 
 ##Screenshots
 <div align="center">
