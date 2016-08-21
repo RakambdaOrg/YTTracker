@@ -105,6 +105,26 @@ $(document).ready(function () {
         $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         $('#UUID').text(config[YTT_CONFIG_USERID] ? config[YTT_CONFIG_USERID] : 'Unknown');
 
+        function getAllSharedData() {
+            chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
+                var xhr = new XMLHttpRequest();
+
+                function displaySharedData(data){
+                    if(xhr.readyState == 4) {
+                        var resp = JSON.parse(xhr.responseText);
+                        console.log(resp);
+                        $('#openShareStats').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
+                    }
+                }
+
+                xhr.onreadystatechange = displaySharedData;
+                xhr.open("GET", 'http://yttracker.mrcraftcod.fr/api/stats/get?uuid=' + encodeURI(config[YTT_CONFIG_USERID]), true);
+                xhr.send();
+            });
+        }
+
+        $('#uuidReveal').click(getAllSharedData);
+
         $('#themeSelect').change(function () {
             var theme = $('#themeSelect').find(":selected").val();
             YTTApplyThemeCSS(theme);

@@ -20,7 +20,8 @@
   "permissions": [
     "https://www.youtube.com/*",
     "storage",
-    "downloads"
+    "downloads",
+    "http://*.mrcraftcod.fr/*"
   ],
 
   "options_page": "chart.html",
