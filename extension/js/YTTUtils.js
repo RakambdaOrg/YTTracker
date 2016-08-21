@@ -1,4 +1,6 @@
 var YTT_DEBUG = false;
+const YTT_CONFIG_SHARE_ONLINE = 'YTT_Share_Stats';
+const YTT_CONFIG_USERID = 'YTT_User_ID';
 const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
