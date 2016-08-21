@@ -65,7 +65,7 @@ $(document).ready(function () {
         });
     });
 
-    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION], function (config) {
+    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE], function (config) {
         function setSelectedTheme(theme) {
             $('#darkTheme').prop('selected', false);
             $('#lightTheme').prop('selected', false);
@@ -98,7 +98,12 @@ $(document).ready(function () {
                 setSelectedHandDrawn('false');
         }
 
+        if(config.hasOwnProperty(YTT_CONFIG_SHARE_ONLINE)){
+            $("#shareStats").prop("checked", config[YTT_CONFIG_SHARE_ONLINE]);
+        }
+
         $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
+        $('#UUID').text(config[YTT_CONFIG_USERID] ? config[YTT_CONFIG_USERID] : 'Unknown');
 
         $('#themeSelect').change(function () {
             var theme = $('#themeSelect').find(":selected").val();
@@ -112,6 +117,13 @@ $(document).ready(function () {
             var state = $('#handDrawnSelect').find(":selected").val();
             var newConfig = {};
             newConfig[YTT_CONFIG_HANDDRAWN] = state;
+            chrome.storage.sync.set(newConfig);
+        });
+
+        $('#shareStats').change(function () {
+            var state = document.getElementById('shareStats').checked;
+            var newConfig = {};
+            newConfig[YTT_CONFIG_SHARE_ONLINE] = state;
             chrome.storage.sync.set(newConfig);
         });
     });

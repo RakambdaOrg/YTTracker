@@ -48,10 +48,18 @@
                 <button class="optionDesc" id="resetButton">Reset all data</button>
             </div>
         </li>
+        <hr/>
+        <li class="option" id="openShareStats">
+            <div>
+                <span class="optionDesc">Put stats online:</span>
+                <input type="checkbox" id="shareStats" name="shareStats" value="share" title="Share stats"/>
+            </div>
+        </li>
     </ul>
     <footer>
         <hr/>
         <button id="backButton">Back to chart</button>
+        <p class="bottomLeft">UUID: <span id="UUID"></span></p>
         <p class="bottomRight">Version: <span id="versionNumber"></span></p>
     </footer>
 </body>
