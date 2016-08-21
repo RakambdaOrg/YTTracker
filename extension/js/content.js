@@ -3,6 +3,7 @@ function YTTGetChangeState() {
     var event = {};
     event[YTT_STATE_EVENT_STATE_KEY] = values[0];
     event[YTT_STATE_EVENT_TIME_KEY] = values[1];
+    event[YTT_STATE_EVENT_VID_KEY] = $('#' + YTT_DOM_PLAYER_INFOS).text().split(YTT_DOM_SPLITTER)[0];
     YTTMessage(YTT_STATE_EVENT, event);
 }
 

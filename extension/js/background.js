@@ -36,7 +36,13 @@ function playerStateChange(event) {
         var size = 0, key;
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
         if (size < 1)chrome.browserAction.setBadgeText({text: ""});
-        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY], function (config) {
+        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
+            if(config[YTT_CONFIG_SHARE_ONLINE] === true){
+                $.ajax({
+                    url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(YTTGetUUID()) + '&videoID=' + encodeURI(event[YTT_STATE_EVENT_VID_KEY]) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
+                    method: "POST"
+                });
+            }
             var newConfig = {};
             newConfig[YTT_CONFIG_REAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_REAL_TIME_KEY]);
             newConfig[REAL_TODAY_KEY] = YTTAddDurations(duration, config[REAL_TODAY_KEY]);
@@ -49,7 +55,7 @@ function playerStateChange(event) {
 function setVideoDuration(event) {
     var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
     var COUNT_TODAY_KEY = YTTGetCountDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY, COUNT_TODAY_KEY], function (config) {
+    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY, COUNT_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
         var toRemove = [];
         var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || {};
         for (var key in IDS) {
@@ -66,6 +72,12 @@ function setVideoDuration(event) {
         if (!IDS.hasOwnProperty(event[YTT_DURATION_EVENT_ID_KEY])) {
             IDS[event[YTT_DURATION_EVENT_ID_KEY]] = new Date().getTime();
             var duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
+            if(config[YTT_CONFIG_SHARE_ONLINE] === true){
+                $.ajax({
+                    url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(YTTGetUUID()) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
+                    method: "POST"
+                });
+            }
             var newConfig = {};
             newConfig[YTT_CONFIG_TOTAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_TOTAL_TIME_KEY]);
             newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
@@ -101,9 +113,13 @@ chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_DEBUG_KEY], function (con
 
     if (!userID) {
         userID = getUUID();
+        YTTSetUUID(userID);
         var newConfig = {};
         newConfig[YTT_CONFIG_USERID] = userID;
         chrome.storage.sync.set(newConfig);
+    }
+    else{
+        YTTSetUUID(userID);
     }
     YTTSetDebug(config[YTT_CONFIG_DEBUG_KEY] || false);
 });
