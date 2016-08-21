@@ -1,4 +1,7 @@
 var YTT_DEBUG = false;
+var YTT_UUID = '';
+const YTT_CONFIG_SHARE_ONLINE = 'YTT_Share_Stats';
+const YTT_CONFIG_USERID = 'YTT_User_ID';
 const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
@@ -15,6 +18,7 @@ const YTT_DURATION_EVENT_ID_KEY = 'ID';
 const YTT_DURATION_EVENT_DURATION_KEY = 'duration';
 const YTT_STATE_EVENT = 'playerStateChange';
 const YTT_STATE_EVENT_ID_KEY = 'ID';
+const YTT_STATE_EVENT_VID_KEY = 'videoID';
 const YTT_STATE_EVENT_STATE_KEY = 'state';
 const YTT_STATE_EVENT_TIME_KEY = 'time';
 const YTT_DOM_PLAYER_STATE = 'YTTPlayerState';
@@ -22,6 +26,14 @@ const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
 const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 const YTT_DOM_SPLITTER = '@';
+
+function YTTSetUUID(uuid){
+    YTT_UUID = uuid;
+}
+
+function YTTGetUUID(){
+    return YTT_UUID;
+}
 
 function YTTApplyThemeCSS(theme)
 {
