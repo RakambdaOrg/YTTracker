@@ -65,7 +65,19 @@ $(document).ready(function () {
         });
     });
 
-    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE], function (config) {
+    $('#validUsername').click(function () {
+        var newConfig = {};
+        newConfig[YTT_CONFIG_USERNAME] = $('#username').val();
+        chrome.storage.sync.set(newConfig);
+        chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
+            $.ajax({
+                url: 'http://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
+                method: 'POST'
+            });
+        });
+    });
+
+    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME], function (config) {
         function setSelectedTheme(theme) {
             $('#darkTheme').prop('selected', false);
             $('#lightTheme').prop('selected', false);
@@ -98,27 +110,27 @@ $(document).ready(function () {
                 setSelectedHandDrawn('false');
         }
 
-        if(config.hasOwnProperty(YTT_CONFIG_SHARE_ONLINE)){
+        if (config.hasOwnProperty(YTT_CONFIG_SHARE_ONLINE)) {
             $("#shareStats").prop("checked", config[YTT_CONFIG_SHARE_ONLINE]);
         }
 
         $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         $('#UUID').text(config[YTT_CONFIG_USERID] ? config[YTT_CONFIG_USERID] : 'Unknown');
+        $('#username').val(config[YTT_CONFIG_USERNAME] ? config[YTT_CONFIG_USERNAME] : '');
 
         function getAllSharedData() {
-            chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
+            chrome.storage.sync.get(YTT_CONFIG_USERID, function (config) {
                 var xhr = new XMLHttpRequest();
 
-                function displaySharedData(data){
-                    if(xhr.readyState == 4) {
+                function displaySharedData(data) {
+                    if (xhr.readyState == 4) {
                         var resp = JSON.parse(xhr.responseText);
-                        console.log(resp);
                         $('#openShareStats').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
                     }
                 }
 
                 xhr.onreadystatechange = displaySharedData;
-                xhr.open("GET", 'http://yttracker.mrcraftcod.fr/api/stats/get?uuid=' + encodeURI(config[YTT_CONFIG_USERID]), true);
+                xhr.open('GET', 'http://yttracker.mrcraftcod.fr/api/stats/get?uuid=' + encodeURI(config[YTT_CONFIG_USERID]), true);
                 xhr.send();
             });
         }
