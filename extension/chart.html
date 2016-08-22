@@ -19,13 +19,24 @@
 </head>
     <body>
         <header id="topContainer">
-            <ul>
-                <li><a href="javascript: void(0)" id="exportJPGButton">Save as JPG</a></li>
-                <li><a href="javascript: void(0)" id="exportPNGButton">Save as PNG</a></li>
-                <li class="rightNav"><a href="javascript: void(0)">Version: <span id="versionNumber"></span></a></li>
-                <li class="rightNav"><a href="options.html">Options</a></li>
-                <li class="rightNav"><a href="javascript: void(0)" id="zoomWeekButton">Zoom on last week</a></li>
-            </ul>
+            <div class="leftNav inline">
+                <ul>
+                    <li><a href="javascript: void(0)" id="exportJPGButton">Save as JPG</a></li>
+                    <li><a href="javascript: void(0)" id="exportPNGButton">Save as PNG</a></li>
+                </ul>
+            </div>
+            <div class="inline">
+                <ul>
+                    <li class="centerNav"><a href="javascript: void(0)" id="openSharedStats">Online Stats</a></li>
+                </ul>
+            </div>
+            <div class="rightNav inline">
+                <ul>
+                    <li><a href="javascript: void(0)">Version: <span id="versionNumber"></span></a></li>
+                    <li><a href="options.html">Options</a></li>
+                    <li><a href="javascript: void(0)" id="zoomWeekButton">Zoom on last week</a></li>
+                </ul>
+            </div>
         </header>
         <div class="infosHolder">
             <p class="inline">Average ratio: <span id="averageRatioHolder"></span></p>

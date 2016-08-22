@@ -4,7 +4,8 @@ body{
 
 .infosHolder>p,
 button,
-select{
+select,
+input{
     background-color: #ABABAB;
 }
 
@@ -20,4 +21,8 @@ footer a, footer a:visited{
 
 .option:hover{
     background-color: #6F6F6F;
+}
+
+.json{
+    background-color: #808080;
 }

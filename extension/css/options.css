@@ -63,4 +63,5 @@ footer button{
     font-size: 1.3em;
     max-height: 150px;
     overflow-y: scroll;
+    border-radius: 9px;
 }

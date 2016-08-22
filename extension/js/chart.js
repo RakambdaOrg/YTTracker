@@ -458,6 +458,9 @@ $(document).ready(function () {
             $('#zoomWeekButton').click(function () {
                 zoomChart();
             });
+            $('#openSharedStats').click(function () {
+                window.open('http://yttracker.mrcraftcod.fr/', '_blank')
+            });
 
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));

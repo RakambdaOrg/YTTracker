@@ -12,6 +12,8 @@ $(document).ready(function () {
     addTooltip('optionExport', 'Export your datas in a JSON file that you can download');
     addTooltip('optionImport', 'Import a JSON file (!! HIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
     addTooltip('optionReset', 'Reset all your current data (!! THIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
+    addTooltip('openShareStats', 'Share your statistics online to compare with other users');
+    addTooltip('optionUsername', 'Username to show online');
 
     $('#backButton').click(function () {
         document.location.href = 'chart.html';
@@ -72,7 +74,10 @@ $(document).ready(function () {
         chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
             $.ajax({
                 url: 'http://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
-                method: 'POST'
+                method: 'POST',
+                success: function(){
+                    alert('Username changed');
+                }
             });
         });
     });
@@ -122,10 +127,9 @@ $(document).ready(function () {
             chrome.storage.sync.get(YTT_CONFIG_USERID, function (config) {
                 var xhr = new XMLHttpRequest();
 
-                function displaySharedData(data) {
+                function displaySharedData() {
                     if (xhr.readyState == 4) {
-                        var resp = JSON.parse(xhr.responseText);
-                        $('#openShareStats').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
+                        $('#optionUsername').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
                     }
                 }
 

@@ -5,6 +5,10 @@ body {
     margin: auto;
 }
 
+#topContainer{
+    background-color: #333;
+}
+
 #chartHolder {
     width: 95%;
     height: 85%;
@@ -15,7 +19,7 @@ body {
     width: 100%;
 }
 
-header > ul {
+header ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -23,7 +27,7 @@ header > ul {
     background-color: #333;
 }
 
-header > ul > li {
+header ul > li {
     float: left;
 }
 
@@ -31,12 +35,17 @@ header > ul > li {
     float: right !important;
 }
 
+.leftNav {
+    float: left !important;
+}
+
 select {
     background-color: #AAAAAA;
     border-color: #CCCCCC;
 }
 
-header > ul > li > a {
+header ul > li > a {
+    border-radius: 10px;
     display: block;
     color: #CCCCCC;
     text-align: center;
@@ -44,7 +53,7 @@ header > ul > li > a {
     text-decoration: none;
 }
 
-header > ul > li > a:hover {
+header ul > li > a:hover {
     background-color: #111;
 }
 
@@ -63,4 +72,9 @@ header > ul > li > a:hover {
     padding-right: 5px;
     border-style: none;
     border-radius: 5px;
+}
+
+#topContainer{
+    width: 100%;
+    padding-top: 3px;
 }
