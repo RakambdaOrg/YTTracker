@@ -12,6 +12,8 @@ $(document).ready(function () {
     addTooltip('optionExport', 'Export your datas in a JSON file that you can download');
     addTooltip('optionImport', 'Import a JSON file (!! HIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
     addTooltip('optionReset', 'Reset all your current data (!! THIS WILL RESET EVERYTHING AND CAN\'T BE UNDONE !!)');
+    addTooltip('openShareStats', 'Share your statistics online to compare with other users');
+    addTooltip('optionUsername', 'Username to show online');
 
     $('#backButton').click(function () {
         document.location.href = 'chart.html';
