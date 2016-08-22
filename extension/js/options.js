@@ -125,7 +125,7 @@ $(document).ready(function () {
                 function displaySharedData(data) {
                     if (xhr.readyState == 4) {
                         var resp = JSON.parse(xhr.responseText);
-                        $('#openShareStats').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
+                        $('#optionUsername').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
                     }
                 }
 
