@@ -36,11 +36,11 @@ function playerStateChange(event) {
         var size = 0, key;
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
         if (size < 1)chrome.browserAction.setBadgeText({text: ""});
-        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
+        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERID], function (config) {
             if(config[YTT_CONFIG_SHARE_ONLINE] === true){
                 $.ajax({
-                    url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(YTTGetUUID()) + '&videoID=' + encodeURI(event[YTT_STATE_EVENT_VID_KEY]) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
-                    method: "POST"
+                    url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_STATE_EVENT_VID_KEY]) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
+                    method: 'POST'
                 });
             }
             var newConfig = {};
@@ -55,7 +55,7 @@ function playerStateChange(event) {
 function setVideoDuration(event) {
     var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
     var COUNT_TODAY_KEY = YTTGetCountDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY, COUNT_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
+    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TOTAL_TODAY_KEY, COUNT_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERID], function (config) {
         var toRemove = [];
         var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || {};
         for (var key in IDS) {
@@ -74,8 +74,8 @@ function setVideoDuration(event) {
             var duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
             if(config[YTT_CONFIG_SHARE_ONLINE] === true){
                 $.ajax({
-                    url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(YTTGetUUID()) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
-                    method: "POST"
+                    url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
+                    method: 'POST'
                 });
             }
             var newConfig = {};
@@ -96,30 +96,11 @@ function setVideoDuration(event) {
 chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_DEBUG_KEY], function (config) {
     var userID = config[YTT_CONFIG_USERID];
 
-    function getUUID() {
-        var lut = [];
-        for (var i = 0; i < 256; i++) {
-            lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
-        }
-        var d0 = Math.random() * 0xffffffff | 0;
-        var d1 = Math.random() * 0xffffffff | 0;
-        var d2 = Math.random() * 0xffffffff | 0;
-        var d3 = Math.random() * 0xffffffff | 0;
-        return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + '-' +
-            lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + '-' + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + '-' +
-            lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + '-' + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
-            lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
-    }
-
     if (!userID) {
-        userID = getUUID();
-        YTTSetUUID(userID);
+        userID = YTTGenUUID();
         var newConfig = {};
         newConfig[YTT_CONFIG_USERID] = userID;
         chrome.storage.sync.set(newConfig);
-    }
-    else{
-        YTTSetUUID(userID);
     }
     YTTSetDebug(config[YTT_CONFIG_DEBUG_KEY] || false);
 });

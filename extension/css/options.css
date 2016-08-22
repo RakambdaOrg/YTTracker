@@ -1,3 +1,12 @@
+#wrap {
+    min-height: 100%;
+}
+
+#main {
+    overflow: auto;
+    padding-bottom: 50px;
+}
+
 ul {
     list-style-type: none;
     padding-left: 0;
@@ -11,6 +20,10 @@ li{
 footer {
     color: black;
     text-align: center;
+    position: relative;
+    margin-top: -50px;
+    height: 50px;
+    clear: both;
 }
 
 footer button{
@@ -44,4 +57,10 @@ footer button{
     bottom: 5px;
     left: 5px;
     text-align: left;
+}
+
+.json{
+    font-size: 1.3em;
+    max-height: 150px;
+    overflow-y: scroll;
 }
