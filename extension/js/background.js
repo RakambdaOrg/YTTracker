@@ -40,7 +40,7 @@ function playerStateChange(event) {
             if(config[YTT_CONFIG_SHARE_ONLINE] === true){
                 $.ajax({
                     url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_STATE_EVENT_VID_KEY]) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
-                    method: "POST"
+                    method: 'POST'
                 });
             }
             var newConfig = {};
@@ -75,7 +75,7 @@ function setVideoDuration(event) {
             if(config[YTT_CONFIG_SHARE_ONLINE] === true){
                 $.ajax({
                     url: 'http://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
-                    method: "POST"
+                    method: 'POST'
                 });
             }
             var newConfig = {};
