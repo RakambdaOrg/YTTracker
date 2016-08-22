@@ -122,9 +122,8 @@ $(document).ready(function () {
             chrome.storage.sync.get(YTT_CONFIG_USERID, function (config) {
                 var xhr = new XMLHttpRequest();
 
-                function displaySharedData(data) {
+                function displaySharedData() {
                     if (xhr.readyState == 4) {
-                        var resp = JSON.parse(xhr.responseText);
                         $('#optionUsername').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
                     }
                 }

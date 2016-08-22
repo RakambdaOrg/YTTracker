@@ -17,3 +17,7 @@ footer a, footer a:visited{
 .option:hover{
     background-color: #BFBFBF;
 }
+
+.json{
+    background-color: #A5A5A5;
+}
