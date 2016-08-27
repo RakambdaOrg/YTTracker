@@ -73,7 +73,7 @@ $(document).ready(function () {
         chrome.storage.sync.set(newConfig);
         chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
             $.ajax({
-                url: 'http://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
+                url: 'https://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
                 method: 'POST',
                 success: function(){
                     alert('Username changed');
@@ -134,7 +134,7 @@ $(document).ready(function () {
                 }
 
                 xhr.onreadystatechange = displaySharedData;
-                xhr.open('GET', 'http://yttracker.mrcraftcod.fr/api/stats/get?uuid=' + encodeURI(config[YTT_CONFIG_USERID]), true);
+                xhr.open('GET', 'https://yttracker.mrcraftcod.fr/api/stats/get?uuid=' + encodeURI(config[YTT_CONFIG_USERID]), true);
                 xhr.send();
             });
         }
