@@ -3,3 +3,4 @@
 *.ipr
 *.iws
 *.pem
+extension/manifest.json
