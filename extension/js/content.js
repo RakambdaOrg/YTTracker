@@ -1,3 +1,9 @@
+chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
+    if (msg['action'] == 'alertPopup') {
+        alert(msg['message']);
+    }
+});
+
 function YTTGetChangeState() {
     var values = $('#' + YTT_DOM_PLAYER_STATE).text().split(YTT_DOM_SPLITTER);
     var event = {};

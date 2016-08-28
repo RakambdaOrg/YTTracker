@@ -42,13 +42,18 @@ function playerStateChange(event) {
                     url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_STATE_EVENT_VID_KEY]) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
                     method: 'POST',
                     error: function(a, b ,c){
-                        alert("YTTF2-" + event[YTT_STATE_EVENT_VID_KEY]);
+                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF2-' + event[YTT_STATE_EVENT_VID_KEY]}, function(response) {});
+                        });
                         console.error("YTTF2" + event[YTT_STATE_EVENT_VID_KEY]);
                         console.error(a);
                         console.error(b);
                         console.error(c);
                     },
                     success: function(){
+                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTO2-' + event[YTT_STATE_EVENT_VID_KEY]}, function(response) {});
+                        });
                         console.log("YTTO2-" + event[YTT_STATE_EVENT_VID_KEY]);
                     }
                 });
@@ -87,13 +92,18 @@ function setVideoDuration(event) {
                     url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
                     method: 'POST',
                     error: function(a, b ,c){
-                        alert("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY]);
+                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF1-' + event[YTT_DURATION_EVENT_ID_KEY]}, function(response) {});
+                        });
                         console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY]);
                         console.error(a);
                         console.error(b);
                         console.error(c);
                     },
                     success: function(){
+                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTO1-' + event[YTT_DURATION_EVENT_ID_KEY]}, function(response) {});
+                        });
                         console.log("YTTO1-" + event[YTT_DURATION_EVENT_ID_KEY]);
                     }
                 });
