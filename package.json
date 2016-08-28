@@ -1,6 +1,6 @@
 {
   "name": "YTTracker",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb",
@@ -15,8 +15,8 @@
     "manifest": "cd extension && cp manifestProd.json manifest.json && cd ../",
     "manifestTest": "cd extension && cp manifestTest.json manifest.json && cd ../",
     "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
-    "release": "npm run manifest && npm run zip && webstore upload --file extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
-    "releaseTest": "npm run manifestTest && npm run zip && webstore upload --file extension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID_TEST --client-secret $CLIENT_SECRET_TEST --refresh-token $REFRESH_TOKEN_TEST --auto-publish",
+    "release": "npm run manifest && npm run zip && webstore upload --file extension.zip --source extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "releaseTest": "npm run manifestTest && npm run zip && webstore upload --file extension.zip --source extension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID_TEST --client-secret $CLIENT_SECRET_TEST --refresh-token $REFRESH_TOKEN_TEST --auto-publish",
     "test": "xo src/*.js"
   },
   "devDependencies": {
