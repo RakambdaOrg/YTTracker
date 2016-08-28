@@ -1,6 +1,6 @@
 {
   "name": "YTTracker",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb",
@@ -15,8 +15,8 @@
     "manifest": "cd extension && cp manifestProd.json manifest.json && cd ../",
     "manifestTest": "cd extension && cp manifestTest.json manifest.json && cd ../",
     "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
-    "release": "npm run manifest && npm run zip && send",
-    "releaseTest": "npm run manifestTest && npm run zip && send",
+    "release": "npm run manifest && npm run zip && npm run send",
+    "releaseTest": "npm run manifestTest && npm run zip && npm run send",
     "test": "xo src/*.js",
     "send": "webstore upload --file extension.zip --source extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish"
   },
