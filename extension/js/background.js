@@ -45,7 +45,7 @@ function playerStateChange(event) {
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
                             chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF2-' + event[YTT_STATE_EVENT_VID_KEY]}, function(response) {});
                         });
-                        console.error("YTTF2" + event[YTT_STATE_EVENT_VID_KEY]);
+                        console.error("YTTF2" + event[YTT_STATE_EVENT_VID_KEY] + ':' + YTTGetDurationString(duration));
                         console.error(a);
                         console.error(b);
                         console.error(c);
@@ -54,7 +54,7 @@ function playerStateChange(event) {
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
                             chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTO2-' + event[YTT_STATE_EVENT_VID_KEY]}, function(response) {});
                         });
-                        console.log("YTTO2-" + event[YTT_STATE_EVENT_VID_KEY]);
+                        console.log("YTTO2-" + event[YTT_STATE_EVENT_VID_KEY] + ':' + YTTGetDurationString(duration));
                     }
                 });
             }
@@ -95,7 +95,7 @@ function setVideoDuration(event) {
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
                             chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF1-' + event[YTT_DURATION_EVENT_ID_KEY]}, function(response) {});
                         });
-                        console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY]);
+                        console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
                         console.error(a);
                         console.error(b);
                         console.error(c);
@@ -104,7 +104,7 @@ function setVideoDuration(event) {
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
                             chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTO1-' + event[YTT_DURATION_EVENT_ID_KEY]}, function(response) {});
                         });
-                        console.log("YTTO1-" + event[YTT_DURATION_EVENT_ID_KEY]);
+                        console.log("YTTO1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
                     }
                 });
             }
