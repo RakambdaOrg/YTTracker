@@ -1,7 +1,7 @@
 <p align="center">
-    <img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/>
+    <a href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/></a>
 </p>
-<h1 align="center">YTTracker</h1>
+<a style="color: white; text-decoration:none;"href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><h1 align="center">YTTracker</h1></a>
 <p align="center">
     <a alt="Build Status" href="https://travis-ci.org/MrCraftCod/YTTracker"><img alt="Build status" src="https://travis-ci.org/MrCraftCod/YTTracker.svg?branch=master"/></a>
     <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg"/></a>
@@ -32,6 +32,9 @@ The count and time of videos opened are counted only one time per each hour maxi
     <img style="width:75%" src="https://github.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
 </div>
 
+
+## Development/Beta releases
+[https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec](https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec)
 
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
