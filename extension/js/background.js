@@ -26,12 +26,13 @@ function playerStateChange(event) {
     if (event[YTT_STATE_EVENT_STATE_KEY] == 1) {
         log("Started playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         chrome.browserAction.setBadgeText({text: "P"});
-        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = event[YTT_STATE_EVENT_TIME_KEY];
+        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = {time: event[YTT_STATE_EVENT_TIME_KEY], vid: event[YTT_STATE_EVENT_VID_KEY]};
     }
     else if ((event[YTT_STATE_EVENT_STATE_KEY] == 2 || event[YTT_STATE_EVENT_STATE_KEY] == 0 || event[YTT_STATE_EVENT_STATE_KEY] == -5) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] != null) {
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
-        var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]) * 1000)};
+        var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time']) * 1000)};
+        var videoID = activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['vid'];
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
         var size = 0, key;
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
@@ -39,22 +40,19 @@ function playerStateChange(event) {
         chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERID], function (config) {
             if(config[YTT_CONFIG_SHARE_ONLINE] === true){
                 $.ajax({
-                    url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_STATE_EVENT_VID_KEY]) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
+                    url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(videoID) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
                     method: 'POST',
                     error: function(a, b ,c){
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF2-' + event[YTT_STATE_EVENT_VID_KEY]}, function(response) {});
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF2-' + videoID}, function(response) {});
                         });
-                        console.error("YTTF2" + event[YTT_STATE_EVENT_VID_KEY] + ':' + YTTGetDurationString(duration));
-                        console.error(a);
-                        console.error(b);
-                        console.error(c);
+                        console.error("YTTF2" + videoID + ':' + YTTGetDurationString(duration));
                     },
                     success: function(){
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTO2-' + event[YTT_STATE_EVENT_VID_KEY]}, function(response) {});
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTO2-' + videoID}, function(response) {});
                         });
-                        console.log("YTTO2-" + event[YTT_STATE_EVENT_VID_KEY] + ':' + YTTGetDurationString(duration));
+                        console.log("YTTO2-" + videoID + ':' + YTTGetDurationString(duration));
                     }
                 });
             }
@@ -81,7 +79,6 @@ function setVideoDuration(event) {
             }
         }
         for (var key in toRemove) {
-            log(key);
             delete IDS[toRemove[key]];
         }
         if (!IDS.hasOwnProperty(event[YTT_DURATION_EVENT_ID_KEY])) {
@@ -96,9 +93,6 @@ function setVideoDuration(event) {
                             chrome.tabs.sendMessage(tabs[0].id, {action: 'alertPopup', message: 'YTTF1-' + event[YTT_DURATION_EVENT_ID_KEY]}, function(response) {});
                         });
                         console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
-                        console.error(a);
-                        console.error(b);
-                        console.error(c);
                     },
                     success: function(){
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
