@@ -43,10 +43,10 @@ function playerStateChange(event) {
                     method: 'POST',
                     error: function(a, b ,c){
                         alert("YTTF2-" + event[YTT_STATE_EVENT_VID_KEY]);
-                        console.log("YTTF2" + event[YTT_STATE_EVENT_VID_KEY]);
-                        console.log(a);
-                        console.log(b);
-                        console.log(c);
+                        console.error("YTTF2" + event[YTT_STATE_EVENT_VID_KEY]);
+                        console.error(a);
+                        console.error(b);
+                        console.error(c);
                     },
                     success: function(){
                         console.log("YTTO2-" + event[YTT_STATE_EVENT_VID_KEY]);
@@ -88,10 +88,10 @@ function setVideoDuration(event) {
                     method: 'POST',
                     error: function(a, b ,c){
                         alert("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY]);
-                        console.log("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY]);
-                        console.log(a);
-                        console.log(b);
-                        console.log(c);
+                        console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY]);
+                        console.error(a);
+                        console.error(b);
+                        console.error(c);
                     },
                     success: function(){
                         console.log("YTTO1-" + event[YTT_DURATION_EVENT_ID_KEY]);
