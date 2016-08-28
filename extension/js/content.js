@@ -1,6 +1,10 @@
 chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
     if (msg['action'] == 'alertPopup') {
-        alert(msg['message']);
+        var videoTitle = document.getElementById('watch7-headline');
+        var span = document.createElement('span');
+        span.innerHTML = msg['text'];
+        span.className = 'YTTInfo';
+        videoTitle.parentNode.insertBefore(span, videoTitle);
     }
 });
 
