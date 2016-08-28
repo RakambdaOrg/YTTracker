@@ -10,7 +10,12 @@ notifications:
   on_failure: always
 deploy:
   provider: script
-  script: npm run release
+  script:
+    - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+        npm run releaseTest;
+      else
+        npm run release;
+      fi
   on:
     all_branches: true
     tags: true
