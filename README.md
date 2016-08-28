@@ -1,7 +1,7 @@
 <p align="center">
     <a href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/></a>
 </p>
-<a style="color: white; text-decoration:none;"href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><h1 align="center">YTTracker</h1></a>
+<a style="color: white; text-decoration:none;" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><h1 align="center">YTTracker</h1></a>
 <p align="center">
     <a alt="Build Status" href="https://travis-ci.org/MrCraftCod/YTTracker"><img alt="Build status" src="https://travis-ci.org/MrCraftCod/YTTracker.svg?branch=master"/></a>
     <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg"/></a>
