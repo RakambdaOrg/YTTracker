@@ -11,7 +11,7 @@
 <h2 align="center">A Chrome extension to track time on YouTube</h2>
 
 ## Description
-This application will track your time spent on YouTube. Those datas can be viwed rapidly in the popup icon or in a chart.
+This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
 
 The datas tracked are:
 * Two kind of time are recorded:
@@ -20,6 +20,8 @@ The datas tracked are:
 * The number of videos opened.
 
 The count and time of videos opened are counted only one time per each hour maximum. This is to avoid having unintended reloads of the page bringing up the statistics.
+
+You can also choose to send those data to a server to be able to compare your self with others. The stats are available [here](https://yttracker.mrcraftcod.fr/).
 
 ##Screenshots
 <div align="center">
@@ -51,7 +53,9 @@ Moment JS - [https://github.com/moment/moment](https://github.com/moment/moment)
 Tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
 
 ##Other
-Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome)
+Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
+
+Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
 
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/MrCraftCod/YTTracker/issues).
