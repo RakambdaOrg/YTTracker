@@ -12,7 +12,7 @@
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
-    "clearComp": "del extension/manifest.json && del extension.zip",
+    "clearComp": "rm extension/manifest.json && rm extension.zip",
     "manifest": "cd extension && cp manifestProd.json manifest.json && cd ../",
     "manifestTest": "cd extension && cp manifestTest.json manifest.json && cd ../",
     "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
