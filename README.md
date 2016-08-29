@@ -1,16 +1,17 @@
 <p align="center">
-    <img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/>
+    <a href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/></a>
 </p>
-<h1 align="center">YTTracker</h1>
+<a style="color: white; text-decoration:none;" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><h1 align="center">YTTracker</h1></a>
 <p align="center">
-    <a alt="Build Status" href="https://travis-ci.org/MrCraftCod/YTTracker"><img alt="Build status" src="https://travis-ci.org/MrCraftCod/YTTracker.svg?branch=master"/></a>
-    <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg"/></a>
-    <a alt="GitHub Release" href="https://github.com/mrcraftcod/yttracker/releases"><img alt="GitHub Release" src="https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20"/></a>
+    <a alt="Downloads" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="Downloads" src="https://img.shields.io/chrome-web-store/d/knnlnielflnfhdohmihofhdelgahgjdb.svg?maxAge=2592000&style=flat" /></a>
+    <a alt="Build Status" href="https://travis-ci.org/MrCraftCod/YTTracker"><img alt="Build status" src="https://img.shields.io/travis/MrCraftCod/YTTracker/master.svg?maxAge=2592000&style=flat"/></a>
+    <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg?style=flat"/></a>
+    <a alt="GitHub Release" href="https://github.com/mrcraftcod/yttracker/releases"><img alt="GitHub Release" src="https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20&style=flat"/></a>
 </p>
 <h2 align="center">A Chrome extension to track time on YouTube</h2>
 
 ## Description
-This application will track your time spent on YouTube. Those datas can be viwed rapidly in the popup icon or in a chart.
+This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
 
 The datas tracked are:
 * Two kind of time are recorded:
@@ -19,6 +20,8 @@ The datas tracked are:
 * The number of videos opened.
 
 The count and time of videos opened are counted only one time per each hour maximum. This is to avoid having unintended reloads of the page bringing up the statistics.
+
+You can also choose to send those data to a server to be able to compare your self with others. The stats are available [here](https://yttracker.mrcraftcod.fr/).
 
 ##Screenshots
 <div align="center">
@@ -33,6 +36,9 @@ The count and time of videos opened are counted only one time per each hour maxi
 </div>
 
 
+## Development/Beta releases
+[https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec](https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec)
+
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
 
@@ -45,6 +51,11 @@ JQuery tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy
 Moment JS - [https://github.com/moment/moment](https://github.com/moment/moment)
 
 Tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
+
+##Other
+Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
+
+Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
 
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/MrCraftCod/YTTracker/issues).

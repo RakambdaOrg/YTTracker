@@ -1,7 +1,5 @@
 $(document).ready(function () {
-    chrome.storage.sync.get(YTT_CONFIG_THEME, function(config){
-        YTTApplyThemeCSS('light');
-    });
+    YTTApplyThemeCSS('light');
 
     $('#openoptions').click(function () {
         window.open(chrome.runtime.getURL('options.html'));
@@ -35,15 +33,13 @@ function addTooltip(id, text) {
 
 function showValue() {
     YTTLog('UPDATING PRINTED VALUE');
-    var TOTAL_TODAY_KEY = YTTGetTotalDayConfigKey();
-    var REAL_TODAY_KEY = YTTGetRealDayConfigKey();
-    var COUNT_TODAY_KEY = YTTGetCountDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TOTAL_TODAY_KEY, REAL_TODAY_KEY, COUNT_TODAY_KEY], function (result) {
+    var TODAY_KEY = YTTGetDayConfigKey();
+    chrome.storage.sync.get([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY], function (result) {
         $("#duration").text(YTTGetDurationString(result[YTT_CONFIG_TOTAL_TIME_KEY]));
         $("#realduration").text(YTTGetDurationString(result[YTT_CONFIG_REAL_TIME_KEY]));
-        $("#durationtoday").text(YTTGetDurationString(result[TOTAL_TODAY_KEY]));
-        $("#counttoday").text(result[COUNT_TODAY_KEY] || 0);
-        $("#realdurationtoday").text(YTTGetDurationString(result[REAL_TODAY_KEY]));
+        $("#durationtoday").text(YTTGetDurationString(result[TODAY_KEY][YTT_DATA_TOTAL]));
+        $("#counttoday").text(result[TODAY_KEY][YTT_DATA_COUNT] || 0);
+        $("#realdurationtoday").text(YTTGetDurationString(result[TODAY_KEY][YTT_DATA_REAL]));
         $("#start").text(YTTGetDateString(result[YTT_CONFIG_START_TIME_KEY]));
     });
 }
