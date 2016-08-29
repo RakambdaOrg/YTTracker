@@ -11,7 +11,7 @@ chrome.storage.sync.get(null, function (conf) {
     }
 
     if (YTTCompareVersion('1.3.0', conf[YTT_CONFIG_VERSION]) > 0) {
-        notify('YTTracker', 'Converting stored data...');
+        notify('YTTracker', 'Converting stored data...', true);
         for (var key in conf) {
             if (conf.hasOwnProperty(key) && key.substring(0, 3) == 'day' && isValidExKey(key.substring(key.length - 1))) {
                 var label = key.substring(key.length - 1);
@@ -33,7 +33,7 @@ chrome.storage.sync.get(null, function (conf) {
             }
         }
         shouldClear = true;
-        notify('YTTracker', 'Converting done');
+        notify('YTTracker', 'Converting done', true);
     }
     newConfig[YTT_CONFIG_VERSION] = chrome.app.getDetails().version;
     if (shouldClear) {
@@ -47,21 +47,25 @@ chrome.storage.sync.get(null, function (conf) {
 });
 
 function log(text) {
-    if (YTT_DEBUG)
+    if (YTT_DEBUG) {
         console.log(text);
+    }
 }
 
-function notify(title, text) {
-    chrome.notifications.getPermissionLevel(function (permissionLevel) {
-        if (permissionLevel === 'granted') {
-            chrome.notifications.create('', {
-                type: 'basic',
-                iconUrl: '/assets/icon128.png',
-                title: title,
-                message: text
-            });
-        }
-    });
+function notify(title, text, force) {
+    if (YTT_DEBUG || force)
+    {
+        chrome.notifications.getPermissionLevel(function (permissionLevel) {
+            if (permissionLevel === 'granted') {
+                chrome.notifications.create('', {
+                    type: 'basic',
+                    iconUrl: '/assets/icon128.png',
+                    title: title,
+                    message: text
+                });
+            }
+        });
+    }
 }
 
 //noinspection JSCheckFunctionSignatures
