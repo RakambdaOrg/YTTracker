@@ -8,14 +8,12 @@ cache:
 notifications:
   email: true
   on_failure: always
+sudo: true
+before_script:
+  - chmod +x deploy.sh
 deploy:
   provider: script
-  script:
-    - if echo "$TRAVIS_BRANCH" | grep -q "^[0-9]\{1,\}[0-9]\{1,\}[0-9]$"; then
-        npm run release;
-      else
-        npm run releaseTest;
-      fi
+  script: ./deploy.sh
   on:
     all_branches: true
     tags: true
