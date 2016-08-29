@@ -35,6 +35,7 @@ chrome.storage.sync.get(null, function (conf) {
         shouldClear = true;
         notify('YTTracker', 'Converting done', true);
     }
+    newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
     newConfig[YTT_CONFIG_VERSION] = chrome.app.getDetails().version;
     if (shouldClear) {
         chrome.storage.sync.clear(function () {
@@ -46,6 +47,49 @@ chrome.storage.sync.get(null, function (conf) {
     }
 });
 
+function sendRequest(request) {
+    function send(uuid, vid, dur) {
+        var rVal = true;
+        $.ajax({
+            url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + "&type=" + request['type'] + "&stats=" + YTTGetDurationAsMillisec(dur),
+            method: 'POST',
+            async: false,
+            error: function () {
+                notify('YTTError', 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server (' + vid + ' -- ' + YTTGetDurationString(dur) + ')');
+                console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
+            },
+            success: function () {
+                rVal = true;
+                notify('YTTracker', 'Sent ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server (' + vid + ' -- ' + YTTGetDurationString(dur) + ')');
+                console.log("YTTO-" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
+            }
+        });
+        return rVal;
+    }
+
+    chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_FAILED_SHARE], function (config) {
+        config[YTT_CONFIG_FAILED_SHARE] = config[YTT_CONFIG_FAILED_SHARE] || [];
+        if (!send(config[YTT_CONFIG_USERID], request['videoID'], request['duration'])) {
+            config[YTT_CONFIG_FAILED_SHARE].push(request);
+        }
+        var toDel = [];
+        //noinspection JSDuplicatedDeclaration
+        for (var key in config[YTT_CONFIG_FAILED_SHARE]) {
+            if (config[YTT_CONFIG_FAILED_SHARE].hasOwnProperty(key)) {
+                var req = config[YTT_CONFIG_FAILED_SHARE][key];
+                if (send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'])) {
+                    toDel.push(key);
+                }
+            }
+        }
+        //noinspection JSDuplicatedDeclaration
+        for (var key in toDel) {
+            delete config[YTT_CONFIG_FAILED_SHARE][toDel[key]];
+        }
+        chrome.storage.sync.set(config);
+    });
+}
+
 function log(text) {
     if (YTT_DEBUG) {
         console.log(text);
@@ -53,8 +97,7 @@ function log(text) {
 }
 
 function notify(title, text, force) {
-    if (YTT_DEBUG || force)
-    {
+    if (YTT_DEBUG || force) {
         chrome.notifications.getPermissionLevel(function (permissionLevel) {
             if (permissionLevel === 'granted') {
                 chrome.notifications.create('', {
@@ -101,19 +144,12 @@ function playerStateChange(event) {
         var size = 0, key;
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
         if (size < 1)chrome.browserAction.setBadgeText({text: ""});
-        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERID], function (config) {
+        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
             if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
-                $.ajax({
-                    url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(videoID) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
-                    method: 'POST',
-                    error: function () {
-                        notify('YTTError', 'Failed to send watched time to server (' + videoID + ' -- ' + YTTGetDurationString(duration) + ')');
-                        console.error("YTTF2" + videoID + ':' + YTTGetDurationString(duration));
-                    },
-                    success: function () {
-                        notify('YTTracker', 'Sent watched time to server (' + videoID + ' -- ' + YTTGetDurationString(duration) + ')');
-                        console.log("YTTO2-" + videoID + ':' + YTTGetDurationString(duration));
-                    }
+                sendRequest({
+                    videoID: videoID,
+                    type: 1,
+                    duration: duration
                 });
             }
             var newConfig = {};
@@ -127,7 +163,7 @@ function playerStateChange(event) {
 
 function setVideoDuration(event) {
     var TODAY_KEY = YTTGetDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERID], function (config) {
+    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
         var toRemove = [];
         var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || {};
         //noinspection JSDuplicatedDeclaration
@@ -150,17 +186,10 @@ function setVideoDuration(event) {
             IDS[event[YTT_DURATION_EVENT_ID_KEY]] = new Date().getTime();
             var duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
             if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
-                $.ajax({
-                    url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
-                    method: 'POST',
-                    error: function () {
-                        notify('YTTracker', 'Failed to send opened time to server (' + event[YTT_DURATION_EVENT_ID_KEY] + ' -- ' + YTTGetDurationString(duration) + ')');
-                        console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
-                    },
-                    success: function () {
-                        notify('YTTracker', 'Sent opened time to server (' + event[YTT_DURATION_EVENT_ID_KEY] + ' -- ' + YTTGetDurationString(duration) + ')');
-                        console.log("YTTO1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
-                    }
+                sendRequest({
+                    videoID: event[YTT_DURATION_EVENT_ID_KEY],
+                    type: 2,
+                    duration: duration
                 });
             }
             var newConfig = {};

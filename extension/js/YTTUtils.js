@@ -5,6 +5,7 @@ const YTT_DATA_COUNT = 'count';
 const YTT_CONFIG_USERNAME = 'YTT_Username';
 const YTT_CONFIG_SHARE_ONLINE = 'YTT_Share_Stats';
 const YTT_CONFIG_USERID = 'YTT_User_ID';
+const YTT_CONFIG_FAILED_SHARE = 'YTT_Failed_Share';
 const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
@@ -61,7 +62,13 @@ function YTTAddConfigCount(amount, config) {
     return config;
 }
 
+/**
+ * @return {number}
+ */
 function YTTCompareVersion(v1, v2, options) {
+    if(v2 === undefined){
+        return 1;
+    }
     var v1parts = v1.split(/[.-]/);
     var v2parts = v2.split(/[.-]/);
 
