@@ -14,6 +14,7 @@ const YTT_MESSAGE_TYPE_KEY = 'type';
 const YTT_MESSAGE_VALUE_KEY = 'value';
 const YTT_LOG_EVENT = 'log';
 const YTT_DURATION_EVENT = 'playerDuration';
+const YTT_DURATION_EVENT_TABID_KEY = 'tabID';
 const YTT_DURATION_EVENT_ID_KEY = 'ID';
 const YTT_DURATION_EVENT_DURATION_KEY = 'duration';
 const YTT_STATE_EVENT = 'playerStateChange';
