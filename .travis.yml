@@ -11,10 +11,11 @@ notifications:
 deploy:
   provider: script
   script:
-    - if [ "$TRAVIS_BRANCH" == "master" ]; then
-        npm run release;
+    - if [ "$TRAVIS_BRANCH" == "master" ]
+      then
+        npm run release
       else
-        npm run releaseTest;
+        npm run releaseTest
       fi
   on:
     all_branches: true
