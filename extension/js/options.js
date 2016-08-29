@@ -62,8 +62,12 @@ $(document).ready(function () {
         if (!confirm("This action will wipe all your data!\nAre you sure to continue?")) {
             return;
         }
-        chrome.storage.sync.clear(function () {
-            location.reload();
+        chrome.storage.sync.get([YTT_CONFIG_USERID], function (config) {
+            chrome.storage.sync.clear(function () {
+                chrome.storage.sync.set(config, function () {
+                    location.reload();
+                });
+            });
         });
     });
 
