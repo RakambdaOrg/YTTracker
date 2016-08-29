@@ -12,10 +12,11 @@
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
+    "clearComp": "del extension/manifest.json && del extension.zip",
     "manifest": "cd extension && cp manifestProd.json manifest.json && cd ../",
     "manifestTest": "cd extension && cp manifestTest.json manifest.json && cd ../",
     "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
-    "release": "npm run manifest && npm run zip && npm run send && npm run sendTest",
+    "release": "npm run manifest && npm run zip && npm run send && clearComp && releaseTest",
     "releaseTest": "npm run manifestTest && npm run zip && npm run sendTest",
     "test": "xo src/*.js",
     "send": "webstore upload --file extension.zip --source extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
