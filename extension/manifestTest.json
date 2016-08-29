@@ -21,7 +21,8 @@
     "https://www.youtube.com/*",
     "https://yttracker.mrcraftcod.fr/*",
     "storage",
-    "downloads"
+    "downloads",
+    "notifications"
   ],
 
   "options_page": "chart.html",

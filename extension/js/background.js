@@ -10,6 +10,21 @@ function log(text) {
         console.log(text);
 }
 
+function notify(title, text) {
+    chrome.notifications.getPermissionLevel(function (permissionLevel) {
+        log('pLV');
+        log(permissionLevel);
+        if (permissionLevel === 'granted') {
+            chrome.notifications.create('', {
+                type: 'basic',
+                iconUrl: '/assets/icon128.png',
+                title: title,
+                message: text
+            });
+        }
+    });
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request[YTT_MESSAGE_TYPE_KEY] == YTT_LOG_EVENT) {
         log(request[YTT_MESSAGE_VALUE_KEY] || "undefined");
@@ -18,8 +33,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
         playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
     }
-    else if (request[YTT_MESSAGE_TYPE_KEY] == YTT_DURATION_EVENT)
-    {
+    else if (request[YTT_MESSAGE_TYPE_KEY] == YTT_DURATION_EVENT) {
         request[YTT_MESSAGE_VALUE_KEY][YTT_DURATION_EVENT_TABID_KEY] = sender.tab.id;
         setVideoDuration(request[YTT_MESSAGE_VALUE_KEY])
     }
@@ -29,7 +43,10 @@ function playerStateChange(event) {
     if (event[YTT_STATE_EVENT_STATE_KEY] == 1) {
         log("Started playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         chrome.browserAction.setBadgeText({text: "P"});
-        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = {time: event[YTT_STATE_EVENT_TIME_KEY], vid: event[YTT_STATE_EVENT_VID_KEY]};
+        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = {
+            time: event[YTT_STATE_EVENT_TIME_KEY],
+            vid: event[YTT_STATE_EVENT_VID_KEY]
+        };
     }
     else if ((event[YTT_STATE_EVENT_STATE_KEY] == 2 || event[YTT_STATE_EVENT_STATE_KEY] == 0 || event[YTT_STATE_EVENT_STATE_KEY] == -5) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] != null) {
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
@@ -41,16 +58,16 @@ function playerStateChange(event) {
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
         if (size < 1)chrome.browserAction.setBadgeText({text: ""});
         chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, REAL_TODAY_KEY, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERID], function (config) {
-            if(config[YTT_CONFIG_SHARE_ONLINE] === true){
+            if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
                 $.ajax({
                     url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(videoID) + "&type=1&stats=" + YTTGetDurationAsMillisec(duration),
                     method: 'POST',
-                    error: function(a, b ,c){
-                            chrome.tabs.sendMessage(event[YTT_STATE_EVENT_ID_KEY], {action: 'alertPopup', message: 'YTTF2-' + videoID + ':' + YTTGetDurationString(duration)}, function(response) {});
+                    error: function (a, b, c) {
+                        notify('YTTError', 'Failed to send watched time to server (' + videoID + ' -- ' + YTTGetDurationString(duration) + ')');
                         console.error("YTTF2" + videoID + ':' + YTTGetDurationString(duration));
                     },
-                    success: function(){
-                        chrome.tabs.sendMessage(event[YTT_STATE_EVENT_ID_KEY], {action: 'alertPopup', message: 'YTTO2-' + videoID + ':' + YTTGetDurationString(duration)}, function(response) {});
+                    success: function () {
+                        notify('YTTracker', 'Sent watched time to server (' + videoID + ' -- ' + YTTGetDurationString(duration) + ')');
                         console.log("YTTO2-" + videoID + ':' + YTTGetDurationString(duration));
                     }
                 });
@@ -83,16 +100,16 @@ function setVideoDuration(event) {
         if (!IDS.hasOwnProperty(event[YTT_DURATION_EVENT_ID_KEY])) {
             IDS[event[YTT_DURATION_EVENT_ID_KEY]] = new Date().getTime();
             var duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
-            if(config[YTT_CONFIG_SHARE_ONLINE] === true){
+            if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
                 $.ajax({
                     url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&videoID=' + encodeURI(event[YTT_DURATION_EVENT_ID_KEY]) + "&type=2&stats=" + YTTGetDurationAsMillisec(duration),
                     method: 'POST',
-                    error: function(a, b ,c){
-                        chrome.tabs.sendMessage(event[YTT_DURATION_EVENT_TABID_KEY], {action: 'alertPopup', message: 'YTTF1-' + event[YTT_DURATION_EVENT_ID_KEY]  + ':' + YTTGetDurationString(duration)}, function(response) {});
+                    error: function (a, b, c) {
+                        notify('YTTracker', 'Failed to send opened time to server (' + event[YTT_DURATION_EVENT_ID_KEY] + ' -- ' + YTTGetDurationString(duration) + ')');
                         console.error("YTTF1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
                     },
-                    success: function(){
-                        chrome.tabs.sendMessage(event[YTT_DURATION_EVENT_TABID_KEY], {action: 'alertPopup', message: 'YTTO1-' + event[YTT_DURATION_EVENT_ID_KEY]  + ':' + YTTGetDurationString(duration)}, function(response) {});
+                    success: function () {
+                        notify('YTTracker', 'Sent opened time to server (' + event[YTT_DURATION_EVENT_ID_KEY] + ' -- ' + YTTGetDurationString(duration) + ')');
                         console.log("YTTO1-" + event[YTT_DURATION_EVENT_ID_KEY] + ':' + YTTGetDurationString(duration));
                     }
                 });
