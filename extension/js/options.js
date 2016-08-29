@@ -75,11 +75,11 @@ $(document).ready(function () {
         var newConfig = {};
         newConfig[YTT_CONFIG_USERNAME] = $('#username').val();
         chrome.storage.sync.set(newConfig);
-        chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
+        chrome.storage.sync.get(YTT_CONFIG_USERID, function (config) {
             $.ajax({
                 url: 'https://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
                 method: 'POST',
-                success: function(){
+                success: function () {
                     alert('Username changed');
                 }
             });

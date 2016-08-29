@@ -1,4 +1,7 @@
 var YTT_DEBUG = false;
+const YTT_DATA_REAL = 'real';
+const YTT_DATA_TOTAL = 'total';
+const YTT_DATA_COUNT = 'count';
 const YTT_CONFIG_USERNAME = 'YTT_Username';
 const YTT_CONFIG_SHARE_ONLINE = 'YTT_Share_Stats';
 const YTT_CONFIG_USERID = 'YTT_User_ID';
@@ -46,16 +49,15 @@ function YTTGenUUID() {
         lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
 }
 
-function YTTAddConfigCount(amount, config, key) {
+function YTTAddConfigCount(amount, config) {
     if (!config) {
         var newConf = {};
-        newConf[YTT_DATA_COUNT] = 0;
+        newConf[YTT_DATA_COUNT] = amount;
         newConf[YTT_DATA_REAL] = {milliseconds: 0};
         newConf[YTT_DATA_TOTAL] = {milliseconds: 0};
-        newConf[key] = duration;
         return newConf;
     }
-    config[key] = (config[key] ? config[key] : 0) + amount;
+    config[YTT_DATA_COUNT] = (config[YTT_DATA_COUNT] ? config[YTT_DATA_COUNT] : 0) + amount;
     return config;
 }
 

@@ -1,4 +1,4 @@
-chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg['action'] == 'alertPopup') {
         var videoTitle = document.getElementById('watch7-headline');
         var span = document.createElement('p');
