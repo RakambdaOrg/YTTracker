@@ -49,11 +49,14 @@ $(document).ready(function () {
             var maxDate = '0';
             for (var key in config) {
                 if (config.hasOwnProperty(key) && key.substring(0, 3) == 'day') {
-                    var day = key.substring(3, key.length - 1);
+                    var day = key.substring(3);
                     if (!parsedConfig[day]) {
-                        parsedConfig[day] = {R: 0, T: 0, C: 0};
+                        parsedConfig[day] = {
+                            R: config[key][YTT_DATA_REAL],
+                            T: config[key][YTT_DATA_TOTAL],
+                            C: config[key][YTT_DATA_COUNT]
+                        };
                     }
-                    parsedConfig[day][key.substring(key.length - 1)] = config[key];
                     if (YTTCompareConfigDate(minDate, day) < 0) {
                         minDate = day;
                     }
@@ -108,7 +111,12 @@ $(document).ready(function () {
                         totalRatio += list[key]['ratio'];
                     }
                 }
-                return {real: totalR / list.length, total: totalT / list.length, ratio: totalRatio / list.length, count: totalC / list.length};
+                return {
+                    real: totalR / list.length,
+                    total: totalT / list.length,
+                    ratio: totalRatio / list.length,
+                    count: totalC / list.length
+                };
             }
 
             var avgs = getAverages(datas);
@@ -385,7 +393,7 @@ $(document).ready(function () {
             }
 
             function zoomChart(range) {
-                if(!range){
+                if (!range) {
                     range = 7;
                 }
                 chart.zoomToIndexes(parsedConfigOrdered.length - range, parsedConfigOrdered.length - 1);
@@ -462,11 +470,13 @@ $(document).ready(function () {
                 window.open('http://yttracker.mrcraftcod.fr/', '_blank')
             });
 
+            var dayKey = YTTGetDayConfigKey();
+
             $('#averageRatioHolder').text((100 * average['ratio']).toFixed(2) + '%');
             $('#averageWatchedHolder').text(YTTGetDurationString(average['real']));
             $('#averageOpenedHolder').text(YTTGetDurationString(average['total']));
-            $('#watchedHolder').text(YTTGetDurationString(config[YTTGetRealDayConfigKey()]));
-            $('#countHolder').text(config[YTTGetCountDayConfigKey()]  || 0);
+            $('#watchedHolder').text(YTTGetDurationString(config[dayKey] ? config[dayKey][YTT_DATA_REAL] : {milliseconds: 0}));
+            $('#countHolder').text(config[dayKey] ? config[dayKey][YTT_DATA_COUNT] : 0);
             $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
         });
     });

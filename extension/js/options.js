@@ -62,8 +62,12 @@ $(document).ready(function () {
         if (!confirm("This action will wipe all your data!\nAre you sure to continue?")) {
             return;
         }
-        chrome.storage.sync.clear(function () {
-            location.reload();
+        chrome.storage.sync.get([YTT_CONFIG_USERID], function (config) {
+            chrome.storage.sync.clear(function () {
+                chrome.storage.sync.set(config, function () {
+                    location.reload();
+                });
+            });
         });
     });
 
@@ -71,11 +75,11 @@ $(document).ready(function () {
         var newConfig = {};
         newConfig[YTT_CONFIG_USERNAME] = $('#username').val();
         chrome.storage.sync.set(newConfig);
-        chrome.storage.sync.get(YTT_CONFIG_USERID, function(config){
+        chrome.storage.sync.get(YTT_CONFIG_USERID, function (config) {
             $.ajax({
                 url: 'https://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
                 method: 'POST',
-                success: function(){
+                success: function () {
                     alert('Username changed');
                 }
             });

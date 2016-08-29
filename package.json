@@ -1,6 +1,6 @@
 {
   "name": "YTTracker",
-  "version": "0.5.1",
+  "version": "0.6.1",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb",
@@ -12,9 +12,15 @@
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
+    "clearComp": "rm extension/manifest.json && rm extension.zip",
+    "manifest": "cd extension && cp manifestProd.json manifest.json && cd ../",
+    "manifestTest": "cd extension && cp manifestTest.json manifest.json && cd ../",
     "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
-    "release": "npm run zip && webstore upload --file extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
-    "test": "xo src/*.js"
+    "release": "npm run manifest && npm run zip && npm run send && clearComp && releaseTest",
+    "releaseTest": "npm run manifestTest && npm run zip && npm run sendTest",
+    "test": "xo src/*.js",
+    "send": "webstore upload --file extension.zip --source extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "sendTest": "webstore upload --file extension.zip --source extension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^0.2.0",

@@ -1,4 +1,7 @@
 var YTT_DEBUG = false;
+const YTT_DATA_REAL = 'real';
+const YTT_DATA_TOTAL = 'total';
+const YTT_DATA_COUNT = 'count';
 const YTT_CONFIG_USERNAME = 'YTT_Username';
 const YTT_CONFIG_SHARE_ONLINE = 'YTT_Share_Stats';
 const YTT_CONFIG_USERID = 'YTT_User_ID';
@@ -14,6 +17,7 @@ const YTT_MESSAGE_TYPE_KEY = 'type';
 const YTT_MESSAGE_VALUE_KEY = 'value';
 const YTT_LOG_EVENT = 'log';
 const YTT_DURATION_EVENT = 'playerDuration';
+const YTT_DURATION_EVENT_TABID_KEY = 'tabID';
 const YTT_DURATION_EVENT_ID_KEY = 'ID';
 const YTT_DURATION_EVENT_DURATION_KEY = 'duration';
 const YTT_STATE_EVENT = 'playerStateChange';
@@ -30,8 +34,7 @@ const YTT_DOM_SPLITTER = '@';
 /**
  * @return {string}
  */
-function YTTGenUUID()
-{
+function YTTGenUUID() {
     var lut = [];
     for (var i = 0; i < 256; i++) {
         lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
@@ -46,9 +49,98 @@ function YTTGenUUID()
         lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
 }
 
-function YTTApplyThemeCSS(theme)
-{
-    if(!theme){
+function YTTAddConfigCount(amount, config) {
+    if (!config) {
+        var newConf = {};
+        newConf[YTT_DATA_COUNT] = amount;
+        newConf[YTT_DATA_REAL] = {milliseconds: 0};
+        newConf[YTT_DATA_TOTAL] = {milliseconds: 0};
+        return newConf;
+    }
+    config[YTT_DATA_COUNT] = (config[YTT_DATA_COUNT] ? config[YTT_DATA_COUNT] : 0) + amount;
+    return config;
+}
+
+function YTTCompareVersion(v1, v2, options) {
+    var v1parts = v1.split(/[.-]/);
+    var v2parts = v2.split(/[.-]/);
+
+    function compareParts(v1parts, v2parts, options) {
+        //noinspection JSUnresolvedVariable
+        var zeroExtend = options && options.zeroExtend;
+
+        if (zeroExtend) {
+            while (v1parts.length < v2parts.length) v1parts.push("0");
+            while (v2parts.length < v1parts.length) v2parts.push("0");
+        }
+
+        for (var i = 0; i < v1parts.length; ++i) {
+            if (v2parts.length == i) {
+                return 1;
+            }
+
+            var v1part = parseInt(v1parts[i]);
+            var v2part = parseInt(v2parts[i]);
+            var v1part_is_string = !(v1part == v1part);
+            var v2part_is_string = !(v2part == v2part);
+            v1part = v1part_is_string ? v1parts[i] : v1part;
+            v2part = v2part_is_string ? v2parts[i] : v2part;
+
+            if (v1part_is_string == v2part_is_string) {
+                if (v1part_is_string == false) {
+                    if (v1part == v2part) {
+                    } else if (v1part > v2part) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                } else {
+                    var v1subparts = v1part.match(/[a-zA-Z]+|[0-9]+/g);
+                    var v2subparts = v2part.match(/[a-zA-Z]+|[0-9]+/g);
+                    if ((v1subparts.length == 1) && (v2subparts.length == 1)) {
+                        v1part = v1subparts[0];
+                        v2part = v2subparts[0];
+                        if (v1part == v2part) {
+                            continue;
+                        } else if (v1part > v2part) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }
+                    var result = compareParts(v1subparts, v2subparts);
+                    if (result == 0) {
+                    } else {
+                        return result;
+                    }
+                }
+            } else {
+                return v2part_is_string ? 1 : -1;
+            }
+        }
+
+        if (v1parts.length != v2parts.length) {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    return compareParts(v1parts, v2parts, options);
+}
+
+function YTTAddConfigDuration(duration, config, key) {
+    if (!config) {
+        var newConf = {};
+        newConf[key] = duration;
+        return newConf;
+    }
+    config[key] = YTTAddDurations(duration, config[key]);
+    return config;
+}
+
+function YTTApplyThemeCSS(theme) {
+    if (!theme) {
         theme = 'dark';
     }
     var themeDOM = $('#YTTTheme');
@@ -100,14 +192,6 @@ function YTTGetDurationAsMillisec(d) {
     return (((((d.days || 0) * 24 + (d.hours || 0)) * 60 + (d.minutes || 0)) * 60 + (d.seconds || 0)) * 1000 + (d.milliseconds || 0)) || 0;
 }
 
-function YTTGetDurationAsMinutes(d) {
-    return parseInt(YTTGetDurationAsMillisec(d) / (60 * 1000));
-}
-
-function YTTGetDurationAsSeconds(d) {
-    return parseInt(YTTGetDurationAsMillisec(d) / 1000);
-}
-
 /**
  * @return {number}
  */
@@ -120,21 +204,25 @@ function YTTGetValidDuration(d) {
     if (!d) return {};
     if (YTTGetDurationAsMillisec(d) < 0) return {};
     if (d.days) {
+        //noinspection JSDuplicatedDeclaration
         var temp = d.days - Math.floor(d.days);
         d.days = Math.floor(d.days);
         d.hours = (d.hours || 0) + temp * 24;
     }
     if (d.hours) {
+        //noinspection JSDuplicatedDeclaration
         var temp = d.hours - Math.floor(d.hours);
         d.hours = Math.floor(d.hours);
         d.minutes = (d.minutes || 0) + temp * 60;
     }
     if (d.minutes) {
+        //noinspection JSDuplicatedDeclaration
         var temp = d.minutes - Math.floor(d.minutes);
         d.minutes = Math.floor(d.minutes);
         d.secondes = (d.secondes || 0) + temp * 60;
     }
     if (d.secondes) {
+        //noinspection JSDuplicatedDeclaration
         var temp = d.secondes - Math.floor(d.secondes);
         d.secondes = Math.floor(d.secondes);
         d.milliseconds = (d.milliseconds || 0) + temp * 1000;
@@ -194,27 +282,6 @@ function YTTGetDurationString(duration) {
 function YTTGetDayConfigKey(now) {
     now = now || new Date();
     return "day" + now.getDOY() + now.getFullYear();
-}
-
-/**
- * @return {string}
- */
-function YTTGetTotalDayConfigKey(now) {
-    return YTTGetDayConfigKey(now) + 'T';
-}
-
-/**
- * @return {string}
- */
-function YTTGetRealDayConfigKey(now) {
-    return YTTGetDayConfigKey(now) + 'R';
-}
-
-/**
- * @return {string}
- */
-function YTTGetCountDayConfigKey(now) {
-    return YTTGetDayConfigKey(now) + 'C';
 }
 
 /**

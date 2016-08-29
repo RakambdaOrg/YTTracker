@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
 
-  "name": "YouTube Tracker",
-  "short_name": "YTTracker",
+  "name": "YouTube Tracker Beta",
+  "short_name": "YTTrackerBeta",
   "description": "This extension will track your time on YouTube",
-  "version": "1.2.3",
+  "version": "1.3.0",
 
   "icons": {
     "16": "assets/icon16.png",
@@ -15,13 +15,14 @@
   "author": "MrCraftCod",
   "homepage_url": "https://github.com/MrCraftCod/YTTracker",
 
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArlHZIpWVXeiGgvlg/O1XIOvR4wJfm4UVgjlq2YjMQZjPsH/ETsy18topZnnYjrszs7cdKdNP3Nx9t+n50lmQMHsw+BYfWJ4w4ydCQCxC6YD+ce//kOOQF3JFHyfNwka0/AGGa0MUkDXEAvG0qkFFe0ahfZ8UCTssXU8suPKN6PFQcGeOQ0JTCyd/J/a+uCybBagusBnpKloEMCdSFMNpvul5iv2Jo374e0KNFnxehS0BdKf6R2QVyVlg1ju10I5Pcmgrq9Y1qhBGa5Fs/DUs51tjiQF7ThUTZLeU1kL2Silo1I9DTHX820zhwLm+XGlstZIUS2gUMKeGUNb9Fca+hQIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgQG3/oewtkQuMHOb6RKaEYtGWgd4Iv7tYZnO/cdr8/FoBg26DpRM0tTBI1KDeF8I30yVpsKcNjWh6t86iL3P0yROKGuEyhUZIrJIitoROzxyiowscYtfAJFlzwo/dbGr4eEPMuOdzMvl5J7bNPaZGJoXAHYt5auAjJzI7ZQtSxRA+iv3PWFsR1nmNcIhRmV0wP2W43OtFAKclmXuB3YAbzCf42Mtb2oD8FjHpmLWcnHrYggMWr0CQidphB5b9xtx6kgTCSb2LaNfOv1Q9L9MVQbhWw+NPLMves4OltwK3D+0gPbI2ulizSo6CLEPLTGcpn8JE/Xuc/9cRR7q5Kf3WQIDAQAB",
 
   "permissions": [
     "https://www.youtube.com/*",
     "https://yttracker.mrcraftcod.fr/*",
     "storage",
-    "downloads"
+    "downloads",
+    "notifications"
   ],
 
   "options_page": "chart.html",
