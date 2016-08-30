@@ -49,18 +49,18 @@ chrome.storage.sync.get(null, function (conf) {
 
 function sendRequest(request) {
     function send(uuid, vid, dur) {
-        var rVal = true;
+        var rVal = false;
         $.ajax({
             url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + "&type=" + request['type'] + "&stats=" + YTTGetDurationAsMillisec(dur),
             method: 'POST',
             async: false,
             error: function () {
-                notify('YTTError', 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server (' + vid + ' -- ' + YTTGetDurationString(dur) + ')');
-                console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
+                notify('YTTError', 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
+                console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
             },
             success: function () {
                 rVal = true;
-                notify('YTTracker', 'Sent ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server (' + vid + ' -- ' + YTTGetDurationString(dur) + ')');
+                notify('YTTracker', 'Sent ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.log("YTTO-" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
             }
         });
