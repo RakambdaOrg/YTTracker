@@ -77,7 +77,12 @@ function sendRequest(request) {
         for (var key in config[YTT_CONFIG_FAILED_SHARE]) {
             if (config[YTT_CONFIG_FAILED_SHARE].hasOwnProperty(key)) {
                 var req = config[YTT_CONFIG_FAILED_SHARE][key];
-                if (send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'])) {
+                if (req && req['videoID'] && req['duration']) {
+                    if (send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'])) {
+                        toDel.push(key);
+                    }
+                }
+                else {
                     toDel.push(key);
                 }
             }
