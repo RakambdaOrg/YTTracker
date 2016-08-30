@@ -36,7 +36,7 @@ chrome.storage.sync.get(null, function (conf) {
         notify('YTTracker', 'Converting done', true);
     }
     newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
-    newConfig[YTT_CONFIG_VERSION] = chrome.app.getDetails().version;
+    newConfig[YTT_CONFIG_VERSION] = chrome.runtime.getManifest().version;
     if (shouldClear) {
         chrome.storage.sync.clear(function () {
             chrome.storage.sync.set(newConfig);
@@ -55,12 +55,12 @@ function sendRequest(request) {
             method: 'POST',
             async: false,
             error: function () {
-                notify('YTTError', 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
+                notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
             },
             success: function () {
                 rVal = true;
-                notify('YTTracker', 'Sent ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
+                notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.log("YTTO-" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
             }
         });
