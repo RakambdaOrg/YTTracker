@@ -4,7 +4,7 @@
   "name": "YouTube Tracker Beta",
   "short_name": "YTTracker Beta",
   "description": "This extension will track your time on YouTube",
-  "version": "1.4.0",
+  "version": "1.4.1",
 
   "icons": {
     "16": "assets/icon16.png",
