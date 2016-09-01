@@ -1,5 +1,5 @@
-function YTTGetChangeState() {
-    var values = $('#' + YTT_DOM_PLAYER_STATE).text().split(YTT_DOM_SPLITTER);
+function YTTGetChangeState(mutation) {
+    var values = mutation.target.textContent.split(YTT_DOM_SPLITTER);
     var event = {};
     event[YTT_STATE_EVENT_STATE_KEY] = values[0];
     event[YTT_STATE_EVENT_TIME_KEY] = values[1];
@@ -7,8 +7,8 @@ function YTTGetChangeState() {
     YTTMessage(YTT_STATE_EVENT, event);
 }
 
-function YTTGetChangeInfos() {
-    var values = $('#' + YTT_DOM_PLAYER_INFOS).text().split(YTT_DOM_SPLITTER);
+function YTTGetChangeInfos(mutation) {
+    var values = mutation.target.textContent.split(YTT_DOM_SPLITTER);
     var event = {};
     event[YTT_DURATION_EVENT_ID_KEY] = values[0];
     event[YTT_DURATION_EVENT_DURATION_KEY] = values[1];
@@ -56,15 +56,19 @@ function injectCode() {
     docFrag.appendChild(hookerInj);
     (document.head || document.documentElement).appendChild(docFrag);
 
-    $('#' + YTT_DOM_PLAYER_STATE).bind("DOMSubtreeModified", function () {
-        YTTGetChangeState();
-    });
+    function observeElement(id, callback){
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(callback);
+        });
+        observer.observe(document.getElementById(id), {
+            attributes: false, childList: true, characterData: true, subtree: true
+        });
+    }
 
-    $('#' + YTT_DOM_PLAYER_INFOS).bind("DOMSubtreeModified", function () {
-        YTTGetChangeInfos();
-    });
+    observeElement(YTT_DOM_PLAYER_STATE, YTTGetChangeState);
+    observeElement(YTT_DOM_PLAYER_INFOS, YTTGetChangeInfos);
 
-    YTTLog("Player hooked");
+    YTTLog('Player hooked');
 }
 
 $(document).ready(injectCode);

@@ -22,7 +22,7 @@ function YTTUpdateDOM() {
             document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML = document.getElementById(YTT_DOM_PLAYER_TIME_1).innerHTML;
             document.getElementById(YTT_DOM_PLAYER_TIME_1).innerHTML = YTTTempPlayer.getCurrentTime();
         }
-    }, 100);
+    }, 75);
 }
 
 YTTHookProcess();
