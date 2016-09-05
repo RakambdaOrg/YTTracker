@@ -49,6 +49,9 @@ chrome.storage.sync.get(null, function (conf) {
 
 function sendRequest(request) {
     function send(uuid, vid, dur) {
+        if (YTTGetDurationAsMillisec(dur) === 0) {
+            return true;
+        }
         var rVal = false;
         $.ajax({
             url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + "&type=" + request['type'] + "&stats=" + YTTGetDurationAsMillisec(dur),
