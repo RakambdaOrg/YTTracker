@@ -83,9 +83,7 @@ function sendRequest(request) {
 
     chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_FAILED_SHARE], function (config) {
         config[YTT_CONFIG_FAILED_SHARE] = config[YTT_CONFIG_FAILED_SHARE] || [];
-        if (!send(config[YTT_CONFIG_USERID], request['videoID'], request['duration'], request['date'])) {
-            config[YTT_CONFIG_FAILED_SHARE].push(request);
-        }
+        config[YTT_CONFIG_FAILED_SHARE].push(request);
         var toDel = [];
         //noinspection JSDuplicatedDeclaration
         for (var key in config[YTT_CONFIG_FAILED_SHARE]) {
