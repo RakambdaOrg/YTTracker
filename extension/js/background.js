@@ -68,6 +68,7 @@ function sendRequest(request) {
             error: function () {
                 notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
+                console.error(request, true);
             },
             success: function () {
                 rVal = true;
