@@ -48,15 +48,27 @@ chrome.storage.sync.get(null, function (conf) {
 });
 
 function sendRequest(request) {
-    function send(uuid, vid, dur) {
+    function send(uuid, vid, dur, date) {
+        function getDate(timestamp){
+            if(!timestamp){
+                timestamp = new Date().getTime();
+            }
+            var d = new Date(timestamp);
+            return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+        }
+
+        if (YTTGetDurationAsMillisec(dur) === 0) {
+            return true;
+        }
         var rVal = false;
         $.ajax({
-            url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + "&type=" + request['type'] + "&stats=" + YTTGetDurationAsMillisec(dur),
+            url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + "&type=" + request['type'] + "&stats=" + YTTGetDurationAsMillisec(dur) + "&date=" + encodeURI(getDate(date)),
             method: 'POST',
             async: false,
             error: function () {
                 notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
+                console.error(request, true);
             },
             success: function () {
                 rVal = true;
@@ -67,18 +79,18 @@ function sendRequest(request) {
         return rVal;
     }
 
+    request['date'] = new Date().getTime();
+
     chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_FAILED_SHARE], function (config) {
         config[YTT_CONFIG_FAILED_SHARE] = config[YTT_CONFIG_FAILED_SHARE] || [];
-        if (!send(config[YTT_CONFIG_USERID], request['videoID'], request['duration'])) {
-            config[YTT_CONFIG_FAILED_SHARE].push(request);
-        }
+        config[YTT_CONFIG_FAILED_SHARE].push(request);
         var toDel = [];
         //noinspection JSDuplicatedDeclaration
         for (var key in config[YTT_CONFIG_FAILED_SHARE]) {
             if (config[YTT_CONFIG_FAILED_SHARE].hasOwnProperty(key)) {
                 var req = config[YTT_CONFIG_FAILED_SHARE][key];
                 if (req && req['videoID'] && req['duration']) {
-                    if (send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'])) {
+                    if (send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'], req['date'])) {
                         toDel.push(key);
                     }
                 }

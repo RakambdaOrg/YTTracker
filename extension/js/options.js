@@ -86,7 +86,7 @@ $(document).ready(function () {
         });
     });
 
-    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME], function (config) {
+    chrome.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME, YTT_CONFIG_DEBUG_KEY], function (config) {
         function setSelectedTheme(theme) {
             $('#darkTheme').prop('selected', false);
             $('#lightTheme').prop('selected', false);
@@ -121,6 +121,10 @@ $(document).ready(function () {
 
         if (config.hasOwnProperty(YTT_CONFIG_SHARE_ONLINE)) {
             $("#shareStats").prop("checked", config[YTT_CONFIG_SHARE_ONLINE]);
+        }
+
+        if (config.hasOwnProperty(YTT_CONFIG_SHARE_ONLINE)) {
+            $("#debug").prop("checked", config[YTT_CONFIG_DEBUG_KEY]);
         }
 
         $('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
@@ -164,6 +168,13 @@ $(document).ready(function () {
             var state = document.getElementById('shareStats').checked;
             var newConfig = {};
             newConfig[YTT_CONFIG_SHARE_ONLINE] = state;
+            chrome.storage.sync.set(newConfig);
+        });
+
+        $('#debug').change(function () {
+            var state = document.getElementById('debug').checked;
+            var newConfig = {};
+            newConfig[YTT_CONFIG_DEBUG_KEY] = state;
             chrome.storage.sync.set(newConfig);
         });
     });
