@@ -15,7 +15,7 @@
     "clearComp": "rm chrome/manifest.json && rm extension.zip",
     "manifest": "cd chrome && cp manifestProd.json manifest.json && cd ../",
     "manifestTest": "cd chrome && cp manifestTest.json manifest.json && cd ../",
-    "zip": "cd chrome && zip -r extension.zip ./* && cd ../ && mv chromes/extension.zip extension.zip",
+    "zip": "cd chrome && zip -r extension.zip ./* && cd ../ && mv chrome/extension.zip extension.zip",
     "release": "npm run manifest && npm run zip && npm run send && npm run clearComp && npm run releaseTest",
     "releaseTest": "npm run manifestTest && npm run zip && npm run sendTest",
     "test": "xo src/*.js",
