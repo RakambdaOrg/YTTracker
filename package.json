@@ -12,10 +12,10 @@
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
-    "clearComp": "rm extension/manifest.json && rm extension.zip",
-    "manifest": "cd extension && cp manifestProd.json manifest.json && cd ../",
-    "manifestTest": "cd extension && cp manifestTest.json manifest.json && cd ../",
-    "zip": "cd extension && zip -r extension.zip ./* && cd ../ && mv extension/extension.zip extension.zip",
+    "clearComp": "rm chrome/manifest.json && rm extension.zip",
+    "manifest": "cd chrome && cp manifestProd.json manifest.json && cd ../",
+    "manifestTest": "cd chrome && cp manifestTest.json manifest.json && cd ../",
+    "zip": "cd chrome && zip -r extension.zip ./* && cd ../ && mv chromes/extension.zip extension.zip",
     "release": "npm run manifest && npm run zip && npm run send && npm run clearComp && npm run releaseTest",
     "releaseTest": "npm run manifestTest && npm run zip && npm run sendTest",
     "test": "xo src/*.js",
