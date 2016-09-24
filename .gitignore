@@ -3,4 +3,4 @@
 *.ipr
 *.iws
 *.pem
-extension/manifest.json
+chrome/manifest.json
