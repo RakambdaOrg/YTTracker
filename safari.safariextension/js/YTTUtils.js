@@ -1,4 +1,4 @@
-var YTT_DEBUG = true;
+var YTT_DEBUG = false;
 const YTT_DATA_REAL = 'real';
 const YTT_DATA_TOTAL = 'total';
 const YTT_DATA_COUNT = 'count';
@@ -334,9 +334,10 @@ function YTTMessage(type, value) {
     message[YTT_MESSAGE_TYPE_KEY] = type;
     message[YTT_MESSAGE_VALUE_KEY] = value;
     try {
-        chrome.runtime.sendMessage(message);
+        safari.self.tab.dispatchMessage('YTTracker', message);
     }
     catch (err) {
+        console.log(err);
     }
 }
 
