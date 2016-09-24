@@ -334,9 +334,10 @@ function YTTMessage(type, value) {
     message[YTT_MESSAGE_TYPE_KEY] = type;
     message[YTT_MESSAGE_VALUE_KEY] = value;
     try {
-        alert(message);
+        safari.self.tab.dispatchMessage('YTTracker', message);
     }
     catch (err) {
+        console.log(err);
     }
 }
 
