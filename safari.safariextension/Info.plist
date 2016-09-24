@@ -28,7 +28,7 @@
 				<key>Identifier</key>
 				<string>fr.mrcraftcod.yttracker.toolbar</string>
 				<key>Image</key>
-				<string>icon-16.png</string>
+				<string>assets/barIcon.png</string>
 				<key>Include By Default</key>
 				<true/>
 				<key>Label</key>
