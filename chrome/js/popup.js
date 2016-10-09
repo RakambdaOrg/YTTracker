@@ -13,6 +13,10 @@ $(document).ready(function () {
         }
     });
 
+    $('#openstats').click(function () {
+        window.open("https://yttracker.mrcraftcod.fr/");
+    });
+
     addTooltip('textrealdurationtoday', 'Time of videos in the "playing state" today');
     addTooltip('texttotaldurationtoday', 'Time of video pages opened today');
     addTooltip('textrealduration', 'Time of videos in the "playing state"');
