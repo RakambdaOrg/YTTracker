@@ -39,6 +39,8 @@ You can also choose to send those data to a server to be able to compare your se
 ## Development/Beta releases
 [https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec](https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec)
 
+A lighter version is also available for Safari. This one only sends statistics to the online server. To use it get the ```safari.safariextension``` folder. Then in safari go to ```Develop > Show Extension Builder > Click the '+' at the bottom left corner > Add extension > Point to the previously downloaded folder```. *You can rename the folder but it have to end with '.safariextension'*
+
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
 
