@@ -84,25 +84,19 @@ function sendRequest(request) {
     chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_FAILED_SHARE], function (config) {
         config[YTT_CONFIG_FAILED_SHARE] = config[YTT_CONFIG_FAILED_SHARE] || [];
         config[YTT_CONFIG_FAILED_SHARE].push(request);
-        var toDel = [];
+        var newFailed = [];
         //noinspection JSDuplicatedDeclaration
         for (var key in config[YTT_CONFIG_FAILED_SHARE]) {
             if (config[YTT_CONFIG_FAILED_SHARE].hasOwnProperty(key)) {
                 var req = config[YTT_CONFIG_FAILED_SHARE][key];
-                if (req && req['videoID'] && req['duration']) {
-                    if (send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'], req['date'])) {
-                        toDel.push(key);
+                if (req && req !== null && req['videoID'] && req['duration']) {
+                    if (!send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'], req['date'])) {
+                        newFailed.push(key);
                     }
-                }
-                else {
-                    toDel.push(key);
                 }
             }
         }
-        //noinspection JSDuplicatedDeclaration
-        for (var key in toDel) {
-            delete config[YTT_CONFIG_FAILED_SHARE][toDel[key]];
-        }
+        config[YTT_CONFIG_FAILED_SHARE] = newFailed;
         chrome.storage.sync.set(config);
     });
 }
