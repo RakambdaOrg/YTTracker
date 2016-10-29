@@ -305,13 +305,7 @@ $(document).ready(function () {
                     cursorColor: '#000000',
                     fullWidth: true,
                     valueBalloonsEnabled: true,
-                    zoomable: true,
-                    listeners: [{
-                        event: 'zoomed',
-                        method: function (event) {
-                            console.log(event);
-                        }
-                    }]
+                    zoomable: true
                 },
                 dataDateFormat: 'YYYY-MM-DD',
                 categoryField: 'date',

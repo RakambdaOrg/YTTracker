@@ -53,7 +53,7 @@ function YTTGenUUID() {
 function YTTAddConfigCount(amount, config) {
     if (!config) {
         var newConf = {};
-        newConf[YTT_DATA_COUNT] = amount;
+        newConf[YTT_DATA_COUNT] = 0;
         newConf[YTT_DATA_REAL] = {milliseconds: 0};
         newConf[YTT_DATA_TOTAL] = {milliseconds: 0};
         return newConf;
