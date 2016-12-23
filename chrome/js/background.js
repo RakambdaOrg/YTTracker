@@ -13,7 +13,7 @@ chrome.storage.sync.get(null, function (conf) {
     if (YTTCompareVersion('1.3.0', conf[YTT_CONFIG_VERSION]) > 0) {
         notify('YTTracker', 'Converting stored data...', true);
         for (var key in conf) {
-            if (conf.hasOwnProperty(key) && key.substring(0, 3) == 'day' && isValidExKey(key.substring(key.length - 1))) {
+            if (conf.hasOwnProperty(key) && key.substring(0, 3) === 'day' && isValidExKey(key.substring(key.length - 1))) {
                 var label = key.substring(key.length - 1);
                 var day = key.substring(0, key.length - 1);
                 switch (label) {
@@ -57,7 +57,7 @@ function sendRequest(request) {
             return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         }
 
-        if (YTTGetDurationAsMillisec(dur) === 0) {
+        if (YTTGetDurationAsMillisec(dur) <= 0) {
             return true;
         }
         var rVal = false;
@@ -66,13 +66,13 @@ function sendRequest(request) {
             method: 'POST',
             async: false,
             error: function () {
-                notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
+                notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
                 console.error(request, true);
             },
             success: function () {
                 rVal = true;
-                notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] == 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
+                notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.log("YTTO-" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
             }
         });
@@ -124,21 +124,21 @@ function notify(title, text, force) {
 
 //noinspection JSCheckFunctionSignatures
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    if (request[YTT_MESSAGE_TYPE_KEY] == YTT_LOG_EVENT) {
+    if (request[YTT_MESSAGE_TYPE_KEY] === YTT_LOG_EVENT) {
         log(request[YTT_MESSAGE_VALUE_KEY] || "undefined");
     }
-    else if (request[YTT_MESSAGE_TYPE_KEY] == YTT_STATE_EVENT) {
+    else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
         request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
         playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
     }
-    else if (request[YTT_MESSAGE_TYPE_KEY] == YTT_DURATION_EVENT) {
+    else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DURATION_EVENT) {
         request[YTT_MESSAGE_VALUE_KEY][YTT_DURATION_EVENT_TABID_KEY] = sender.tab.id;
         setVideoDuration(request[YTT_MESSAGE_VALUE_KEY])
     }
 });
 
 function playerStateChange(event) {
-    if (event[YTT_STATE_EVENT_STATE_KEY] == 1) {
+    if (event[YTT_STATE_EVENT_STATE_KEY] === 1) {
         log("Started playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         chrome.browserAction.setBadgeText({text: "P"});
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = {
@@ -146,14 +146,14 @@ function playerStateChange(event) {
             vid: event[YTT_STATE_EVENT_VID_KEY]
         };
     }
-    else if ((event[YTT_STATE_EVENT_STATE_KEY] == 2 || event[YTT_STATE_EVENT_STATE_KEY] == 0 || event[YTT_STATE_EVENT_STATE_KEY] == -5) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] != null) {
+    else if ((event[YTT_STATE_EVENT_STATE_KEY] === 2 || event[YTT_STATE_EVENT_STATE_KEY] === 0 || event[YTT_STATE_EVENT_STATE_KEY] === -5) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] !== null) {
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         var TODAY_KEY = YTTGetDayConfigKey();
         var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time']) * 1000)};
         var videoID = activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['vid'];
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
         var size = 0, key;
-        for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] != null) size++;
+        for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null) size++;
         if (size < 1)chrome.browserAction.setBadgeText({text: ""});
         chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
             if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
