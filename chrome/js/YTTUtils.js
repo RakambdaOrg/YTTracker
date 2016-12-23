@@ -82,20 +82,20 @@ function YTTCompareVersion(v1, v2, options) {
         }
 
         for (var i = 0; i < v1parts.length; ++i) {
-            if (v2parts.length == i) {
+            if (v2parts.length === i) {
                 return 1;
             }
 
             var v1part = parseInt(v1parts[i]);
             var v2part = parseInt(v2parts[i]);
-            var v1part_is_string = !(v1part == v1part);
-            var v2part_is_string = !(v2part == v2part);
+            var v1part_is_string = !(v1part === v1part);
+            var v2part_is_string = !(v2part === v2part);
             v1part = v1part_is_string ? v1parts[i] : v1part;
             v2part = v2part_is_string ? v2parts[i] : v2part;
 
-            if (v1part_is_string == v2part_is_string) {
-                if (v1part_is_string == false) {
-                    if (v1part == v2part) {
+            if (v1part_is_string === v2part_is_string) {
+                if (v1part_is_string === false) {
+                    if (v1part === v2part) {
                     } else if (v1part > v2part) {
                         return 1;
                     } else {
@@ -104,10 +104,10 @@ function YTTCompareVersion(v1, v2, options) {
                 } else {
                     var v1subparts = v1part.match(/[a-zA-Z]+|[0-9]+/g);
                     var v2subparts = v2part.match(/[a-zA-Z]+|[0-9]+/g);
-                    if ((v1subparts.length == 1) && (v2subparts.length == 1)) {
+                    if ((v1subparts.length === 1) && (v2subparts.length === 1)) {
                         v1part = v1subparts[0];
                         v2part = v2subparts[0];
-                        if (v1part == v2part) {
+                        if (v1part === v2part) {
                             continue;
                         } else if (v1part > v2part) {
                             return 1;
@@ -116,7 +116,7 @@ function YTTCompareVersion(v1, v2, options) {
                         }
                     }
                     var result = compareParts(v1subparts, v2subparts);
-                    if (result == 0) {
+                    if (result === 0) {
                     } else {
                         return result;
                     }
@@ -126,7 +126,7 @@ function YTTCompareVersion(v1, v2, options) {
             }
         }
 
-        if (v1parts.length != v2parts.length) {
+        if (v1parts.length !== v2parts.length) {
             return -1;
         }
 
@@ -172,8 +172,8 @@ function YTTApplyThemeCSS(theme) {
 
 Date.prototype.isLeapYear = function () {
     var year = this.getFullYear();
-    if ((year & 3) != 0) return false;
-    return ((year % 100) != 0 || (year % 400) == 0);
+    if ((year & 3) !== 0) return false;
+    return ((year % 100) !== 0 || (year % 400) === 0);
 };
 
 // Get Day of Year
@@ -209,7 +209,7 @@ function YTTGetDurationAsHours(d) {
 
 function YTTGetValidDuration(d) {
     if (!d) return {};
-    if (YTTGetDurationAsMillisec(d) < 0) return {};
+    if (YTTGetDurationAsMillisec(d) <= 0) return {};
     if (d.days) {
         //noinspection JSDuplicatedDeclaration
         var temp = d.days - Math.floor(d.days);
@@ -278,7 +278,7 @@ function YTTGetDurationString(duration) {
         text += duration.minutes + 'M ';
     if (duration.seconds)
         text += duration.seconds + 'S';
-    if (text == '')
+    if (text === '')
         return '0S';
     return text;
 }
@@ -310,7 +310,7 @@ function YTTGetDateString(time) {
 function YTTCompareConfigDate(base, test) {
     var baseObj = YTTConvertConfigDateToObject(base);
     var testObj = YTTConvertConfigDateToObject(test);
-    return testObj.year != baseObj.year ? (testObj.year - baseObj.year) * 365 : testObj.day - baseObj.day;
+    return testObj.year !== baseObj.year ? (testObj.year - baseObj.year) * 365 : testObj.day - baseObj.day;
 }
 
 /**

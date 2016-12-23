@@ -136,7 +136,7 @@ $(document).ready(function () {
                 var xhr = new XMLHttpRequest();
 
                 function displaySharedData() {
-                    if (xhr.readyState == 4) {
+                    if (xhr.readyState === 4) {
                         $('#optionUsername').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
                     }
                 }
