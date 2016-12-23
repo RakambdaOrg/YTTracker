@@ -48,7 +48,7 @@ $(document).ready(function () {
             var minDate = '19999';
             var maxDate = '0';
             for (var key in config) {
-                if (config.hasOwnProperty(key) && key.substring(0, 3) == 'day') {
+                if (config.hasOwnProperty(key) && key.substring(0, 3) === 'day') {
                     var day = key.substring(3);
                     if (!parsedConfig[day]) {
                         parsedConfig[day] = {
@@ -428,7 +428,7 @@ $(document).ready(function () {
                             date: dateFromDay(config[key]['day']),
                             real: YTTGetDurationAsHours(config[key]['R']),
                             total: YTTGetDurationAsHours(config[key]['T']),
-                            ratio: YTTGetDurationAsMillisec(config[key]['T']) == 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T']),
+                            ratio: YTTGetDurationAsMillisec(config[key]['T']) === 0 ? 1 : YTTGetDurationAsMillisec(config[key]['R']) / YTTGetDurationAsMillisec(config[key]['T']),
                             count: config[key]['C'] || 0
                         });
                     }

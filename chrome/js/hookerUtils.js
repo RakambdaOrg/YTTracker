@@ -2,7 +2,7 @@ var YTTHooked = false;
 var YTTPlayer;
 
 function changeDOMTime(event) {
-    if (event == 1)
+    if (event === 1)
         document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = event + YTT_DOM_SPLITTER + YTTGetPlayer().getCurrentTime();
     else
         document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = event + YTT_DOM_SPLITTER + document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML;
