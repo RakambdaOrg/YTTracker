@@ -138,7 +138,7 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 });
 
 function playerStateChange(event) {
-    if (event[YTT_STATE_EVENT_STATE_KEY] === 1) {
+    if (event[YTT_STATE_EVENT_STATE_KEY] === '1') {
         log("Started playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         chrome.browserAction.setBadgeText({text: "P"});
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = {
@@ -146,7 +146,7 @@ function playerStateChange(event) {
             vid: event[YTT_STATE_EVENT_VID_KEY]
         };
     }
-    else if ((event[YTT_STATE_EVENT_STATE_KEY] === 2 || event[YTT_STATE_EVENT_STATE_KEY] === 0 || event[YTT_STATE_EVENT_STATE_KEY] === -5) && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] !== null) {
+    else if ((event[YTT_STATE_EVENT_STATE_KEY] === '2' || event[YTT_STATE_EVENT_STATE_KEY] === '0' || event[YTT_STATE_EVENT_STATE_KEY] === '-5') && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] !== null) {
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         var TODAY_KEY = YTTGetDayConfigKey();
         var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time']) * 1000)};
