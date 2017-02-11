@@ -108,7 +108,7 @@ function log(text) {
 }
 
 function notify(title, text, force) {
-    //if (YTT_DEBUG || force)
+    if (YTT_DEBUG || force)
     {
         chrome.notifications.getPermissionLevel(function (permissionLevel) {
             if (permissionLevel === 'granted') {
