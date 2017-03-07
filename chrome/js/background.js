@@ -64,7 +64,7 @@ function sendRequest(request) {
         $.ajax({
             url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + "&type=" + request['type'] + "&stats=" + YTTGetDurationAsMillisec(dur) + "&date=" + encodeURI(getDate(date)),
             method: 'POST',
-            async: false,
+            async: true,
             error: function () {
                 notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
                 console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
