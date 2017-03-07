@@ -1,7 +1,9 @@
 <p align="center">
     <img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/>
 </p>
+<p>
     <h1 align="center">YTTracker</h1>
+</p>
 <p align="center">
     <a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/knnlnielflnfhdohmihofhdelgahgjdb.svg?maxAge=2592000&style=flat" /></a>
     <a alt="Firefox Addon" href="https://addons.mozilla.org/en-US/firefox/addon/youtube-tracker/"><img alt="Firefox Addon" src="https://img.shields.io/amo/v/youtube-tracker.svg?maxAge=2592000&style=flat" /></a>
