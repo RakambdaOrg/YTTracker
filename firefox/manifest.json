@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "YouTube Tracker Beta",
-  "short_name": "YTTracker Beta",
+  "name": "YouTube Tracker",
+  "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
   "version": "1.13.1",
 
@@ -12,10 +12,14 @@
     "128": "assets/icon128.png"
   },
 
+  "applications": {
+    "gecko": {
+      "id": "yttracker@mrcraftcod.fr"
+    }
+  },
+
   "author": "MrCraftCod",
   "homepage_url": "https://github.com/MrCraftCod/YTTracker",
-
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgQG3/oewtkQuMHOb6RKaEYtGWgd4Iv7tYZnO/cdr8/FoBg26DpRM0tTBI1KDeF8I30yVpsKcNjWh6t86iL3P0yROKGuEyhUZIrJIitoROzxyiowscYtfAJFlzwo/dbGr4eEPMuOdzMvl5J7bNPaZGJoXAHYt5auAjJzI7ZQtSxRA+iv3PWFsR1nmNcIhRmV0wP2W43OtFAKclmXuB3YAbzCf42Mtb2oD8FjHpmLWcnHrYggMWr0CQidphB5b9xtx6kgTCSb2LaNfOv1Q9L9MVQbhWw+NPLMves4OltwK3D+0gPbI2ulizSo6CLEPLTGcpn8JE/Xuc/9cRR7q5Kf3WQIDAQAB",
 
   "permissions": [
     "https://www.youtube.com/*",
@@ -25,10 +29,14 @@
     "notifications"
   ],
 
-  "options_page": "chart.html",
+  "options_ui": {
+    "page": "chart.html",
+    "open_in_tab": true
+  },
 
   "browser_action": {
     "default_icon": "assets/icon128.png",
+    "default_title": "YoutubeTracker",
     "default_popup": "popup.html"
   },
 
@@ -43,7 +51,7 @@
     "scripts": ["js/lib/jquery/jquery.js", "js/YTTUtils.js", "js/background.js"]
   },
 
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self'; object-src 'self'",
 
   "web_accessible_resources": ["js/YTTUtils.js", "js/hookerUtils.js", "js/hooker.js"]
 }

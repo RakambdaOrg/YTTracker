@@ -1,14 +1,15 @@
 <p align="center">
-    <a href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/></a>
+    <img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/>
 </p>
-<a style="color: white; text-decoration:none;" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><h1 align="center">YTTracker</h1></a>
+    <h1 align="center">YTTracker</h1>
 <p align="center">
-    <a alt="Downloads" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="Downloads" src="https://img.shields.io/chrome-web-store/d/knnlnielflnfhdohmihofhdelgahgjdb.svg?maxAge=2592000&style=flat" /></a>
+    <a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/knnlnielflnfhdohmihofhdelgahgjdb.svg?maxAge=2592000&style=flat" /></a>
+    <a alt="Firefox Addon" href="https://addons.mozilla.org/en-US/firefox/addon/youtube-tracker/"><img alt="Firefox Addon" src="https://img.shields.io/amo/v/youtube-tracker.svg?maxAge=2592000&style=flat" /></a>
     <a alt="Build Status" href="https://travis-ci.org/MrCraftCod/YTTracker"><img alt="Build status" src="https://img.shields.io/travis/MrCraftCod/YTTracker/master.svg?maxAge=2592000&style=flat"/></a>
     <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg?style=flat"/></a>
     <a alt="GitHub Release" href="https://github.com/mrcraftcod/yttracker/releases"><img alt="GitHub Release" src="https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20&style=flat"/></a>
 </p>
-<h2 align="center">A Chrome extension to track time on YouTube</h2>
+<h2 align="center">An extension to track time on YouTube</h2>
 
 ## Description
 This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
@@ -37,9 +38,7 @@ You can also choose to send those data to a server to be able to compare your se
 
 
 ## Development/Beta releases
-[https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec](https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec)
-
-A lighter version is also available for Safari. This one only sends statistics to the online server. To use it get the ```safari.safariextension``` folder. Then in safari go to ```Develop > Show Extension Builder > Click the '+' at the bottom left corner > Add extension > Point to the previously downloaded folder```. *You can rename the folder but it have to end with '.safariextension'*
+[Chrome beta version](https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec)
 
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)

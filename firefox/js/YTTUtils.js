@@ -278,8 +278,6 @@ function YTTGetDurationString(duration) {
         text += duration.minutes + 'M ';
     if (duration.seconds)
         text += duration.seconds + 'S';
-    if(YTT_DEBUG)
-        text += duration.milliseconds + "MS";
     if (text === '')
         return '0S';
     return text;
