@@ -1,0 +1,80 @@
+html,
+body {
+    height: 100%;
+    text-align: center;
+    margin: auto;
+}
+
+#topContainer{
+    background-color: #333;
+}
+
+#chartHolder {
+    width: 95%;
+    height: 85%;
+    margin: auto;
+}
+
+#chartdiv {
+    width: 100%;
+}
+
+header ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+header ul > li {
+    float: left;
+}
+
+.rightNav {
+    float: right !important;
+}
+
+.leftNav {
+    float: left !important;
+}
+
+select {
+    background-color: #AAAAAA;
+    border-color: #CCCCCC;
+}
+
+header ul > li > a {
+    border-radius: 10px;
+    display: block;
+    color: #CCCCCC;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+header ul > li > a:hover {
+    background-color: #111;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.amcharts-export-canvas {
+    display: none;
+}
+
+.infosHolder > p {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-style: none;
+    border-radius: 5px;
+}
+
+#topContainer{
+    width: 100%;
+    padding-top: 3px;
+}
