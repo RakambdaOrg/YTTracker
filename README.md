@@ -3,6 +3,7 @@
 </p>
 <p>
     <h1 align="center">YTTracker</h1>
+    <h3 align="center">An extension to track time on YouTube</h3>
 </p>
 <p align="center">
     <a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/knnlnielflnfhdohmihofhdelgahgjdb.svg?maxAge=2592000&style=flat" /></a>
@@ -11,7 +12,6 @@
     <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg?style=flat"/></a>
     <a alt="GitHub Release" href="https://github.com/mrcraftcod/yttracker/releases"><img alt="GitHub Release" src="https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20&style=flat"/></a>
 </p>
-<h2 align="center">An extension to track time on YouTube</h2>
 
 ## Description
 This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
@@ -26,7 +26,7 @@ The count and time of videos opened are counted only one time per each hour maxi
 
 You can also choose to send those data to a server to be able to compare your self with others. The stats are available [here](https://yttracker.mrcraftcod.fr/).
 
-##Screenshots
+## Screenshots
 <div align="center">
     <p>Popup window:</p>
     <img style="width:65%" src="https://github.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/popup.png"/>
