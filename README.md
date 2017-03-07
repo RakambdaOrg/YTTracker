@@ -40,7 +40,7 @@ You can also choose to send those data to a server to be able to compare your se
 
 
 ## Development/Beta releases
-[Chrome beta version](https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec): <a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec"><img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/moboafdnejnjnppicfiadaalobjeemec.svg?maxAge=2592000&style=flat" /></a>
+<a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec" style="text: white; text-decoration:none;">Chrome beta version: <img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/moboafdnejnjnppicfiadaalobjeemec.svg?maxAge=2592000&style=flat" /></a>
 
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
