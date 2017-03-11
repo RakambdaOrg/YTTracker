@@ -144,6 +144,8 @@ function playerStateChange(event) {
         };
     }
     else if ((event[YTT_STATE_EVENT_STATE_KEY] === '2' || event[YTT_STATE_EVENT_STATE_KEY] === '0' || event[YTT_STATE_EVENT_STATE_KEY] === '-5') && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] !== null) {
+        if(!activePlayers[event[YTT_STATE_EVENT_ID_KEY]])
+            return;
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         var TODAY_KEY = YTTGetDayConfigKey();
         var duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time']) * 1000)};

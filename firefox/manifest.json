@@ -42,13 +42,13 @@
 
   "content_scripts": [{
     "matches": ["https://www.youtube.com/*"],
-    "js": ["js/lib/jquery/jquery.js", "js/firefoxUtils.js", "js/YTTUtils.js", "js/content.js"],
+    "js": ["js/lib/jquery/jquery.js", "js/browserUtils.js", "js/YTTUtils.js", "js/content.js"],
     "run_at": "document_start",
     "all_frames": true
   }],
 
   "background": {
-    "scripts": ["js/lib/jquery/jquery.js", "js/firefoxUtils.js", "js/YTTUtils.js", "js/background.js"]
+    "scripts": ["js/lib/jquery/jquery.js", "js/browserUtils.js", "js/YTTUtils.js", "js/background.js"]
   },
 
   "content_security_policy": "script-src 'self'; object-src 'self'",
