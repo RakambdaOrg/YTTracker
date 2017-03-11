@@ -19,3 +19,8 @@ function YTTClearConfig(callback)
     if(callback !== null)
         callback();
 }
+
+function YTTSendNotification(notification)
+{
+    chrome.notifications.create('', notification);
+}

@@ -2,7 +2,7 @@
 
 var activePlayers = {};
 
-chrome.storage.sync.get(null, function (conf) {
+YTTGetConfig(null, function (conf) {
     var newConfig = {};
     var shouldClear = false;
 
@@ -38,12 +38,12 @@ chrome.storage.sync.get(null, function (conf) {
     newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
     newConfig[YTT_CONFIG_VERSION] = chrome.runtime.getManifest().version;
     if (shouldClear) {
-        chrome.storage.sync.clear(function () {
-            chrome.storage.sync.set(newConfig);
+        YTTClearConfig(function () {
+            YTTSetConfig(newConfig);
         })
     }
     else {
-        chrome.storage.sync.set(newConfig);
+        YTTSetConfig(newConfig);
     }
 });
 
@@ -81,7 +81,7 @@ function sendRequest(request) {
 
     request['date'] = new Date().getTime();
 
-    chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_FAILED_SHARE], function (config) {
+    YTTGetConfig([YTT_CONFIG_USERID, YTT_CONFIG_FAILED_SHARE], function (config) {
         config[YTT_CONFIG_FAILED_SHARE] = config[YTT_CONFIG_FAILED_SHARE] || [];
         config[YTT_CONFIG_FAILED_SHARE].push(request);
         var newFailed = [];
@@ -97,7 +97,7 @@ function sendRequest(request) {
             }
         }
         config[YTT_CONFIG_FAILED_SHARE] = newFailed;
-        chrome.storage.sync.set(config);
+        YTTSetConfig(config);
     });
 }
 
@@ -110,15 +110,11 @@ function log(text) {
 function notify(title, text, force) {
     if (YTT_DEBUG || force)
     {
-        chrome.notifications.getPermissionLevel(function (permissionLevel) {
-            if (permissionLevel === 'granted') {
-                chrome.notifications.create('', {
-                    type: 'basic',
-                    iconUrl: '/assets/icon128.png',
-                    title: title,
-                    message: text
-                });
-            }
+        YTTSendNotification({
+            type: 'basic',
+            iconUrl: '/assets/icon128.png',
+            title: title,
+            message: text
         });
     }
 }
@@ -156,7 +152,7 @@ function playerStateChange(event) {
         var size = 0, key;
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null) size++;
         if (size < 1)chrome.browserAction.setBadgeText({text: ""});
-        chrome.storage.sync.get([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
+        YTTGetConfig([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
             if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
                 sendRequest({
                     videoID: videoID,
@@ -167,7 +163,7 @@ function playerStateChange(event) {
             var newConfig = {};
             newConfig[YTT_CONFIG_REAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_REAL_TIME_KEY]);
             newConfig[TODAY_KEY] = YTTAddConfigDuration(duration, config[TODAY_KEY], YTT_DATA_REAL);
-            chrome.storage.sync.set(newConfig);
+            YTTSetConfig(newConfig);
             log("Added real time: " + YTTGetDurationString(duration));
         });
     }
@@ -175,7 +171,7 @@ function playerStateChange(event) {
 
 function setVideoDuration(event) {
     var TODAY_KEY = YTTGetDayConfigKey();
-    chrome.storage.sync.get([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
+    YTTGetConfig([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
         var toRemove = [];
         var IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || {};
         //noinspection JSDuplicatedDeclaration
@@ -209,7 +205,7 @@ function setVideoDuration(event) {
             newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
             newConfig[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
             newConfig[TODAY_KEY] = YTTAddConfigCount(1, YTTAddConfigDuration(duration, config[TODAY_KEY], YTT_DATA_TOTAL));
-            chrome.storage.sync.set(newConfig);
+            YTTSetConfig(newConfig);
             log("New total time: " + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY]));
         }
         else {
@@ -218,14 +214,14 @@ function setVideoDuration(event) {
     });
 }
 
-chrome.storage.sync.get([YTT_CONFIG_USERID, YTT_CONFIG_DEBUG_KEY], function (config) {
+YTTGetConfig([YTT_CONFIG_USERID, YTT_CONFIG_DEBUG_KEY], function (config) {
     var userID = config[YTT_CONFIG_USERID];
 
     if (!userID) {
         userID = YTTGenUUID();
         var newConfig = {};
         newConfig[YTT_CONFIG_USERID] = userID;
-        chrome.storage.sync.set(newConfig);
+        YTTSetConfig(newConfig);
     }
     YTTSetDebug(config[YTT_CONFIG_DEBUG_KEY] || false);
 });

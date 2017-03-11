@@ -20,3 +20,12 @@ function YTTClearConfig(callback)
 {
     chrome.storage.sync.clear(callback);
 }
+
+function YTTSendNotification(notification)
+{
+    chrome.notifications.getPermissionLevel(function (permissionLevel) {
+        if (permissionLevel === 'granted') {
+            chrome.notifications.create('', notification);
+        }
+    });
+}
