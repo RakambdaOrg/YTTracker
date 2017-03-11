@@ -3,16 +3,19 @@
   "version": "0.6.1",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
   "description": "This extension will track your time on YouTube",
-  "homepage": "https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb",
+  "homepage": "https://github.com/MrCraftCod/YTTracker/blob/master/README.md",
+  "license" : "MIT",
   "files": [
-    "/src"
+    "/chrome",
+    "/firefox",
+    "/includes"
   ],
   "repository" : {
     "type" : "git",
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
-    "test": "xo src/*.js",
+    "test": "echo \"No tests\"",
 
 
     "chromeManifest": "cd chrome && cp manifestProd.json manifest.json && cd ../",
