@@ -20,11 +20,8 @@ $(document).ready(function () {
     });
 
     $('#exportButton').click(function () {
-        browser.storage.sync.get(null).then(function (config) {
-            chrome.downloads.download({
-                url: 'data:application/json;base64,' + btoa(JSON.stringify(config)),
-                filename: 'YTTExport.json'
-            });
+        YTTGetConfig(null, function (config) {
+            YTTDownload('data:application/json;base64,' + btoa(JSON.stringify(config)), 'YTTExport.json');
         });
     });
 
@@ -49,7 +46,7 @@ $(document).ready(function () {
                     if (!confirm("This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?")) {
                         return;
                     }
-                    browser.storage.sync.set(dataObject);
+                    YTTSetConfig(dataObject);
                     location.reload();
                 };
                 importData(reader.target.result);
@@ -62,10 +59,11 @@ $(document).ready(function () {
         if (!confirm("This action will wipe all your data!\nAre you sure to continue?")) {
             return;
         }
-        browser.storage.sync.get([YTT_CONFIG_USERID]).then(function (config) {
-            browser.storage.sync.clear();
-            browser.storage.sync.set(config, function () {
+        YTTGetConfig([YTT_CONFIG_USERID], function (config) {
+            YTTClearConfig(function () {
+                YTTSetConfig(config, function () {
                     location.reload();
+                });
             });
         });
     });
@@ -73,8 +71,8 @@ $(document).ready(function () {
     $('#validUsername').click(function () {
         var newConfig = {};
         newConfig[YTT_CONFIG_USERNAME] = $('#username').val();
-        browser.storage.sync.set(newConfig);
-        browser.storage.sync.get(YTT_CONFIG_USERID).then(function (config) {
+        YTTSetConfig(newConfig);
+        YTTGetConfig(YTT_CONFIG_USERID, function (config) {
             $.ajax({
                 url: 'https://yttracker.mrcraftcod.fr/api/usernames/set?uuid=' + encodeURI(config[YTT_CONFIG_USERID]) + '&username=' + encodeURI(newConfig[YTT_CONFIG_USERNAME]),
                 method: 'POST',
@@ -85,7 +83,7 @@ $(document).ready(function () {
         });
     });
 
-    browser.storage.sync.get([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME, YTT_CONFIG_DEBUG_KEY]).then(function (config) {
+    YTTGetConfig([YTT_CONFIG_THEME, YTT_CONFIG_HANDDRAWN, YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME, YTT_CONFIG_DEBUG_KEY], function (config) {
         function setSelectedTheme(theme) {
             $('#darkTheme').prop('selected', false);
             $('#lightTheme').prop('selected', false);
@@ -131,7 +129,7 @@ $(document).ready(function () {
         $('#username').val(config[YTT_CONFIG_USERNAME] ? config[YTT_CONFIG_USERNAME] : '');
 
         function getAllSharedData() {
-            browser.storage.sync.get(YTT_CONFIG_USERID).then(function (config) {
+            YTTGetConfig(YTT_CONFIG_USERID, function (config) {
                 var xhr = new XMLHttpRequest();
 
                 function displaySharedData() {
@@ -153,28 +151,28 @@ $(document).ready(function () {
             YTTApplyThemeCSS(theme);
             var newConfig = {};
             newConfig[YTT_CONFIG_THEME] = theme;
-            browser.storage.sync.set(newConfig);
+            YTTSetConfig(newConfig);
         });
 
         $('#handDrawnSelect').change(function () {
             var state = $('#handDrawnSelect').find(":selected").val();
             var newConfig = {};
             newConfig[YTT_CONFIG_HANDDRAWN] = state;
-            browser.storage.sync.set(newConfig);
+            YTTSetConfig(newConfig);
         });
 
         $('#shareStats').change(function () {
             var state = document.getElementById('shareStats').checked;
             var newConfig = {};
             newConfig[YTT_CONFIG_SHARE_ONLINE] = state;
-            browser.storage.sync.set(newConfig);
+            YTTSetConfig(newConfig);
         });
 
         $('#debug').change(function () {
             var state = document.getElementById('debug').checked;
             var newConfig = {};
             newConfig[YTT_CONFIG_DEBUG_KEY] = state;
-            browser.storage.sync.set(newConfig);
+            YTTSetConfig(newConfig);
         });
     });
 });

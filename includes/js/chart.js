@@ -39,7 +39,7 @@ $(document).ready(function () {
     }
 
     AmCharts.ready(function () {
-        chrome.storage.sync.get(null, function (config) {
+        YTTGetConfig(null, function (config) {
             YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
             var chartColors = getChartColors(config[YTT_CONFIG_THEME], config[YTT_CONFIG_HANDDRAWN] === 'true');
 
@@ -440,20 +440,14 @@ $(document).ready(function () {
             $('#exportJPGButton').click(function () {
                 chart.export.capture({}, function () {
                     this.toJPG({}, function (base64) {
-                        chrome.downloads.download({
-                            url: base64,
-                            filename: 'YTTExport.jpg'
-                        });
+                        YTTDownload(base64, "YTTExport.png");
                     });
                 });
             });
             $('#exportPNGButton').click(function () {
                 chart.export.capture({}, function () {
                     this.toPNG({}, function (base64) {
-                        chrome.downloads.download({
-                            url: base64,
-                            filename: 'YTTExport.png'
-                        });
+                        YTTDownload(base64, "YTTExport.png");
                     });
                 });
             });
