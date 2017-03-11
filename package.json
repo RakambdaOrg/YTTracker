@@ -18,7 +18,7 @@
     "chromeManifest": "cd chrome && cp manifestProd.json manifest.json && cd ../",
     "chromeManifestBeta": "cd chrome && cp manifestTest.json manifest.json && cd ../",
 
-    "chromeIncludes": "cp -R includes/assets chrome && cp -R includes/css chrome && cp -R includes/js chrome",
+    "chromeIncludes": "cp -R includes/* chrome",
     "chromePackage": "npm run chromeIncludes && cd chrome && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv chrome/extension.zip extension.zip",
 
     "chromeRelease": "npm run chromeManifest && npm run chromePackage && npm run chromeSend && npm run chromeClear && npm run chromeReleaseBeta",
@@ -30,7 +30,7 @@
     "chromeClear": "rm chrome/manifest.json && rm chromeExtension.zip",
 
 
-    "firefoxIncludes": "cp -R includes/assets firefox && cp -R includes/css firefox && cp -R includes/js firefox",
+    "firefoxIncludes": "cp -R includes/* firefox",
     "firefoxPackage": "npm run firefoxIncludes && cd firefox && zip -r firefoxExtension.xpi ./* -x \"*.DS_Store\" && cd ../ && mv firefox/firefoxExtension.xpi firefoxExtension.xpi",
 
     "firefoxClear": "rm firefoxExtension.xpi"
