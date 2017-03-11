@@ -22,13 +22,13 @@
     "chromeManifestBeta": "cd chrome && cp manifestTest.json manifest.json && cd ../",
 
     "chromeIncludes": "cp -R includes/* chrome",
-    "chromePackage": "npm run chromeIncludes && cd chrome && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv chrome/extension.zip extension.zip",
+    "chromePackage": "npm run chromeIncludes && cd chrome && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv chrome/chromeExtension.zip chromeExtension.zip",
 
     "chromeRelease": "npm run chromeManifest && npm run chromePackage && npm run chromeSend && npm run chromeClear && npm run chromeReleaseBeta",
     "chromeReleaseBeta": "npm run chromeManifestBeta && npm run chromePackage && npm run chromeSendBeta",
 
-    "chromeSend": "webstore upload --file extension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
-    "chromeSendBeta": "webstore upload --file extension.zip --source chromeExtension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "chromeSendBeta": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
 
     "chromeClear": "rm chrome/manifest.json && rm chromeExtension.zip",
 
