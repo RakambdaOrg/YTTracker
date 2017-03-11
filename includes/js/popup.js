@@ -38,7 +38,7 @@ function addTooltip(id, text) {
 function showValue() {
     YTTLog('UPDATING PRINTED VALUE');
     var TODAY_KEY = YTTGetDayConfigKey();
-    browser.storage.sync.get([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY]).then(function (result) {
+    YTTGetConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY], function (result) {
         $("#duration").text(YTTGetDurationString(result[YTT_CONFIG_TOTAL_TIME_KEY]));
         $("#realduration").text(YTTGetDurationString(result[YTT_CONFIG_REAL_TIME_KEY]));
         $("#durationtoday").text(YTTGetDurationString(result[TODAY_KEY][YTT_DATA_TOTAL]));
