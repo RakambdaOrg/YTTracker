@@ -3,24 +3,40 @@
   "version": "0.6.1",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
   "description": "This extension will track your time on YouTube",
-  "homepage": "https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb",
+  "homepage": "https://github.com/MrCraftCod/YTTracker/blob/master/README.md",
+  "license" : "MIT",
   "files": [
-    "/src"
+    "/chrome",
+    "/firefox",
+    "/includes"
   ],
   "repository" : {
     "type" : "git",
     "url" : "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
-    "clearComp": "rm chrome/manifest.json && rm extension.zip",
-    "manifest": "cd chrome && cp manifestProd.json manifest.json && cd ../",
-    "manifestTest": "cd chrome && cp manifestTest.json manifest.json && cd ../",
-    "zip": "cd chrome && zip -r extension.zip ./* && cd ../ && mv chrome/extension.zip extension.zip",
-    "release": "npm run manifest && npm run zip && npm run send && npm run clearComp && npm run releaseTest",
-    "releaseTest": "npm run manifestTest && npm run zip && npm run sendTest",
-    "test": "xo src/*.js",
-    "send": "webstore upload --file extension.zip --source extension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
-    "sendTest": "webstore upload --file extension.zip --source extension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish"
+    "test": "echo \"No tests\"",
+
+
+    "chromeManifest": "cd chrome && cp manifestProd.json manifest.json && cd ../",
+    "chromeManifestBeta": "cd chrome && cp manifestTest.json manifest.json && cd ../",
+
+    "chromeIncludes": "cp -R includes/* chrome",
+    "chromePackage": "npm run chromeIncludes && cd chrome && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv chrome/chromeExtension.zip chromeExtension.zip",
+
+    "chromeRelease": "npm run chromeManifest && npm run chromePackage && npm run chromeSend && npm run chromeClear && npm run chromeReleaseBeta",
+    "chromeReleaseBeta": "npm run chromeManifestBeta && npm run chromePackage && npm run chromeSendBeta",
+
+    "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "chromeSendBeta": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+
+    "chromeClear": "rm chrome/manifest.json && rm chromeExtension.zip",
+
+
+    "firefoxIncludes": "cp -R includes/* firefox",
+    "firefoxPackage": "npm run firefoxIncludes && cd firefox && zip -r firefoxExtension.xpi ./* -x \"*.DS_Store\" && cd ../ && mv firefox/firefoxExtension.xpi firefoxExtension.xpi",
+
+    "firefoxClear": "rm firefoxExtension.xpi"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^0.2.0",
