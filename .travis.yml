@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - node
-sudo: true
+sudo: required
 cache:
   directories:
   - node_modules
