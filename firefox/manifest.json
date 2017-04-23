@@ -14,8 +14,7 @@
 
   "applications": {
     "gecko": {
-      "id": "yttracker@mrcraftcod.fr",
-      "update_url": "https://yttracker.mrcraftcod.fr/firefox/updates.json"
+      "id": "yttracker@mrcraftcod.fr"
     }
   },
 
