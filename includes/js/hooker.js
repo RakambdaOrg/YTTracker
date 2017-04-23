@@ -2,8 +2,7 @@ function YTTHookProcess() {
     var hooked = false;
     try {
         var YTTPlayerTemp;
-        if (yt && yt.player && yt.player.getPlayerByElement)
-            YTTPlayerTemp = yt.player.getPlayerByElement('player-api');
+        YTTPlayerTemp = document.getElementById('movie_player');
         if (YTTPlayerTemp && hookYTTPlayer)
             hooked = hookYTTPlayer(YTTPlayerTemp);
     }
