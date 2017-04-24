@@ -73,7 +73,7 @@ function injectCode() {
 }
 
 $(document).ready(function () {
-    if (window.location.href === 'https://yttracker.mrcraftcod.fr/')
+    if (window && window.location && window.location.href && window.location.href.startsWith('https://yttracker.mrcraftcod.fr/'))
         $('#extentionsAd').hide();
     else
         injectCode();
