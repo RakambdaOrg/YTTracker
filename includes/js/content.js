@@ -57,8 +57,8 @@ function injectCode() {
     docFrag.appendChild(hookerInj);
     (document.head || document.documentElement).appendChild(docFrag);
 
-    function observeElement(id, callback){
-        var observer = new MutationObserver(function(mutations) {
+    function observeElement(id, callback) {
+        var observer = new MutationObserver(function (mutations) {
             mutations.forEach(callback);
         });
         observer.observe(document.getElementById(id), {
@@ -72,4 +72,9 @@ function injectCode() {
     YTTLog('Player hooked');
 }
 
-$(document).ready(injectCode);
+$(document).ready(function () {
+    if (window.location.href === 'https://yttracker.mrcraftcod.fr/')
+        $('#extentionsAd').hide();
+    else
+        injectCode();
+});

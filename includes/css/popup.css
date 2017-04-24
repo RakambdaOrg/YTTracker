@@ -1,8 +1,10 @@
-body {
-    background-color: #EEEEEE;
-    width: 300px;
+body
+{
+	background-color : #EEEEEE;
+	width            : 300px;
 }
 
-#infos {
-    text-align: center;
+#infos
+{
+	text-align : center;
 }
