@@ -3,7 +3,7 @@
   "name": "YouTube Tracker Beta",
   "short_name": "YTTracker Beta",
   "description": "This extension will track your time on YouTube",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "icons": {
     "16": "assets/icon16.png",
     "48": "assets/icon48.png",
@@ -37,7 +37,7 @@
     {
       "matches": [
         "https://www.youtube.com/*",
-        "https://yttracker.mrcraftcod.fr/"
+        "https://yttracker.mrcraftcod.fr/*"
       ],
       "js": [
         "js/lib/jquery/jquery.js",
