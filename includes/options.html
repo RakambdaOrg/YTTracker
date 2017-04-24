@@ -13,70 +13,70 @@
     <script type="text/javascript" src="js/options.js"></script>
 </head>
 <body>
-    <div id="wrap">
-        <div id="main">
-            <ul class="options">
-                <li class="option" id="optionTheme">
-                    <div>
-                        <span class="optionDesc">Theme:</span>
-                        <select title="Theme" id="themeSelect">
-                            <option value="dark" id="darkTheme" selected>Dark</option>
-                            <option value="light" id="lightTheme">Light</option>
-                        </select>
-                    </div>
-                </li>
-                <li class="option" id="optionHandDrawn">
-                    <div>
-                        <span class="optionDesc">Chart hand drawn:</span>
-                        <select title="Chart hand drawn" id="handDrawnSelect">
-                            <option value="true" id="handDrawnTrue">Yes</option>
-                            <option value="false" id="handDrawnFalse" selected>No</option>
-                        </select>
-                    </div>
-                </li>
-                <hr/>
-                <li class="option" id="optionExport">
-                    <div>
-                        <button class="optionDesc" id="exportButton">Export data</button>
-                    </div>
-                </li>
-                <li class="option" id="optionImport">
-                    <div>
-                        <input type="file" id="importFileInput" style="display: none;"/>
-                        <button class="optionDesc" id="importButton">Import data</button>
-                    </div>
-                </li>
-                <li class="option" id="optionReset">
-                    <div>
-                        <button class="optionDesc" id="resetButton">Reset all data</button>
-                    </div>
-                </li>
-                <hr/>
-                <li class="option" id="openShareStats">
-                    <div>
-                        <span class="optionDesc">Put stats online:</span>
-                        <input type="checkbox" id="shareStats" name="shareStats" value="share" title="Share stats"/>
-                    </div>
-                </li>
-                <li class="option" id="optionUsername">
-                    <div>
-                        <span class="optionDesc">Username:</span>
-                        <input type="text" id="username" name="username" title="Username"/>
-                        <button id="validUsername">Valid</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
+<div id="wrap">
+    <div id="main">
+        <ul class="options">
+            <li class="option" id="optionTheme">
+                <div>
+                    <span class="optionDesc">Theme:</span>
+                    <select title="Theme" id="themeSelect">
+                        <option value="dark" id="darkTheme" selected>Dark</option>
+                        <option value="light" id="lightTheme">Light</option>
+                    </select>
+                </div>
+            </li>
+            <li class="option" id="optionHandDrawn">
+                <div>
+                    <span class="optionDesc">Chart hand drawn:</span>
+                    <select title="Chart hand drawn" id="handDrawnSelect">
+                        <option value="true" id="handDrawnTrue">Yes</option>
+                        <option value="false" id="handDrawnFalse" selected>No</option>
+                    </select>
+                </div>
+            </li>
+            <hr/>
+            <li class="option" id="optionExport">
+                <div>
+                    <button class="optionDesc" id="exportButton">Export data</button>
+                </div>
+            </li>
+            <li class="option" id="optionImport">
+                <div>
+                    <input type="file" id="importFileInput" style="display: none;"/>
+                    <button class="optionDesc" id="importButton">Import data</button>
+                </div>
+            </li>
+            <li class="option" id="optionReset">
+                <div>
+                    <button class="optionDesc" id="resetButton">Reset all data</button>
+                </div>
+            </li>
+            <hr/>
+            <li class="option" id="openShareStats">
+                <div>
+                    <span class="optionDesc">Put stats online:</span>
+                    <input type="checkbox" id="shareStats" name="shareStats" value="share" title="Share stats"/>
+                </div>
+            </li>
+            <li class="option" id="optionUsername">
+                <div>
+                    <span class="optionDesc">Username:</span>
+                    <input type="text" id="username" name="username" title="Username"/>
+                    <button id="validUsername">Valid</button>
+                </div>
+            </li>
+        </ul>
     </div>
-    <footer>
-        <hr/>
-        <button id="backButton">Back to chart</button>
-        <a class="bottomLeft" href="javascript: void(0)" id="uuidReveal">UUID: <span id="UUID"></span></a>
-        <div class="bottomRight">
-            <span>Debug:</span>
-            <input type="checkbox" id="debug" name="debug" value="debug" title="Debug"/>
-            <span>Version: <span id="versionNumber"></span></span>
-        </div>
-    </footer>
+</div>
+<footer>
+    <hr/>
+    <button id="backButton">Back to chart</button>
+    <a class="bottomLeft" href="javascript: void(0)" id="uuidReveal">UUID: <span id="UUID"></span></a>
+    <div class="bottomRight">
+        <span>Debug:</span>
+        <input type="checkbox" id="debug" name="debug" value="debug" title="Debug"/>
+        <span>Version: <span id="versionNumber"></span></span>
+    </div>
+</footer>
 </body>
 </html>
