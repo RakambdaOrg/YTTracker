@@ -49,8 +49,8 @@ YTTGetConfig(null, function (conf) {
 
 function sendRequest(request) {
     function send(uuid, vid, dur, date) {
-        function getDate(timestamp){
-            if(!timestamp){
+        function getDate(timestamp) {
+            if (!timestamp) {
                 timestamp = new Date().getTime();
             }
             var d = new Date(timestamp);
@@ -108,8 +108,7 @@ function log(text) {
 }
 
 function notify(title, text, force) {
-    if (YTT_DEBUG || force)
-    {
+    if (YTT_DEBUG || force) {
         YTTSendNotification({
             type: 'basic',
             iconUrl: '/assets/icon128.png',
@@ -144,7 +143,7 @@ function playerStateChange(event) {
         };
     }
     else if ((event[YTT_STATE_EVENT_STATE_KEY] === '2' || event[YTT_STATE_EVENT_STATE_KEY] === '0' || event[YTT_STATE_EVENT_STATE_KEY] === '-5') && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] !== null) {
-        if(!activePlayers[event[YTT_STATE_EVENT_ID_KEY]])
+        if (!activePlayers[event[YTT_STATE_EVENT_ID_KEY]])
             return;
         log("Ended playing at " + event[YTT_STATE_EVENT_TIME_KEY] + "s");
         var TODAY_KEY = YTTGetDayConfigKey();
@@ -153,7 +152,7 @@ function playerStateChange(event) {
         activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
         var size = 0, key;
         for (key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null) size++;
-        if (size < 1)chrome.browserAction.setBadgeText({text: ""});
+        if (size < 1) chrome.browserAction.setBadgeText({text: ""});
         YTTGetConfig([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
             if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
                 sendRequest({

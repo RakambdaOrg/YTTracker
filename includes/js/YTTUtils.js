@@ -66,7 +66,7 @@ function YTTAddConfigCount(amount, config) {
  * @return {number}
  */
 function YTTCompareVersion(v1, v2, options) {
-    if(v2 === undefined){
+    if (v2 === undefined) {
         return 1;
     }
     var v1parts = v1.split(/[.-]/);
@@ -278,7 +278,7 @@ function YTTGetDurationString(duration) {
         text += duration.minutes + 'M ';
     if (duration.seconds)
         text += duration.seconds + 'S ';
-    if(YTT_DEBUG)
+    if (YTT_DEBUG)
         text += duration.milliseconds + 'MS';
     if (text === '')
         return '0S';
