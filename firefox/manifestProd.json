@@ -1,26 +1,21 @@
 {
   "manifest_version": 2,
-
   "name": "YouTube Tracker",
   "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
   "version": "1.13.2",
-
   "icons": {
     "16": "assets/icon16.png",
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-
   "applications": {
     "gecko": {
       "id": "yttracker@mrcraftcod.fr"
     }
   },
-
   "author": "MrCraftCod",
   "homepage_url": "https://github.com/MrCraftCod/YTTracker",
-
   "permissions": [
     "https://www.youtube.com/*",
     "https://yttracker.mrcraftcod.fr/*",
@@ -28,30 +23,43 @@
     "downloads",
     "notifications"
   ],
-
   "options_ui": {
     "page": "chart.html",
     "open_in_tab": true
   },
-
   "browser_action": {
     "default_icon": "assets/icon128.png",
     "default_title": "YoutubeTracker",
     "default_popup": "popup.html"
   },
-
-  "content_scripts": [{
-    "matches": ["https://www.youtube.com/*"],
-    "js": ["js/lib/jquery/jquery.js", "js/browserUtils.js", "js/YTTUtils.js", "js/content.js"],
-    "run_at": "document_start",
-    "all_frames": true
-  }],
-
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://yttracker.mrcraftcod.fr/"
+      ],
+      "js": [
+        "js/lib/jquery/jquery.js",
+        "js/browserUtils.js",
+        "js/YTTUtils.js",
+        "js/content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
   "background": {
-    "scripts": ["js/lib/jquery/jquery.js", "js/browserUtils.js", "js/YTTUtils.js", "js/background.js"]
+    "scripts": [
+      "js/lib/jquery/jquery.js",
+      "js/browserUtils.js",
+      "js/YTTUtils.js",
+      "js/background.js"
+    ]
   },
-
   "content_security_policy": "script-src 'self'; object-src 'self'",
-
-  "web_accessible_resources": ["js/YTTUtils.js", "js/hookerUtils.js", "js/hooker.js"]
+  "web_accessible_resources": [
+    "js/YTTUtils.js",
+    "js/hookerUtils.js",
+    "js/hooker.js"
+  ]
 }

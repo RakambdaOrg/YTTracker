@@ -72,4 +72,9 @@ function injectCode() {
     YTTLog('Player hooked');
 }
 
-$(document).ready(injectCode);
+$(document).ready(function () {
+    if(window.location.href === 'https://yttracker.mrcraftcod.fr/')
+        $('#extentionsAd').hide();
+    else
+        injectCode();
+});
