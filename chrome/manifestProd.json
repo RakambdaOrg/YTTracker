@@ -28,7 +28,7 @@
     {
       "matches": [
         "https://www.youtube.com/*",
-        "https://yttracker.mrcraftcod.fr/"
+        "https://yttracker.mrcraftcod.fr/*"
       ],
       "js": [
         "js/lib/jquery/jquery.js",
