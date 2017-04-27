@@ -66,14 +66,14 @@ function sendRequest(request) {
             method: 'POST',
             async: true,
             error: function () {
-                notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
-                console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur), true);
+                notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur, true));
+                console.error("YTTF" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur, true), true);
                 console.error(request, true);
             },
             success: function () {
                 rVal = true;
-                notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur));
-                console.log("YTTO-" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur));
+                notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur, true));
+                console.log("YTTO-" + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur, true));
             }
         });
         return rVal;
@@ -102,20 +102,23 @@ function sendRequest(request) {
 }
 
 function log(text) {
-    if (YTT_DEBUG) {
-        console.log(text);
-    }
+    YTTGetConfig(YTT_CONFIG_DEBUG_KEY, function(config){
+        if (config[YTT_CONFIG_DEBUG_KEY]) {
+            console.log(text);
+        }
+    });
 }
 
 function notify(title, text, force) {
-    if (YTT_DEBUG || force) {
-        YTTSendNotification({
-            type: 'basic',
-            iconUrl: '/assets/icon128.png',
-            title: title,
-            message: text
-        });
-    }
+    YTTGetConfig(YTT_CONFIG_DEBUG_KEY, function(config){
+        if(force || config[YTT_CONFIG_DEBUG_KEY])
+            YTTSendNotification({
+                type: 'basic',
+                iconUrl: '/assets/icon128.png',
+                title: title,
+                message: text
+            });
+    });
 }
 
 //noinspection JSCheckFunctionSignatures
@@ -165,7 +168,7 @@ function playerStateChange(event) {
             newConfig[YTT_CONFIG_REAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_REAL_TIME_KEY]);
             newConfig[TODAY_KEY] = YTTAddConfigDuration(duration, config[TODAY_KEY], YTT_DATA_REAL);
             YTTSetConfig(newConfig);
-            log("Added real time: " + YTTGetDurationString(duration));
+            log("Added real time: " + YTTGetDurationString(duration, true));
         });
     }
 }
@@ -207,7 +210,7 @@ function setVideoDuration(event) {
             newConfig[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
             newConfig[TODAY_KEY] = YTTAddConfigCount(1, YTTAddConfigDuration(duration, config[TODAY_KEY], YTT_DATA_TOTAL));
             YTTSetConfig(newConfig);
-            log("New total time: " + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY]));
+            log("New total time: " + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY], true));
         }
         else {
             log("Video isn't new");
