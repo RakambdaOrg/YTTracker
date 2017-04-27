@@ -1,4 +1,3 @@
-var YTT_DEBUG = false;
 const YTT_DATA_REAL = 'real';
 const YTT_DATA_TOTAL = 'total';
 const YTT_DATA_COUNT = 'count';
@@ -186,11 +185,6 @@ Date.prototype.getDOY = function () {
     return dayOfYear;
 };
 
-function YTTSetDebug(state) {
-    YTTLog('Set debug to: ' + state);
-    YTT_DEBUG = state;
-}
-
 /**
  * @return {number}
  */
@@ -265,7 +259,7 @@ function YTTAddDurations(d1, d2) {
 /**
  * @return {string}
  */
-function YTTGetDurationString(duration) {
+function YTTGetDurationString(duration, showMillisec) {
     if (!duration)
         return '0S';
     duration = YTTAddDurations(duration, {});
@@ -278,7 +272,7 @@ function YTTGetDurationString(duration) {
         text += duration.minutes + 'M ';
     if (duration.seconds)
         text += duration.seconds + 'S ';
-    if (YTT_DEBUG)
+    if (showMillisec)
         text += duration.milliseconds + 'MS';
     if (text === '')
         return '0S';
