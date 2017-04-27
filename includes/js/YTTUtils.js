@@ -1,4 +1,4 @@
-var YTT_DEBUG = true;
+var YTT_DEBUG = false;
 const YTT_DATA_REAL = 'real';
 const YTT_DATA_TOTAL = 'total';
 const YTT_DATA_COUNT = 'count';
