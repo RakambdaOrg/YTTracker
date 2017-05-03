@@ -16,7 +16,7 @@
   },
   "scripts": {
     "eslint": "eslint chrome firefox includes",
-    "test": "xo",
+    "test": "npm run eslint",
     "clean": "rm -R temp",
     "init": "mkdir temp",
     "includes": "cp -R includes/* temp",
