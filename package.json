@@ -15,7 +15,7 @@
     "url": "https://github.com/MrCraftCod/YTTracker.git"
   },
   "scripts": {
-    "eslint": "eslint chrome firefox includes",
+    "eslint": "eslint . --ext .json --ext .js",
     "test": "npm run eslint",
     "clean": "rm -R temp",
     "init": "mkdir temp",
@@ -43,7 +43,8 @@
     "chrome-webstore-upload-cli": "^0.2.0",
     "xo": "^0.18.1",
     "eslint": "^3.19.0",
-    "eslint-plugin-no-unsanitized": "git+https://github.com/mozilla/eslint-plugin-no-unsanitized.git"
+    "eslint-plugin-no-unsanitized": "git+https://github.com/mozilla/eslint-plugin-no-unsanitized.git",
+    "eslint-plugin-json": "^1.2.0"
   },
   "xo": {
     "envs": [
@@ -52,7 +53,8 @@
   },
   "eslintConfig": {
     "plugins": [
-      "no-unsanitized"
+      "no-unsanitized",
+      "json"
     ],
     "parserOptions": {
       "ecmaVersion": 6
