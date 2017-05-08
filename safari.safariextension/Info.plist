@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>MrCraftCod</string>
+	<key>Builder Version</key>
+	<string>12602.1.50.0.10</string>
+	<key>CFBundleDisplayName</key>
+	<string>YTTracker</string>
+	<key>CFBundleIdentifier</key>
+	<string>fr.mrcraftcod.yttracker</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.6.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.6.0</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Global Page</key>
+		<string>background.html</string>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Command</key>
+				<string>yttracker-button</string>
+				<key>Identifier</key>
+				<string>fr.mrcraftcod.yttracker.toolbar</string>
+				<key>Image</key>
+				<string>assets/barIcon.png</string>
+				<key>Include By Default</key>
+				<true/>
+				<key>Label</key>
+				<string>YTTtacker</string>
+				<key>Tool Tip</key>
+				<string>YTTracker</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>End</key>
+			<array>
+				<string>js/content.js</string>
+			</array>
+			<key>Start</key>
+			<array>
+				<string>js/lib/jquery/jquery.js</string>
+				<string>js/browserUtils.js</string>
+				<string>js/YTTUtils.js</string>
+			</array>
+		</dict>
+		<key>Whitelist</key>
+		<array>
+			<string>https://www.youtube.com/*</string>
+			<string>https://yttracker.mrcraftcod.fr/*</string>
+		</array>
+	</dict>
+	<key>Description</key>
+	<string>This extension will track your time on YouTube</string>
+	<key>DeveloperIdentifier</key>
+	<string>0000000000</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Website</key>
+	<string>https://github.com/MrCraftCod/YTTracker</string>
+</dict>
+</plist>

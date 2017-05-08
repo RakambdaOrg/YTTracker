@@ -325,17 +325,6 @@ function YTTConvertConfigDateToObject(date) {
     return {year: year, day: day};
 }
 
-function YTTMessage(type, value) {
-    var message = {};
-    message[YTT_MESSAGE_TYPE_KEY] = type;
-    message[YTT_MESSAGE_VALUE_KEY] = value;
-    try {
-        chrome.runtime.sendMessage(message);
-    }
-    catch (err) {
-    }
-}
-
 function YTTLog(text) {
     YTTMessage(YTT_LOG_EVENT, text);
 }

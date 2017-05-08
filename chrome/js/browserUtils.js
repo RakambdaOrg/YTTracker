@@ -29,3 +29,18 @@ function YTTSendNotification(notification)
         }
     });
 }
+
+function YTTMessage(type, value) {
+	var message = {};
+	message[YTT_MESSAGE_TYPE_KEY] = type;
+	message[YTT_MESSAGE_VALUE_KEY] = value;
+	try {
+		chrome.runtime.sendMessage(message);
+	}
+	catch (err) {
+	}
+}
+
+function YTTSetBadge(text) {
+	chrome.browserAction.setBadgeText({text: text});
+}
