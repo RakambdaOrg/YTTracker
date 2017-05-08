@@ -23,3 +23,5 @@ function handleMessage(msg) {
 		}
 	}
 }
+
+safari.application.addEventListener('command', performCommand, false);
