@@ -44,13 +44,13 @@ function injectCode() {
 	const docFrag = document.createDocumentFragment();
 
 	yttUtilsInj.type = 'text/javascript';
-	yttUtilsInj.src = chrome.extension.getURL('js/YTTUtils.js');
+	yttUtilsInj.src = YTTGetURL('js/YTTUtils.js');
 
 	hookerUtilsInj.type = 'text/javascript';
-	hookerUtilsInj.src = chrome.extension.getURL('js/hookerUtils.js');
+	hookerUtilsInj.src = YTTGetURL('js/hookerUtils.js');
 
 	hookerInj.type = 'text/javascript';
-	hookerInj.src = chrome.extension.getURL('js/hooker.js');
+	hookerInj.src = YTTGetURL('js/hooker.js');
 
 	docFrag.appendChild(yttUtilsInj);
 	docFrag.appendChild(hookerUtilsInj);

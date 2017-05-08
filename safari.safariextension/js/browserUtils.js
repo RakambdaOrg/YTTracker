@@ -1,7 +1,7 @@
 function YTTGetConfig(values, callback) {
 	const config = {};
 	if (typeof values === 'string') {
-		config[value] = safari.extension.settings.getItem(values);
+		config[values] = safari.extension.settings.getItem(values);
 	}
 	else {
 		for (const key in values) {
@@ -26,13 +26,13 @@ function YTTSetConfig(config) {
 }
 
 function YTTClearConfig(callback) {
-	browser.storage.sync.clear();
+	safari.extension.settings.clear();
 	if (callback !== null)
 		callback();
 }
 
 function YTTSendNotification(notification) {
-	chrome.notifications.create('', notification);
+	new Notification(notification['title'], {body: notification['message']});
 }
 
 function YTTMessage(type, value) {
@@ -50,4 +50,20 @@ function YTTSetBadge(text) {
 	safari.extension.toolbarItems.forEach(function(element){
 		element.badge = text === '' ? 0 : 1;
 	});
+}
+
+/**
+ * @return {string}
+ */
+function YTTGetVersion()
+{
+	return safari.extension.displayVersion;
+}
+
+/**
+ * @return {string}
+ */
+function YTTGetURL(path)
+{
+	return safari.extension.baseURI + path;
 }

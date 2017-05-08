@@ -36,7 +36,7 @@ YTTGetConfig(null, function (conf) {
 		notify('YTTracker', 'Converting done', true);
 	}
 	newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
-	newConfig[YTT_CONFIG_VERSION] = chrome.runtime.getManifest().version;
+	newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
 	if (shouldClear) {
 		YTTClearConfig(function () {
 			YTTSetConfig(newConfig);
@@ -120,21 +120,6 @@ function notify(title, text, force) {
 			});
 	});
 }
-
-//noinspection JSCheckFunctionSignatures
-chrome.runtime.onMessage.addListener(function (request, sender) {
-	if (request[YTT_MESSAGE_TYPE_KEY] === YTT_LOG_EVENT) {
-		log(request[YTT_MESSAGE_VALUE_KEY] || 'undefined');
-	}
-	else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
-		request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
-		playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
-	}
-	else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DURATION_EVENT) {
-		request[YTT_MESSAGE_VALUE_KEY][YTT_DURATION_EVENT_TABID_KEY] = sender.tab.id;
-		setVideoDuration(request[YTT_MESSAGE_VALUE_KEY]);
-	}
-});
 
 function playerStateChange(event) {
 	if (event[YTT_STATE_EVENT_STATE_KEY] === '1') {
@@ -228,5 +213,5 @@ YTTGetConfig([YTT_CONFIG_USERID, YTT_CONFIG_DEBUG_KEY], function (config) {
 		newConfig[YTT_CONFIG_USERID] = userID;
 		YTTSetConfig(newConfig);
 	}
-	YTTSetDebug(config[YTT_CONFIG_DEBUG_KEY] || false);
+	YTTSetConfig(YTT_CONFIG_DEBUG_KEY, config[YTT_CONFIG_DEBUG_KEY] || false);
 });

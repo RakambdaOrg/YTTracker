@@ -53,7 +53,8 @@
       "js/lib/jquery/jquery.js",
       "js/browserUtils.js",
       "js/YTTUtils.js",
-      "js/background.js"
+      "js/background.js",
+      "js/backgroundFirefox.js"
     ]
   },
   "content_security_policy": "script-src 'self'; object-src 'self'",

@@ -39,3 +39,19 @@ function YTTMessage(type, value) {
 function YTTSetBadge(text) {
 	chrome.browserAction.setBadgeText({text: text});
 }
+
+/**
+ * @return {string}
+ */
+function YTTGetVersion()
+{
+	return chrome.runtime.getManifest().version;
+}
+
+/**
+ * @return {string}
+ */
+function YTTGetURL(path)
+{
+	return chrome.extension.getURL(path);
+}
