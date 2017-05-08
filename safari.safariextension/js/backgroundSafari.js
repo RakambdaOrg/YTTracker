@@ -25,3 +25,4 @@ function handleMessage(msg) {
 }
 
 safari.application.addEventListener('command', performCommand, false);
+safari.application.addEventListener('message', handleMessage, false);
