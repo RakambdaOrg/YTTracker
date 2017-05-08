@@ -37,7 +37,11 @@
     "firefoxPackage": "npm run includes && cd temp && zip -r firefoxExtension.xpi ./* -x \"*.DS_Store\" && cd ../ && mv temp/firefoxExtension.xpi firefoxExtension.xpi",
     "firefoxBuild": "npm run firefoxInit && npm run firefoxManifest && npm run firefoxPackage && npm run clean",
     "firefoxBuildBeta": "npm run firefoxInit && npm run firefoxManifestBeta && npm run firefoxPackage && npm run clean",
-    "firefoxClear": "rm firefoxExtension.xpi"
+    "firefoxClear": "rm firefoxExtension.xpi",
+    "safariInit": "npm run init && cp -R safari.safariextension/* temp",
+    "safariPackage": "npm run includes && cd temp && zip -r yttracker.safariextension.zip ./* -x \"*.DS_Store\" && cd ../ && mv temp/yttracker.safariextension.zip yttracker.safariextension.zip",
+    "safariBuild": "npm run safariInit && npm run safariPackage && npm run clean",
+    "safariClear": "rm yttracker.safariextension.zip"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^0.2.0",
