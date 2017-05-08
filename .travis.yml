@@ -12,7 +12,7 @@ notifications:
   slack:
     secure: H1+hMBhAc5Lec1QjFTik16Uwp1oiVzn3hCk8Yat/t4uU7ho4TgtLWxbfeqJNTl+56a+Z0Mbyic4azGkvMV+ZG2lL7GnqFuuQb1Kl1aAMD3pO7nnyHdIdto+xB5NXFE4SrzX0Q7BcN0AmI4YPniuDDTA2X/e9xRpN3Nfsr7WR+Wn7ubcndeNlyI1Npt503yDkz65VmajMV3KEVKXx65dvXVFozXWZwPnqH6mgrY4naZwFvqHbJO5ZQkIN2eWPV4eJbfT+LkG/B5ivXs8pvgcHmtZs3Gldpy83TU2lsWTXR2ZwdaM0x+ro56jZHOchvWmvlrGAMN8O1mGDnm2qeGi097DYpBWJ8/HTvO+pNejj0osEESmCRT03buhqNzFU3lecLFv+nu4Ic+1hhGDD51B86kltk1BNZMKbYhnUUH2n1PXOmDqbWOH4UY1cEM/my6lgOcJh+ZW1njfbrFS5ZPjurhYyywMagR8i8jKz9JYbcJdEtGPqdLjiiBDLDYF/QonGH9dUpR7NgrStzv0YSpz3OAziPzUoHw+h/ntYeOnS8ck7DNHKTNZvL1CJbCLXw9d/UBVcMtYxnC+NMrkkG6/hk88vKGvDcP1NZvNNzeFqqk5nxZUZwZbAkei29r3SxHQ190N/tL9nzL8mfo2hXVQ0csGOROD5Y9QdYUvTZuuGjN8=
 before_script:
-- chmod +x deploy.sh
+  - chmod +x deploy.sh
 deploy:
   provider: script
   script: ./deploy.sh

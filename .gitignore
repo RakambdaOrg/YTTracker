@@ -4,3 +4,4 @@
 *.iws
 *.pem
 chrome/manifest.json
+node_modules

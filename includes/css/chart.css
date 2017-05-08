@@ -9,6 +9,8 @@ body
 #topContainer
 {
 	background-color : #333333;
+	width            : 100%;
+	padding-top      : 3px;
 }
 
 #chartHolder
@@ -86,10 +88,4 @@ header ul > li > a:hover
 	padding-right : 5px;
 	border-style  : none;
 	border-radius : 5px;
-}
-
-#topContainer
-{
-	width       : 100%;
-	padding-top : 3px;
 }
