@@ -13,9 +13,9 @@
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.17.0</string>
+        <string>1.17.1</string>
         <key>CFBundleVersion</key>
-        <string>1.17.0</string>
+        <string>1.17.1</string>
         <key>Chrome</key>
         <dict>
             <key>Global Page</key>
@@ -56,6 +56,7 @@
             <key>Whitelist</key>
             <array>
                 <string>https://www.youtube.com/*</string>
+                <string>https://yttracker.mrcraftcod.fr/*</string>
             </array>
         </dict>
         <key>Description</key>
