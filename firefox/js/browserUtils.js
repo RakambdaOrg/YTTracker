@@ -52,3 +52,11 @@ function YTTGetURL(path)
 {
 	return chrome.extension.getURL(path);
 }
+
+/**
+ * @return {string}
+ */
+function YTTGetBrowser()
+{
+	return 'Firefox';
+}

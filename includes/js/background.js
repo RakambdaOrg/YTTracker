@@ -62,7 +62,7 @@ function sendRequest(request) {
 		}
 		let rVal = false;
 		$.ajax({
-			url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + '&type=' + request['type'] + '&stats=' + YTTGetDurationAsMillisec(dur) + '&date=' + encodeURI(getDate(date)),
+			url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + '&type=' + request['type'] + '&stats=' + YTTGetDurationAsMillisec(dur) + '&date=' + encodeURI(getDate(date)) + '&browser=' + encodeURI(YTTGetBrowser()),
 			method: 'POST',
 			async: true,
 			error: function () {
