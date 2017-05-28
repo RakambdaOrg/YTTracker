@@ -67,3 +67,11 @@ function YTTGetURL(path)
 {
 	return safari.extension.baseURI + path;
 }
+
+/**
+ * @return {string}
+ */
+function YTTGetBrowser()
+{
+	return 'Safari';
+}
