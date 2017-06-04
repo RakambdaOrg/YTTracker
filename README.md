@@ -57,7 +57,7 @@ Moment JS - [https://github.com/moment/moment](https://github.com/moment/moment)
 
 Tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
 
-##Other
+## Other
 Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
 
 Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
