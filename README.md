@@ -38,6 +38,8 @@ You can also choose to send those data to a server to be able to compare your se
     <img style="width:75%" src="https://github.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
 </div>
 
+## Firefox
+Please make sure the sync storage is activated. For that go to ```about:config``` and set ```webextensions.storage.sync.enabled``` to ```true```.
 
 ## Development/Beta releases
 <a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec" style="color: white; text-decoration:none;">Chrome beta version: <img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/moboafdnejnjnppicfiadaalobjeemec.svg?maxAge=2592000&style=flat" /></a>
@@ -55,7 +57,7 @@ Moment JS - [https://github.com/moment/moment](https://github.com/moment/moment)
 
 Tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
 
-##Other
+## Other
 Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
 
 Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
