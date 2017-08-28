@@ -40,23 +40,20 @@ function YTTSetBadge(text) {
 /**
  * @return {string}
  */
-function YTTGetVersion()
-{
+function YTTGetVersion() {
 	return chrome.runtime.getManifest().version;
 }
 
 /**
  * @return {string}
  */
-function YTTGetURL(path)
-{
+function YTTGetURL(path) {
 	return chrome.extension.getURL(path);
 }
 
 /**
  * @return {string}
  */
-function YTTGetBrowser()
-{
+function YTTGetBrowser() {
 	return 'Firefox';
 }
