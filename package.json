@@ -45,10 +45,10 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^0.2.0",
-    "xo": "^0.18.1",
     "eslint": "^3.19.0",
     "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-no-unsanitized": "^2.0.0"
+    "eslint-plugin-no-unsanitized": "^2.0.1",
+    "xo": "^0.18.1"
   },
   "xo": {
     "envs": [
