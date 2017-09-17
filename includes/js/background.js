@@ -2,6 +2,9 @@
 
 const activePlayers = {};
 
+/**
+ * Init config.
+ */
 YTTGetConfig(null, function (conf) {
 	const newConfig = {};
 	let shouldClear = false;
@@ -10,6 +13,7 @@ YTTGetConfig(null, function (conf) {
 		return key === 'C' || key === 'R' || key === 'T';
 	}
 
+	// If the version of the configuration is from before 1.3.0, convert it to the new format.
 	if (YTTCompareVersion('1.3.0', conf[YTT_CONFIG_VERSION]) > 0) {
 		notify('YTTracker', 'Converting stored data...', true);
 		for (const key in conf) {
@@ -17,13 +21,13 @@ YTTGetConfig(null, function (conf) {
 				const label = key.substring(key.length - 1);
 				const day = key.substring(0, key.length - 1);
 				switch (label) {
-					case 'C':
+					case 'C': // Count of opened videos.
 						newConfig[day] = YTTAddConfigCount(conf[key], newConfig[day]);
 						break;
-					case 'R':
+					case 'R': // Time watched.
 						newConfig[day] = YTTAddConfigDuration(conf[key], newConfig[day], YTT_DATA_REAL);
 						break;
-					case 'T':
+					case 'T': // Time opened.
 						newConfig[day] = YTTAddConfigDuration(conf[key], newConfig[day], YTT_DATA_TOTAL);
 						break;
 				}
@@ -47,6 +51,11 @@ YTTGetConfig(null, function (conf) {
 	}
 });
 
+/**
+ * Send a request to the distant server.
+ * Also ry to send again request that previously failed.
+ * @param request
+ */
 function sendRequest(request) {
 	function send(uuid, vid, dur, date) {
 		function getDate(timestamp) {
