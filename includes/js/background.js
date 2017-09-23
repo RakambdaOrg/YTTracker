@@ -9,46 +9,32 @@ YTTGetConfig(null, function (conf) {
 	const newConfig = {};
 	let shouldClear = false;
 
-	function isValidExKey(key) {
-		return key === 'C' || key === 'R' || key === 'T';
-	}
-
 	// If the version of the configuration is from before 1.3.0, convert it to the new format.
-	if (YTTCompareVersion('1.3.0', conf[YTT_CONFIG_VERSION]) > 0) {
+	if (YTTCompareVersion('1.18.0', conf[YTT_CONFIG_VERSION]) > 0) {
 		notify('YTTracker', 'Converting stored data...', true);
-		for (const key in conf) {
-			if (conf.hasOwnProperty(key) && key.substring(0, 3) === 'day' && isValidExKey(key.substring(key.length - 1))) {
-				const label = key.substring(key.length - 1);
-				const day = key.substring(0, key.length - 1);
-				switch (label) {
-					case 'C': // Count of opened videos.
-						newConfig[day] = YTTAddConfigCount(conf[key], newConfig[day]);
-						break;
-					case 'R': // Time watched.
-						newConfig[day] = YTTAddConfigDuration(conf[key], newConfig[day], YTT_DATA_REAL);
-						break;
-					case 'T': // Time opened.
-						newConfig[day] = YTTAddConfigDuration(conf[key], newConfig[day], YTT_DATA_TOTAL);
-						break;
+		for (const key in conf)
+			if (conf.hasOwnProperty(key)) {
+				if (key.substring(0, 3) === 'day') {
+					const day = conf[key];
+					newConfig[key] = new YTTDay(day[YTT_DATA_COUNT], day[YTT_DATA_REAL], day[YTT_DATA_TOTAL]);
 				}
+				else if (key === YTT_CONFIG_REAL_TIME_KEY || key === YTT_CONFIG_TOTAL_TIME_KEY) {
+					newConfig[key] = new YTTDuration(key, conf[key].milliseconds || 0, conf[key].secondes || 0, conf[key].minutes || 0, conf[key].hours || 0, conf[key].days || 0);
+				}
+				else
+					newConfig[key] = conf[key];
 			}
-			else {
-				newConfig[key] = conf[key];
-			}
-		}
 		shouldClear = true;
 		notify('YTTracker', 'Converting done', true);
 	}
 	newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
 	newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
-	if (shouldClear) {
+	if (shouldClear)
 		YTTClearConfig(function () {
 			YTTSetConfig(newConfig);
 		});
-	}
-	else {
+	else
 		YTTSetConfig(newConfig);
-	}
 });
 
 /**
@@ -59,30 +45,28 @@ YTTGetConfig(null, function (conf) {
 function sendRequest(request) {
 	function send(uuid, vid, dur, date) {
 		function getDate(timestamp) {
-			if (!timestamp) {
+			if (!timestamp)
 				timestamp = new Date().getTime();
-			}
 			const d = new Date(timestamp);
 			return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 		}
 
-		if (YTTGetDurationAsMillisec(dur) <= 0) {
+		if (dur.getAsMilliseconds() <= 0)
 			return true;
-		}
 		let rVal = false;
 		$.ajax({
-			url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + '&type=' + request['type'] + '&stats=' + YTTGetDurationAsMillisec(dur) + '&date=' + encodeURI(getDate(date)) + '&browser=' + encodeURI(YTTGetBrowser()),
+			url: 'https://yttracker.mrcraftcod.fr/api/stats/add?uuid=' + encodeURI(uuid) + '&videoID=' + encodeURI(vid) + '&type=' + request['type'] + '&stats=' + dur.getAsMilliseconds() + '&date=' + encodeURI(getDate(date)) + '&browser=' + encodeURI(YTTGetBrowser()),
 			method: 'POST',
 			async: true,
 			error: function () {
-				notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur, true));
-				console.error('YTTF' + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur, true), true);
+				notify(chrome.runtime.getManifest().short_name, 'Failed to send ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + dur.getAsString(true));
+				console.error('YTTF' + request['type'] + '-' + vid + ':' + dur.getAsString(true), true);
 				console.error(request, true);
 			},
 			success: function () {
 				rVal = true;
-				notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + YTTGetDurationString(dur, true));
-				console.log('YTTO-' + request['type'] + '-' + vid + ':' + YTTGetDurationString(dur, true));
+				notify(chrome.runtime.getManifest().short_name, 'Sent ' + (request['type'] === 1 ? 'watched' : 'opened') + ' time to server\nVideoID: ' + vid + '\nDuration: ' + dur.getAsString(true));
+				console.log('YTTO-' + request['type'] + '-' + vid + ':' + dur.getAsString(true));
 			}
 		});
 		return rVal;
@@ -95,16 +79,13 @@ function sendRequest(request) {
 		config[YTT_CONFIG_FAILED_SHARE].push(request);
 		const newFailed = [];
 		//noinspection JSDuplicatedDeclaration
-		for (const key in config[YTT_CONFIG_FAILED_SHARE]) {
+		for (const key in config[YTT_CONFIG_FAILED_SHARE])
 			if (config[YTT_CONFIG_FAILED_SHARE].hasOwnProperty(key)) {
 				const req = config[YTT_CONFIG_FAILED_SHARE][key];
-				if (req && req !== null && req['videoID'] && req['duration']) {
-					if (!send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'], req['date'])) {
+				if (req && req !== null && req['videoID'] && req['duration'])
+					if (!send(config[YTT_CONFIG_USERID], req['videoID'], req['duration'], req['date']))
 						newFailed.push(key);
-					}
-				}
 			}
-		}
 		config[YTT_CONFIG_FAILED_SHARE] = newFailed;
 		YTTSetConfig(config);
 	});
@@ -144,11 +125,13 @@ function playerStateChange(event) {
 			return;
 		log('Ended playing at ' + event[YTT_STATE_EVENT_TIME_KEY] + 's');
 		const TODAY_KEY = YTTGetDayConfigKey();
-		const duration = {milliseconds: parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time']) * 1000)};
+		const duration = new YTTDuration(YTT_DATA_REAL, parseInt((event[YTT_STATE_EVENT_TIME_KEY] - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time']) * 1000));
 		const videoID = activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['vid'];
 		activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
 		let size = 0;
-		for (const key in activePlayers) if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null) size++;
+		for (const key in activePlayers)
+			if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null)
+				size++;
 		if (size < 1) YTTSetBadge('');
 		YTTGetConfig([YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE], function (config) {
 			if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
@@ -158,11 +141,14 @@ function playerStateChange(event) {
 					duration: duration
 				});
 			}
-			const newConfig = {};
-			newConfig[YTT_CONFIG_REAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_REAL_TIME_KEY]);
-			newConfig[TODAY_KEY] = YTTAddConfigDuration(duration, config[TODAY_KEY], YTT_DATA_REAL);
-			YTTSetConfig(newConfig);
-			log('Added real time: ' + YTTGetDurationString(duration, true));
+			if (!config[YTT_CONFIG_REAL_TIME_KEY])
+				config[YTT_CONFIG_REAL_TIME_KEY] = new YTTDuration(YTT_CONFIG_REAL_TIME_KEY);
+			if (!config[TODAY_KEY])
+				config[TODAY_KEY] = new YTTDay();
+			config[YTT_CONFIG_REAL_TIME_KEY].addDuration(duration);
+			config[TODAY_KEY].getRealDuration().addDuration(duration);
+			YTTSetConfig(config);
+			log('Added real time: ' + duration.getAsString(true));
 		});
 	}
 }
@@ -174,24 +160,19 @@ function setVideoDuration(event) {
 		const toRemove = [];
 		const IDS = config[YTT_CONFIG_IDS_WATCHED_KEY] || {};
 		//noinspection JSDuplicatedDeclaration
-		for (key in IDS) {
-			if (IDS.hasOwnProperty(key)) {
-				if (new Date().getTime() - IDS[key] > 60 * 60 * 1000) {
-					toRemove.push(key);
-				}
-			}
-		}
+		for (key in IDS)
+			if (IDS.hasOwnProperty(key) && new Date().getTime() - IDS[key] > 60 * 60 * 1000)
+				toRemove.push(key);
 		//noinspection JSDuplicatedDeclaration
-		for (const toRemoveItem of toRemove) {
+		for (const toRemoveItem of toRemove)
 			delete IDS[toRemoveItem];
-		}
 		if (event[YTT_DURATION_EVENT_ID_KEY] === 'undefined') {
 			log('Not video page');
 			return;
 		}
 		if (!IDS.hasOwnProperty(event[YTT_DURATION_EVENT_ID_KEY])) {
 			IDS[event[YTT_DURATION_EVENT_ID_KEY]] = new Date().getTime();
-			const duration = {milliseconds: parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000)};
+			const duration = new YTTDuration(YTT_DATA_TOTAL, parseInt(event[YTT_DURATION_EVENT_DURATION_KEY] * 1000));
 			if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
 				sendRequest({
 					videoID: event[YTT_DURATION_EVENT_ID_KEY],
@@ -199,16 +180,20 @@ function setVideoDuration(event) {
 					duration: duration
 				});
 			}
-			const newConfig = {};
-			newConfig[YTT_CONFIG_TOTAL_TIME_KEY] = YTTAddDurations(duration, config[YTT_CONFIG_TOTAL_TIME_KEY]);
-			newConfig[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
-			newConfig[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
-			newConfig[TODAY_KEY] = YTTAddConfigCount(1, YTTAddConfigDuration(duration, config[TODAY_KEY], YTT_DATA_TOTAL));
-			YTTSetConfig(newConfig);
-			log('New total time: ' + YTTGetDurationString(config[YTT_CONFIG_TOTAL_TIME_KEY], true));
+			if (!config[YTT_CONFIG_TOTAL_TIME_KEY])
+				config[YTT_CONFIG_TOTAL_TIME_KEY] = new YTTDuration(YTT_CONFIG_TOTAL_TIME_KEY);
+			if (!config[TODAY_KEY])
+				config[TODAY_KEY] = new YTTDay();
+			config[YTT_CONFIG_TOTAL_TIME_KEY].addDuration(duration);
+			config[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
+			config[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
+			config[TODAY_KEY].addCount(1);
+			config[TODAY_KEY].getTotalDuration().addDuration(duration);
+			YTTSetConfig(config);
+			log('New total time: ' + config[YTT_CONFIG_TOTAL_TIME_KEY].getAsString(true));
 		}
 		else {
-			log('Video isn\'t new');
+			log('Video is not new');
 		}
 	});
 }

@@ -36,7 +36,7 @@ function YTTSendNotification(notification) {
 }
 
 function YTTMessage(type, value) {
-	var message = {};
+	let message = {};
 	message[YTT_MESSAGE_TYPE_KEY] = type;
 	message[YTT_MESSAGE_VALUE_KEY] = value;
 	try {

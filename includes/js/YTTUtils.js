@@ -1,3 +1,4 @@
+/************************************* CONSTANTS *************************************/
 const YTT_DATA_REAL = 'real';
 const YTT_DATA_TOTAL = 'total';
 const YTT_DATA_COUNT = 'count';
@@ -31,14 +32,189 @@ const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 const YTT_DOM_SPLITTER = '@';
 
+
+/************************************* OBJECTS *************************************/
 /**
+ * Creates a new YTTDay object. It represents the datas of a day.
+ *
+ * @param {int} count Initial video count.
+ * @param {int} real Initial real time in ms.
+ * @param {int} total Initial total time in ms.
+ * @constructor
+ */
+function YTTDay(count = 0, real = 0, total = 0) {
+	this[YTT_DATA_COUNT] = count;
+	this[YTT_DATA_REAL] = new YTTDuration(YTT_DATA_REAL, real);
+	this[YTT_DATA_TOTAL] = new YTTDuration(YTT_DATA_TOTAL, total);
+}
+/**
+ * Get the count of videos for this day.
+ *
+ * @returns {YTTDuration} The count of videos.
+ */
+YTTDay.prototype.getCount = function () {
+	return this[YTT_DATA_COUNT];
+};
+/**
+ * Get the real duration for this day.
+ *
+ * @returns {YTTDuration} The duration.
+ */
+YTTDay.prototype.getRealDuration = function () {
+	return this[YTT_DATA_REAL];
+};
+/**
+ * Get the total duration for this day.
+ *
+ * @returns {YTTDuration} The duration.
+ */
+YTTDay.prototype.getTotalDuration = function () {
+	return this[YTT_DATA_TOTAL];
+};
+/**
+ * Add a duration to this day.
+ *
+ * @param {YTTDuration} duration The duration to add.
+ */
+YTTDay.prototype.addDuration = function (duration) {
+	if (duration.type === YTT_DATA_REAL)
+		this[YTT_DATA_REAL] = this[YTT_DATA_REAL].addDuration(duration);
+	else if (duration.type === YTT_DATA_TOTAL)
+		this[YTT_DATA_TOTAL] = this[YTT_DATA_TOTAL].addDuration(duration);
+};
+/**
+ * Add a video count to this day.
+ *
+ * @param {int} amount The number of videos to add.
+ */
+YTTDay.prototype.addCount = function (amount) {
+	this[YTT_DATA_COUNT] = this[YTT_DATA_COUNT] + amount;
+};
+
+/**
+ * @param {string} type The type of the duration.
+ * @param {int} milliseconds
+ * @param {int} seconds
+ * @param {int} minutes
+ * @param {int} hours
+ * @param {int} days
+ * @constructor
+ */
+function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0, days = 0) {
+	this.milliseconds = milliseconds;
+	this.seconds = seconds;
+	this.minutes = minutes;
+	this.hours = hours;
+	this.days = days;
+	this.type = type;
+}
+
+/**
+ * Get the duration in milliseconds.
+ *
+ * @returns {number} The number of milliseconds.
+ */
+YTTDuration.prototype.getAsMilliseconds = function () {
+	return (((((d.days || 0) * 24 + (d.hours || 0)) * 60 + (d.minutes || 0)) * 60 + (d.seconds || 0)) * 1000 + (d.milliseconds || 0)) || 0;
+};
+/**
+ * Get the duration in hours.
+ *
+ * @returns {number} The number of hours.
+ */
+YTTDuration.prototype.getAsHours = function () {
+	return this.getAsMilliseconds() / (60 * 60 * 1000);
+};
+/**
+ * Normalize the internal values.
+ */
+YTTDuration.prototype.normalize = function () {
+	if (this.getAsMilliseconds() <= 0) {
+		this.milliseconds = 0;
+		this.seconds = 0;
+		this.minutes = 0;
+		this.hours = 0;
+		this.days = 0;
+		return;
+	}
+	this.addDuration(new YTTDuration(''));
+};
+/**
+ * Add a duration to this one.
+ *
+ * @param {YTTDuration} duration The duration to add.
+ */
+YTTDuration.prototype.addDuration = function (duration) {
+	this.milliseconds += this.milliseconds + duration.milliseconds;
+	this.seconds += this.seconds + duration.seconds + parseInt(this.milliseconds / 1000.0);
+	this.milliseconds %= 1000;
+	this.minutes = this.minutes + duration.minutes + parseInt(this.seconds / 60.0);
+	this.seconds %= 60;
+	this.hours = this.hours + duration.hours + parseInt(this.minutes / 60.0);
+	this.minutes %= 60;
+	this.days = this.days + duration.days + parseInt(this.hours / 24.0);
+	this.hours %= 24;
+};
+/**
+ * Get this duration as a string.
+ *
+ * @param {boolean} showMillisec Show or not milliseconds.
+ * @returns {string} The duration.
+ */
+YTTDuration.prototype.getAsString = function (showMillisec = false) {
+	this.normalize();
+	let text = '';
+	if (this.days)
+		text += this.days + 'D ';
+	if (this.hours)
+		text += this.hours + 'H ';
+	if (this.minutes)
+		text += this.minutes + 'M ';
+	if (this.seconds)
+		text += this.seconds + 'S ';
+	if (showMillisec)
+		text += this.milliseconds + 'MS';
+	if (text === '')
+		return '0S';
+	return text;
+};
+
+/**
+ * Tell if the year is a leap year.
+ *
+ * @returns {boolean} True if lap year, false else.
+ */
+Date.prototype.isLeapYear = function () {
+	const year = this.getFullYear();
+	if ((year & 3) !== 0) return false;
+	return ((year % 100) !== 0 || (year % 400) === 0);
+};
+/**
+ * Get the number of the day in the year.
+ *
+ * @returns {int} The day number.
+ */
+Date.prototype.getDayOfYear = function () {
+	const dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+	const mn = this.getMonth();
+	const dn = this.getDate();
+	let dayOfYear = dayCount[mn] + dn;
+	if (mn > 1 && this.isLeapYear())
+		dayOfYear++;
+	return dayOfYear;
+};
+
+
+/************************************* UTILITY FUNCTIONS *************************************/
+/**
+ * Generates a new UUID.
+ *
  * @return {string}
  */
 function YTTGenUUID() {
 	const lut = [];
-	for (let i = 0; i < 256; i++) {
+	for (let i = 0; i < 256; i++)
 		lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
-	}
 	const d0 = Math.random() * 0xffffffff | 0;
 	const d1 = Math.random() * 0xffffffff | 0;
 	const d2 = Math.random() * 0xffffffff | 0;
@@ -49,41 +225,37 @@ function YTTGenUUID() {
 		lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
 }
 
-function YTTAddConfigCount(amount, config) {
-	if (!config) {
-		const newConf = {};
-		newConf[YTT_DATA_COUNT] = 0;
-		newConf[YTT_DATA_REAL] = {milliseconds: 0};
-		newConf[YTT_DATA_TOTAL] = {milliseconds: 0};
-		return newConf;
-	}
-	config[YTT_DATA_COUNT] = (config[YTT_DATA_COUNT] ? config[YTT_DATA_COUNT] : 0) + amount;
-	return config;
+/**
+ * Add a number of videos watched to a day.
+ *
+ * @param {int} amount The number of videos to add.
+ * @param {YTTDay} day The config day to modify.
+ * @returns {YTTDay} The new day.
+ */
+function YTTAddConfigCount(amount, day) {
+	if (!day)
+		return new YTTDay(amount);
+	day.addCount(amount);
+	return day;
 }
 
 /**
- * @return {number}
+ * Compare two versions.
+ *
+ * @param {string} v1 Base version.
+ * @param {string} v2 The version to compare with.
+ * @return {int} 1 if v1 is greater, -1 if lower, 0 if equals.
  */
-function YTTCompareVersion(v1, v2, options) {
-	if (v2 === undefined) {
+function YTTCompareVersion(v1, v2) {
+	if (v2 === undefined)
 		return 1;
-	}
 	const v1parts = v1.split(/[.-]/);
 	const v2parts = v2.split(/[.-]/);
 
-	function compareParts(v1parts, v2parts, options) {
-		//noinspection JSUnresolvedVariable
-		const zeroExtend = options && options.zeroExtend;
-
-		if (zeroExtend) {
-			while (v1parts.length < v2parts.length) v1parts.push('0');
-			while (v2parts.length < v1parts.length) v2parts.push('0');
-		}
-
+	function compareParts(v1parts, v2parts) {
 		for (let i = 0; i < v1parts.length; ++i) {
-			if (v2parts.length === i) {
+			if (v2parts.length === i)
 				return 1;
-			}
 
 			let v1part = parseInt(v1parts[i]);
 			let v2part = parseInt(v2parts[i]);
@@ -94,66 +266,68 @@ function YTTCompareVersion(v1, v2, options) {
 
 			if (v1part_is_string === v2part_is_string) {
 				if (v1part_is_string === false) {
-					if (v1part > v2part) {
+					if (v1part > v2part)
 						return 1;
-					}
-					else if (v1part < v2part) {
+					else if (v1part < v2part)
 						return -1;
-					}
 				} else {
 					const v1subparts = v1part.match(/[a-zA-Z]+|[0-9]+/g);
 					const v2subparts = v2part.match(/[a-zA-Z]+|[0-9]+/g);
 					if ((v1subparts.length === 1) && (v2subparts.length === 1)) {
 						v1part = v1subparts[0];
 						v2part = v2subparts[0];
-						if (v1part === v2part) {
+						if (v1part === v2part)
 							continue;
-						} else if (v1part > v2part) {
+						else if (v1part > v2part)
 							return 1;
-						} else {
+						else
 							return -1;
-						}
 					}
 					const result = compareParts(v1subparts, v2subparts);
-					if (result !== 0) {
+					if (result !== 0)
 						return result;
-					}
 				}
-			} else {
+			} else
 				return v2part_is_string ? 1 : -1;
-			}
 		}
-
-		if (v1parts.length !== v2parts.length) {
+		if (v1parts.length !== v2parts.length)
 			return -1;
-		}
-
 		return 0;
 	}
 
 	return compareParts(v1parts, v2parts, options);
 }
 
-function YTTAddConfigDuration(duration, config, key) {
-	if (!config) {
-		const newConf = {};
-		newConf[key] = duration;
-		return newConf;
-	}
-	config[key] = YTTAddDurations(duration, config[key]);
-	return config;
+/**
+ * Add a duration into a YTTDay.
+ *
+ * @param {YTTDuration} duration The duration to add.
+ * @param {YTTDay} day The day to add the duration to.
+ * @returns {YTTDay} The new day.
+ */
+function YTTAddConfigDuration(duration, day) {
+	if (!day)
+		day = new YTTDay();
+	day.addDuration(duration);
+	return day;
 }
 
+/**
+ * Change the theme of the current page.
+ *
+ * @param {string} theme The theme to set.
+ */
 function YTTApplyThemeCSS(theme) {
-	if (!theme) {
-		theme = 'dark';
-	}
 	let themeDOM = $('#YTTTheme');
 
+	/**
+	 * Apply the theme.
+	 *
+	 * @param {string} theme The name of the css file.
+	 */
 	function setTheme(theme) {
-		if (themeDOM) {
+		if (themeDOM)
 			themeDOM.remove();
-		}
 		themeDOM = $('<link id="YTTTheme" rel="stylesheet" href="css/themes/' + theme + '.css">');
 		themeDOM.appendTo('head');
 	}
@@ -168,127 +342,22 @@ function YTTApplyThemeCSS(theme) {
 	}
 }
 
-Date.prototype.isLeapYear = function () {
-	const year = this.getFullYear();
-	if ((year & 3) !== 0) return false;
-	return ((year % 100) !== 0 || (year % 400) === 0);
-};
-
-// Get Day of Year
-Date.prototype.getDOY = function () {
-	const dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-	const mn = this.getMonth();
-	const dn = this.getDate();
-	let dayOfYear = dayCount[mn] + dn;
-	if (mn > 1 && this.isLeapYear()) dayOfYear++;
-	return dayOfYear;
-};
-
 /**
- * @return {number}
+ * Get the config key for a date.
+ *
+ * @param {Date} now The date to get the key for.
+ * @return {string} The config key.
  */
-function YTTGetDurationAsMillisec(d) {
-	if (!d) return 0;
-	return (((((d.days || 0) * 24 + (d.hours || 0)) * 60 + (d.minutes || 0)) * 60 + (d.seconds || 0)) * 1000 + (d.milliseconds || 0)) || 0;
-}
-
-/**
- * @return {number}
- */
-function YTTGetDurationAsHours(d) {
-	return YTTGetDurationAsMillisec(d) / (60 * 60 * 1000);
-}
-
-
-function YTTGetValidDuration(d) {
-	let temp;
-	if (!d) return {};
-	if (YTTGetDurationAsMillisec(d) <= 0) return {};
-	if (d.days) {
-		//noinspection JSDuplicatedDeclaration
-		temp = d.days - Math.floor(d.days);
-		d.days = Math.floor(d.days);
-		d.hours = (d.hours || 0) + temp * 24;
-	}
-	if (d.hours) {
-		//noinspection JSDuplicatedDeclaration
-		temp = d.hours - Math.floor(d.hours);
-		d.hours = Math.floor(d.hours);
-		d.minutes = (d.minutes || 0) + temp * 60;
-	}
-	if (d.minutes) {
-		//noinspection JSDuplicatedDeclaration
-		temp = d.minutes - Math.floor(d.minutes);
-		d.minutes = Math.floor(d.minutes);
-		d.secondes = (d.secondes || 0) + temp * 60;
-	}
-	if (d.secondes) {
-		//noinspection JSDuplicatedDeclaration
-		temp = d.secondes - Math.floor(d.secondes);
-		d.secondes = Math.floor(d.secondes);
-		d.milliseconds = (d.milliseconds || 0) + temp * 1000;
-	}
-	if (d.milliseconds) {
-		d.milliseconds = Math.floor(d.milliseconds);
-	}
-	return d;
-}
-
-function YTTAddDurations(d1, d2) {
-	d1 = YTTGetValidDuration(d1);
-	d2 = YTTGetValidDuration(d2);
-	const d = {
-		milliseconds: 0,
-		seconds: 0,
-		minutes: 0,
-		hours: 0,
-		days: 0
-	};
-	d.milliseconds += (d1.milliseconds || 0) + (d2.milliseconds || 0);
-	d.seconds += (d1.seconds || 0) + (d2.seconds || 0) + parseInt(d.milliseconds / 1000);
-	d.milliseconds %= 1000;
-	d.minutes = (d1.minutes || 0) + (d2.minutes || 0) + parseInt(d.seconds / 60);
-	d.seconds %= 60;
-	d.hours = (d1.hours || 0) + (d2.hours || 0) + parseInt(d.minutes / 60);
-	d.minutes %= 60;
-	d.days = (d1.days || 0) + (d2.days || 0) + parseInt(d.hours / 24);
-	d.hours %= 24;
-	return d;
-}
-
-/**
- * @return {string}
- */
-function YTTGetDurationString(duration, showMillisec) {
-	if (!duration)
-		return '0S';
-	duration = YTTAddDurations(duration, {});
-	let text = '';
-	if (duration.days)
-		text += duration.days + 'D ';
-	if (duration.hours)
-		text += duration.hours + 'H ';
-	if (duration.minutes)
-		text += duration.minutes + 'M ';
-	if (duration.seconds)
-		text += duration.seconds + 'S ';
-	if (showMillisec)
-		text += duration.milliseconds + 'MS';
-	if (text === '')
-		return '0S';
-	return text;
-}
-
-/**
- * @return {string}
- */
-function YTTGetDayConfigKey(now) {
+function YTTGetDayConfigKey(now = null) {
 	now = now || new Date();
-	return 'day' + now.getDOY() + now.getFullYear();
+	return 'day' + now.getDayOfYear() + now.getFullYear();
 }
 
 /**
- * @return {string}
+ * Get a date as a string.
+ *
+ * @param {number} time The timestamp.
+ * @return {string} The date as YYY-MM-DD.
  */
 function YTTGetDateString(time) {
 	if (!time)
@@ -301,7 +370,11 @@ function YTTGetDateString(time) {
 }
 
 /**
- * @return {number}
+ * Compares two config dates.
+ *
+ * @param {string} base The base date as DYYYY or DDYYYY or DDDYYYY.
+ * @param {string} test The date to compare with as DYYYY or DDYYYY or DDDYYYY.
+ * @return {number} The number of difference days, negative if base if before test.
  */
 function YTTCompareConfigDate(base, test) {
 	const baseObj = YTTConvertConfigDateToObject(base);
@@ -310,6 +383,8 @@ function YTTCompareConfigDate(base, test) {
 }
 
 /**
+ * Convert a config date (DYYYY or DDYYYY or DDDYYYY) into an object containing the year and the day number.
+ *
  * @returns {{year: number, day: number}}
  */
 function YTTConvertConfigDateToObject(date) {
@@ -319,12 +394,16 @@ function YTTConvertConfigDateToObject(date) {
 		year = parseFloat(date.toString().substring(date.toString().length - 4));
 		day = parseFloat(date.toString().substring(0, date.toString().length - 4));
 	}
-	else {
+	else
 		year = parseFloat(date.toString());
-	}
 	return {year: year, day: day};
 }
 
+/**
+ * Send a message to log.
+ *
+ * @param text The message to log.
+ */
 function YTTLog(text) {
 	YTTMessage(YTT_LOG_EVENT, text);
 }
