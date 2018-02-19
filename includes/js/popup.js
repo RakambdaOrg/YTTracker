@@ -39,11 +39,11 @@ function showValue() {
 	YTTLog('UPDATING PRINTED VALUE');
 	const TODAY_KEY = YTTGetDayConfigKey();
 	YTTGetConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY], function (result) {
-		$('#duration').text(result[YTT_CONFIG_TOTAL_TIME_KEY].getAsString());
-		$('#realduration').text(result[YTT_CONFIG_REAL_TIME_KEY].getAsString());
-		$('#durationtoday').text(result[TODAY_KEY].getTotalDuration().getAsString());
-		$('#counttoday').text(result[TODAY_KEY].getCount());
-		$('#realdurationtoday').text(result[TODAY_KEY].getRealDuration().getAsString());
+		$('#duration').text(new YTTDuration(result[YTT_CONFIG_TOTAL_TIME_KEY]).getAsString());
+		$('#realduration').text(new YTTDuration(result[YTT_CONFIG_REAL_TIME_KEY].getAsString()));
+		$('#durationtoday').text(new YTTDuration(result[TODAY_KEY].getTotalDuration().getAsString()));
+		$('#counttoday').text(new YTTDay(result[TODAY_KEY].getCount()));
+		$('#realdurationtoday').text(new YTTDay(result[TODAY_KEY].getRealDuration().getAsString()));
 		$('#start').text(YTTGetDateString(result[YTT_CONFIG_START_TIME_KEY]));
 	});
 }

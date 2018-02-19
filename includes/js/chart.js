@@ -50,6 +50,7 @@ $(document).ready(function () {
 			for (const key in config)
 				if (config.hasOwnProperty(key) && key.substring(0, 3) === 'day') {
 					const day = key.substring(3);
+					config[key] = new YTTDay(config[key]);
 					if (!parsedConfig[day])
 						parsedConfig[day] = {
 							R: config[key].getRealDuration(),

@@ -37,16 +37,24 @@ const YTT_DOM_SPLITTER = '@';
 /**
  * Creates a new YTTDay object. It represents the datas of a day.
  *
- * @param {int} count Initial video count.
+ * @param {int|object} count Initial video count.
  * @param {int} real Initial real time in ms.
  * @param {int} total Initial total time in ms.
  * @constructor
  */
 function YTTDay(count = 0, real = 0, total = 0) {
-	this[YTT_DATA_COUNT] = count;
-	this[YTT_DATA_REAL] = new YTTDuration(YTT_DATA_REAL, real);
-	this[YTT_DATA_TOTAL] = new YTTDuration(YTT_DATA_TOTAL, total);
+	if (typeof count === 'object') {
+		this[YTT_DATA_COUNT] = count[YTT_DATA_COUNT];
+		this[YTT_DATA_REAL] = count[YTT_DATA_REAL];
+		this[YTT_DATA_TOTAL] = count[YTT_DATA_TOTAL];
+	}
+	else {
+		this[YTT_DATA_COUNT] = count;
+		this[YTT_DATA_REAL] = new YTTDuration(YTT_DATA_REAL, real);
+		this[YTT_DATA_TOTAL] = new YTTDuration(YTT_DATA_TOTAL, total);
+	}
 }
+
 /**
  * Get the count of videos for this day.
  *
@@ -92,7 +100,7 @@ YTTDay.prototype.addCount = function (amount) {
 };
 
 /**
- * @param {string} type The type of the duration.
+ * @param {string|type} type The type of the duration.
  * @param {int} milliseconds
  * @param {int} seconds
  * @param {int} minutes
@@ -101,12 +109,22 @@ YTTDay.prototype.addCount = function (amount) {
  * @constructor
  */
 function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0, days = 0) {
-	this.milliseconds = milliseconds;
-	this.seconds = seconds;
-	this.minutes = minutes;
-	this.hours = hours;
-	this.days = days;
-	this.type = type;
+	if (typeof type === 'object') {
+		this.milliseconds = type.milliseconds;
+		this.seconds = type.seconds;
+		this.minutes = type.minutes;
+		this.hours = type.hours;
+		this.days = type.days;
+		this.type = type.type;
+	}
+	else {
+		this.milliseconds = milliseconds;
+		this.seconds = seconds;
+		this.minutes = minutes;
+		this.hours = hours;
+		this.days = days;
+		this.type = type;
+	}
 }
 
 /**
@@ -405,7 +423,7 @@ function YTTConvertConfigDateToObject(date) {
  * @param text The message to log.
  */
 function YTTLog(text) {
-	if(typeof YTTMessage !== 'undefined')
+	if (typeof YTTMessage !== 'undefined')
 		YTTMessage(YTT_LOG_EVENT, text);
 	else
 		console.log(text);

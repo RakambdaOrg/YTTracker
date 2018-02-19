@@ -19,7 +19,7 @@ YTTGetConfig(null, function (conf) {
 					newConfig[key] = new YTTDay(day[YTT_DATA_COUNT], day[YTT_DATA_REAL], day[YTT_DATA_TOTAL]);
 				}
 				else if (key === YTT_CONFIG_REAL_TIME_KEY || key === YTT_CONFIG_TOTAL_TIME_KEY) {
-					newConfig[key] = new YTTDuration(key, conf[key].milliseconds || 0, conf[key].secondes || 0, conf[key].minutes || 0, conf[key].hours || 0, conf[key].days || 0);
+					newConfig[key] = new YTTDuration(key, conf[key].milliseconds || 0, conf[key].seconds || 0, conf[key].minutes || 0, conf[key].hours || 0, conf[key].days || 0);
 				}
 				else
 					newConfig[key] = conf[key];
@@ -143,8 +143,12 @@ function playerStateChange(event) {
 			}
 			if (!config[YTT_CONFIG_REAL_TIME_KEY])
 				config[YTT_CONFIG_REAL_TIME_KEY] = new YTTDuration(YTT_CONFIG_REAL_TIME_KEY);
+			else
+				config[YTT_CONFIG_REAL_TIME_KEY] = new YTTDuration(config[YTT_CONFIG_REAL_TIME_KEY]);
 			if (!config[TODAY_KEY])
 				config[TODAY_KEY] = new YTTDay();
+			else
+				config[TODAY_KEY] = new YTTDay(config[TODAY_KEY]);
 			config[YTT_CONFIG_REAL_TIME_KEY].addDuration(duration);
 			config[TODAY_KEY].getRealDuration().addDuration(duration);
 			YTTSetConfig(config);
@@ -182,8 +186,12 @@ function setVideoDuration(event) {
 			}
 			if (!config[YTT_CONFIG_TOTAL_TIME_KEY])
 				config[YTT_CONFIG_TOTAL_TIME_KEY] = new YTTDuration(YTT_CONFIG_TOTAL_TIME_KEY);
+			else
+				config[YTT_CONFIG_TOTAL_TIME_KEY] = new YTTDuration(config[YTT_CONFIG_TOTAL_TIME_KEY]);
 			if (!config[TODAY_KEY])
 				config[TODAY_KEY] = new YTTDay();
+			else
+				config[TODAY_KEY] = new YTTDay(config[TODAY_KEY]);
 			config[YTT_CONFIG_TOTAL_TIME_KEY].addDuration(duration);
 			config[YTT_CONFIG_IDS_WATCHED_KEY] = IDS;
 			config[YTT_CONFIG_START_TIME_KEY] = config[YTT_CONFIG_START_TIME_KEY] || new Date().getTime();
