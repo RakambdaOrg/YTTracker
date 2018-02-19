@@ -405,5 +405,8 @@ function YTTConvertConfigDateToObject(date) {
  * @param text The message to log.
  */
 function YTTLog(text) {
-	YTTMessage(YTT_LOG_EVENT, text);
+	if(typeof YTTMessage !== 'undefined')
+		YTTMessage(YTT_LOG_EVENT, text);
+	else
+		console.log(text);
 }
