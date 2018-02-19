@@ -207,5 +207,7 @@ YTTGetConfig([YTT_CONFIG_USERID, YTT_CONFIG_DEBUG_KEY], function (config) {
 		newConfig[YTT_CONFIG_USERID] = userID;
 		YTTSetConfig(newConfig);
 	}
-	YTTSetConfig(YTT_CONFIG_DEBUG_KEY, config[YTT_CONFIG_DEBUG_KEY] || false);
+	let conf = {};
+	conf[YTT_CONFIG_DEBUG_KEY] = config[YTT_CONFIG_DEBUG_KEY] || false;
+	YTTSetConfig(conf);
 });
