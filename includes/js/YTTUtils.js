@@ -45,8 +45,8 @@ const YTT_DOM_SPLITTER = '@';
 function YTTDay(count = 0, real = 0, total = 0) {
 	if (typeof count === 'object') {
 		this[YTT_DATA_COUNT] = count[YTT_DATA_COUNT];
-		this[YTT_DATA_REAL] = count[YTT_DATA_REAL];
-		this[YTT_DATA_TOTAL] = count[YTT_DATA_TOTAL];
+		this[YTT_DATA_REAL] = new YTTDuration(count[YTT_DATA_REAL]);
+		this[YTT_DATA_TOTAL] = new YTTDuration(count[YTT_DATA_TOTAL]);
 	}
 	else {
 		this[YTT_DATA_COUNT] = count;
@@ -133,7 +133,7 @@ function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0
  * @returns {number} The number of milliseconds.
  */
 YTTDuration.prototype.getAsMilliseconds = function () {
-	return (((((d.days || 0) * 24 + (d.hours || 0)) * 60 + (d.minutes || 0)) * 60 + (d.seconds || 0)) * 1000 + (d.milliseconds || 0)) || 0;
+	return (((((this.days || 0) * 24 + (this.hours || 0)) * 60 + (this.minutes || 0)) * 60 + (this.seconds || 0)) * 1000 + (this.milliseconds || 0)) || 0;
 };
 /**
  * Get the duration in hours.
@@ -313,7 +313,7 @@ function YTTCompareVersion(v1, v2) {
 		return 0;
 	}
 
-	return compareParts(v1parts, v2parts, options);
+	return compareParts(v1parts, v2parts);
 }
 
 /**
