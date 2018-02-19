@@ -30,12 +30,12 @@ $(document).ready(function () {
 	});
 
 	$('#importFileInput').change(function (event) {
-		var file = event.target.files[0];
+		const file = event.target.files[0];
 		if (file) {
-			var reader = new FileReader();
+			const reader = new FileReader();
 			reader.onload = function (reader) {
-				var importData = function (data) {
-					var dataObject;
+				let importData = function (data) {
+					let dataObject;
 					try {
 						dataObject = JSON.parse(data);
 					}
@@ -43,9 +43,8 @@ $(document).ready(function () {
 						alert('Corrupted file!');
 						return;
 					}
-					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?')) {
+					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?'))
 						return;
-					}
 					YTTSetConfig(dataObject);
 					location.reload();
 				};
@@ -56,9 +55,8 @@ $(document).ready(function () {
 	});
 
 	$('#resetButton').click(function () {
-		if (!confirm('This action will wipe all your data!\nAre you sure to continue?')) {
+		if (!confirm('This action will wipe all your data!\nAre you sure to continue?'))
 			return;
-		}
 		YTTGetConfig([YTT_CONFIG_USERID], function (config) {
 			YTTClearConfig(function () {
 				YTTSetConfig(config, function () {
@@ -69,7 +67,7 @@ $(document).ready(function () {
 	});
 
 	$('#validUsername').click(function () {
-		var newConfig = {};
+		let newConfig = {};
 		newConfig[YTT_CONFIG_USERNAME] = $('#username').val();
 		YTTSetConfig(newConfig);
 		YTTGetConfig(YTT_CONFIG_USERID, function (config) {
@@ -130,12 +128,11 @@ $(document).ready(function () {
 
 		function getAllSharedData() {
 			YTTGetConfig(YTT_CONFIG_USERID, function (config) {
-				var xhr = new XMLHttpRequest();
+				const xhr = new XMLHttpRequest();
 
 				function displaySharedData() {
-					if (xhr.readyState === 4) {
+					if (xhr.readyState === 4)
 						$('#optionUsername').after('<hr/><li class="json"><pre>' + JSON.stringify(JSON.parse(xhr.responseText), null, 4) + '</pre></li>');
-					}
 				}
 
 				xhr.onreadystatechange = displaySharedData;
@@ -147,9 +144,9 @@ $(document).ready(function () {
 		$('#uuidReveal').click(getAllSharedData);
 
 		$('#themeSelect').change(function () {
-			var theme = $('#themeSelect').find(':selected').val();
+			const theme = $('#themeSelect').find(':selected').val();
 			YTTApplyThemeCSS(theme);
-			var newConfig = {};
+			const newConfig = {};
 			newConfig[YTT_CONFIG_THEME] = theme;
 			YTTSetConfig(newConfig);
 		});
@@ -162,15 +159,15 @@ $(document).ready(function () {
 		});
 
 		$('#shareStats').change(function () {
-			var state = document.getElementById('shareStats').checked;
-			var newConfig = {};
+			const state = document.getElementById('shareStats').checked;
+			const newConfig = {};
 			newConfig[YTT_CONFIG_SHARE_ONLINE] = state;
 			YTTSetConfig(newConfig);
 		});
 
 		$('#debug').change(function () {
-			var state = document.getElementById('debug').checked;
-			var newConfig = {};
+			const state = document.getElementById('debug').checked;
+			const newConfig = {};
 			newConfig[YTT_CONFIG_DEBUG_KEY] = state;
 			YTTSetConfig(newConfig);
 		});
