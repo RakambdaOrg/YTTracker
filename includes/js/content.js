@@ -74,7 +74,7 @@ function injectCode() {
 
 $(document).ready(function () {
 	if (window && window.location && window.location.href && window.location.href.startsWith('https://yttracker.mrcraftcod.fr/'))
-		$('#extentionsAd').hide();
+		$('.extensionsAd').hide();
 	else
 		injectCode();
 });
