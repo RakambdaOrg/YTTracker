@@ -8,9 +8,6 @@
 <p align="center">
     <a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb"><img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/knnlnielflnfhdohmihofhdelgahgjdb.svg?maxAge=2592000&style=flat" /></a>
     <a alt="Firefox Addon" href="https://addons.mozilla.org/en-US/firefox/addon/youtube-tracker/"><img alt="Firefox Addon" src="https://img.shields.io/amo/v/youtube-tracker.svg?maxAge=2592000&style=flat" /></a>
-    <a alt="Build Status" href="https://travis-ci.org/MrCraftCod/YTTracker"><img alt="Build status" src="https://img.shields.io/travis/MrCraftCod/YTTracker/master.svg?maxAge=2592000&style=flat"/></a>
-    <a alt="GitHub issues" href="https://github.com/mrcraftcod/yttracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mrcraftcod/yttracker.svg?style=flat"/></a>
-    <a alt="GitHub Release" href="https://github.com/mrcraftcod/yttracker/releases"><img alt="GitHub Release" src="https://img.shields.io/github/tag/mrcraftcod/yttracker.svg?label=%20tag%20&style=flat"/></a>
 </p>
 
 ## Description
@@ -63,4 +60,4 @@ Compare versions function from [em92's gist](https://gist.github.com/em92/d58944
 Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
 
 ## Help
-If you have any problems with the extension, you can describe the issue [here](https://github.com/MrCraftCod/YTTracker/issues).
+If you have any problems with the extension, you can describe the issue [here](https://gitlab.com/MrCraftCod/YTTracker/issues).
