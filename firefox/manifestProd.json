@@ -3,7 +3,7 @@
   "name": "YouTube Tracker",
   "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "icons": {
     "16": "assets/icon16.png",
     "48": "assets/icon48.png",
