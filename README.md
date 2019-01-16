@@ -1,6 +1,3 @@
-<p align="center">
-    <img alt="YTTracker logo" src="https://rawgit.com/MrCraftCod/YTTracker/master/extras/timer.svg" height="175"/>
-</p>
 <p>
     <h1 align="center">YTTracker</h1>
     <h3 align="center">An extension to track time on YouTube</h3>
@@ -22,13 +19,13 @@ You can also choose to send those data to a server to be able to compare your se
 ## Screenshots
 <div align="center">
     <p>Popup window:</p>
-    <img style="width:65%" src="https://github.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/popup.png"/>
+    <img style="width:65%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/popup.png"/>
     <hr style="width:85%"/>
     <p>Chart view (dark theme):</p>
-    <img style="width:75%" src="https://github.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartDark.png"/>
+    <img style="width:75%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartDark.png"/>
     <hr style="width:85%"/>
     <p>Chart view (light theme):</p>
-    <img style="width:75%" src="https://github.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
+    <img style="width:75%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
 </div>
 
 ## Firefox

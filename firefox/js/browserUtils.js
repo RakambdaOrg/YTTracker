@@ -17,7 +17,10 @@ function YTTGetConfig(values, callback) {
  * @param name The default file name.
  */
 function YTTDownload(value, name) {
-	//TODO: Download on firefox
+	browser.downloads.download({
+		url: value,
+		filename: name
+	});
 }
 
 /**

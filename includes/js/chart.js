@@ -38,7 +38,7 @@ $(document).ready(function () {
 		}
 	}
 
-	AmCharts.ready(function () {
+	let makeChart = function(){
 		YTTGetConfig(null, function (config) {
 			YTTApplyThemeCSS(config[YTT_CONFIG_THEME]);
 			const chartColors = getChartColors(config[YTT_CONFIG_THEME], config[YTT_CONFIG_HANDDRAWN] === 'true');
@@ -460,5 +460,11 @@ $(document).ready(function () {
 			$('#countHolder').text(config[dayKey].getCount());
 			$('#versionNumber').text(config[YTT_CONFIG_VERSION] ? config[YTT_CONFIG_VERSION] : 'Unknown');
 		});
-	});
+	};
+
+	if (AmCharts.isReady) {
+		makeChart();
+	} else {
+		AmCharts.ready(makeChart);
+	}
 });
