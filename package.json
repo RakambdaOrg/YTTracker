@@ -23,7 +23,7 @@
     "chromeManifest": "cd temp && cp manifestProd.json manifest.json && replace-in-file !!!VERSION!!! ${npm_package_version} manifest.json && cd ../",
     "chromePackage": "npm run includes && cd temp && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv temp/chromeExtension.zip chromeExtension.zip",
     "chromeBuild": "npm run chromeInit && npm run chromeManifest && npm run chromePackage && npm run clean",
-    "chromeRelease": "npm run chromeBuild && npm run chromeSend && npm run chromeClear && npm run chromeReleaseBeta",
+    "chromeRelease": "npm run chromeBuild && npm run chromeSend && npm run chromeClear",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
     "chromeClear": "rm chromeExtension.zip",
     "firefoxInit": "npm run init && cp -R firefox/* temp",
