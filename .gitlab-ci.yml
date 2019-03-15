@@ -16,6 +16,8 @@ stages:
 
 ⏯deploy-chrome:
   stage: deploy
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq zip
   script:
     - npm install
     - npm run chromeRelease
@@ -24,6 +26,8 @@ stages:
 
 ⏯deploy-chrome-beta:
   stage: deploy
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq zip
   script:
     - npm install
     - npm run chromeReleaseBeta
