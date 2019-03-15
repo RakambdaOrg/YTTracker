@@ -11,11 +11,13 @@ stages:
 🧪tests:
   stage: test
   script:
+    - npm install
     - npm test
 
 ⏯deploy-chrome:
   stage: deploy
   script:
+    - npm install
     - npm chromeRelease
   only:
     - master
@@ -23,6 +25,7 @@ stages:
 ⏯deploy-chrome-beta:
   stage: deploy
   script:
+    - npm install
     - npm chromeReleaseBeta
   except:
     - master
