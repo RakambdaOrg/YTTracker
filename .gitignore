@@ -1,5 +1,7 @@
 .idea/
+temp/
 
+*.zip
 *.ipr
 *.iws
 *.pem
