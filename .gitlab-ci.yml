@@ -22,14 +22,4 @@ stages:
     - npm install
     - npm run chromeRelease
   only:
-    - master
-
-⏯deploy-chrome-beta:
-  stage: deploy
-  before_script:
-    - apt-get update -qq && apt-get install -y -qq zip
-  script:
-    - npm install
-    - npm run chromeReleaseBeta
-  except:
-    - master
+    - tags
