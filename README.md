@@ -31,9 +31,6 @@ You can also choose to send those data to a server to be able to compare your se
 ## Firefox
 Please make sure the sync storage is activated. For that go to ```about:config``` and set ```webextensions.storage.sync.enabled``` to ```true```.
 
-## Development/Beta releases
-<a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec" style="color: white; text-decoration:none;">Chrome beta version: <img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/moboafdnejnjnppicfiadaalobjeemec.svg?maxAge=2592000&style=flat" /></a>
-
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
 
