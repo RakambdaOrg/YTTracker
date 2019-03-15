@@ -44,11 +44,11 @@
     "safariClear": "rm yttracker.safariextension.zip"
   },
   "devDependencies": {
-    "chrome-webstore-upload-cli": "^0.2.0",
-    "eslint": "^3.19.0",
-    "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-no-unsanitized": "^2.0.1",
-    "xo": "^0.18.1"
+    "chrome-webstore-upload-cli": "^1.2.0",
+    "eslint": "^5.15.1",
+    "eslint-plugin-json": "^1.4.0",
+    "eslint-plugin-no-unsanitized": "^3.0.2",
+    "xo": "^0.24.0"
   },
   "xo": {
     "envs": [

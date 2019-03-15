@@ -1,0 +1,32 @@
+image: node:11.11
+
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - test
+  - deploy
+
+🧪tests:
+  stage: test
+  script:
+    - npm test
+
+⏯deploy-chrome:
+  stage: deploy
+  script:
+    - npm chromeRelease
+  only:
+    - tags
+  except:
+    - branches
+
+⏯deploy-chrome-beta:
+  stage: deploy
+  script:
+    - npm chromeReleaseBeta
+  only:
+    - tags
+  except:
+    - branches
