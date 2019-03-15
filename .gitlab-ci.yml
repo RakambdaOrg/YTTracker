@@ -18,7 +18,7 @@ stages:
   stage: deploy
   script:
     - npm install
-    - npm chromeRelease
+    - npm run chromeRelease
   only:
     - master
 
@@ -26,6 +26,6 @@ stages:
   stage: deploy
   script:
     - npm install
-    - npm chromeReleaseBeta
+    - npm run chromeReleaseBeta
   except:
     - master
