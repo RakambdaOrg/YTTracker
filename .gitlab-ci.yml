@@ -18,15 +18,11 @@ stages:
   script:
     - npm chromeRelease
   only:
-    - tags
-  except:
-    - branches
+    - master
 
 ⏯deploy-chrome-beta:
   stage: deploy
   script:
     - npm chromeReleaseBeta
-  only:
-    - tags
   except:
-    - branches
+    - master

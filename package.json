@@ -1,19 +1,18 @@
 {
-  "name": "YTTracker",
-  "version": "0.7.1",
-  "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/MrCraftCod/)",
+  "name": "yttracker",
+  "version": "1.23.0",
+  "author": "Thomas Couchoud <zerderr@gmail.com> (https://gitlab.com/MrCraftCod/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://github.com/MrCraftCod/YTTracker/blob/master/README.md",
-  "license": "MIT",
+  "bugs": "https://gitlab.com/MrCraftCod/YTTracker/issues",
+  "repository": "gitlab:MrCraftCod/YTTracker",
+  "license": "GNU GPLv3",
+  "private": true,
   "files": [
     "/chrome",
     "/firefox",
     "/includes"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MrCraftCod/YTTracker.git"
-  },
   "scripts": {
     "eslint": "eslint . --ext .json --ext .js",
     "test": "npm run eslint",
@@ -21,7 +20,7 @@
     "init": "mkdir temp",
     "includes": "cp -R includes/* temp",
     "chromeInit": "npm run init && cp -R chrome/* temp",
-    "chromeManifest": "cd temp && cp manifestProd.json manifest.json && cd ../",
+    "chromeManifest": "cd temp && replace-in-file !!!VERSION!!! to cp manifestProd.json manifest.json && cd ../",
     "chromeManifestBeta": "cd temp && cp manifestTest.json manifest.json && cd ../",
     "chromePackage": "npm run includes && cd temp && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv temp/chromeExtension.zip chromeExtension.zip",
     "chromeBuild": "npm run chromeInit && npm run chromeManifest && npm run chromePackage && npm run clean",
