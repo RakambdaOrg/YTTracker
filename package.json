@@ -28,7 +28,7 @@
     "chromeRelease": "npm run chromeBuild && npm run chromeSend && npm run chromeClear && npm run chromeReleaseBeta",
     "chromeReleaseBeta": "npm run chromeBuildBeta && npm run chromeSendBeta && npm run chromeClear",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
-    "chromeSendBeta": "echo ${CLIENT_ID} && webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
+    "chromeSendBeta": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id moboafdnejnjnppicfiadaalobjeemec --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
     "chromeClear": "rm chromeExtension.zip",
     "firefoxInit": "npm run init && cp -R firefox/* temp",
     "firefoxManifest": "cd temp && cp manifestProd.json manifest.json && replace-in-file !!!VERSION!!! ${npm_package_version} manifest.json && cd ../",
