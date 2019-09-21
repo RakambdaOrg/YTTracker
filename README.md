@@ -19,13 +19,13 @@ You can also choose to send those data to a server to be able to compare your se
 ## Screenshots
 <div align="center">
     <p>Popup window:</p>
-    <img style="width:65%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/popup.png"/>
+    <img style="width:65%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/popup.png"/>
     <hr style="width:85%"/>
     <p>Chart view (dark theme):</p>
-    <img style="width:75%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartDark.png"/>
+    <img style="width:75%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/chartDark.png"/>
     <hr style="width:85%"/>
     <p>Chart view (light theme):</p>
-    <img style="width:75%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
+    <img style="width:75%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
 </div>
 
 ## Firefox
@@ -53,4 +53,4 @@ Compare versions function from [em92's gist](https://gist.github.com/em92/d58944
 Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
 
 ## Help
-If you have any problems with the extension, you can describe the issue [here](https://gitlab.com/MrCraftCod/YTTracker/issues).
+If you have any problems with the extension, you can describe the issue [here](https://github.com/RakSrinaNa/YTTracker/issues).
