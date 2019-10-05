@@ -9,16 +9,25 @@ function YTTGetConfig(values, callback) {
 }
 
 /**
- * Start the download of a file.
+ * Start the download of a json file.
  *
- * @param value The url of the file.
+ * @param json The json of the file.
  * @param name The default file name.
  */
-function YTTDownload(value, name, callback = null) {
+function YTTDownload(json, name, callback = null) {
+	const value = 'data:application/json;base64,' + btoa(JSON.stringify(json));
 	chrome.downloads.download({
 		url: value,
 		filename: name
-	}, callback);
+	}, function(downloadId) {
+		chrome.downloads.onChanged.addListener(function (download) {
+			if(download.id === downloadId && (download.state == "interrupted" || download.state == "complete")){
+				URL.revokeObjectURL(value);
+				if (callback)
+					callback(r);
+			}
+		});
+	});
 }
 
 /**

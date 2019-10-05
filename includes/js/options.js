@@ -5,10 +5,8 @@ $(function () {
 
 	$('#exportButton').on("click",function () {
 		YTTGetConfig(null, function (config) {
-			const json = JSON.stringify(config);
-			const blob = new Blob([json], {type: "application/json"});
 			let payload = {};
-			payload[YTT_DOWNLOAD_EVENT_DATA_KEY] = blob;
+			payload[YTT_DOWNLOAD_EVENT_DATA_KEY] = config;
 			payload[YTT_DOWNLOAD_EVENT_NAME_KEY] = 'YTTExport.json';
 			payload[YTT_DOWNLOAD_EVENT_CALLBACK_KEY] = null;
 			YTTMessage(YTT_DOWNLOAD_EVENT, payload);

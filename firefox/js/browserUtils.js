@@ -14,17 +14,19 @@ function YTTGetConfig(values, callback) {
 /**
  * Start the download of a file.
  *
- * @param blob The blob of the file.
+ * @param json The json of the json file.
  * @param name The default file name.
  */
-function YTTDownload(blob, name, callback = null) {
+function YTTDownload(json, name, callback = null) {
+	const jsonStr = JSON.stringify(json);
+	const blob = new Blob([jsonStr], {type: "application/json"});
 	const value  = URL.createObjectURL(blob);
 	browser.downloads.download({
 		url: value,
 		filename: name
-	}).then(download => function(download) {
+	}).then(function(downloadId) {
 		browser.downloads.onChanged.addListener(function (download) {
-			if(download.state == "interrupted" || download.state == "complete"){
+			if(download.id === downloadId && (download.state == "interrupted" || download.state == "complete")){
 				URL.revokeObjectURL(value);
 				if (callback)
 					callback(r);
