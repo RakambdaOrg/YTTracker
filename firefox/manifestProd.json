@@ -24,7 +24,7 @@
     "notifications"
   ],
   "options_ui": {
-    "page": "chart.html",
+    "page": "options.html",
     "open_in_tab": true
   },
   "browser_action": {

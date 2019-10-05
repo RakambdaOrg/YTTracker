@@ -1,12 +1,12 @@
 $(function () {
 	$('#openOptionsButton').on("click", function () {
-		window.open(YTTGetURL('options.html'));
+		YTTOpenOptionsPage(null, function(){
+			window.open(YTTGetRuntimeURL('options.html'));
+		});
 	});
 
 	$('#openChartButton').on("click", function () {
-		YTTOpenOptionsPage(null, function(){
-			window.open(YTTGetRuntimeURL('chart.html'));
-		});
+		window.open(YTTGetRuntimeURL('chart.html'));
 	});
 
 	$('#openOnlineStatsButton').on("click", function () {

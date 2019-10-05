@@ -41,6 +41,8 @@ YTTGetConfig(null, function (conf) {
 		YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY], null);
 	}
 
+	YTTRemoveConfig(["YTTHanddrawn", "YTTTheme"], null);
+
 	YTTSetConfig(newConfig, null);
 });
 

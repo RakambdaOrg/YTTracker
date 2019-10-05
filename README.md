@@ -1,7 +1,5 @@
-<p>
-    <h1 align="center">YTTracker</h1>
-    <h3 align="center">An extension to track time on YouTube</h3>
-</p>
+# YTTracker
+An extension to track time on YouTube
 
 ## Description
 This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
@@ -19,22 +17,17 @@ You can also choose to send those data to a server to be able to compare your se
 ## Screenshots
 <div align="center">
     <p>Popup window:</p>
-    <img style="width:65%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/popup.png"/>
+    <img style="width:65%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/popup.png"/>
     <hr style="width:85%"/>
-    <p>Chart view (dark theme):</p>
-    <img style="width:75%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartDark.png"/>
+    <p>Chart view:</p>
+    <img style="width:75%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/chart.png"/>
     <hr style="width:85%"/>
-    <p>Chart view (light theme):</p>
-    <img style="width:75%" src="https://gitlab.com/MrCraftCod/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
 </div>
-
-## Firefox
-Please make sure the sync storage is activated. For that go to ```about:config``` and set ```webextensions.storage.sync.enabled``` to ```true```.
 
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
 
-CSS Element Queries - [https://github.com/marcj/css-element-queries](https://github.com/marcj/css-element-queries)
+Bootstrap - [https://getbootstrap.com/](https://getbootstrap.com/)
 
 JQuery - [https://github.com/jquery/jquery](https://github.com/jquery/jquery)
 
@@ -50,4 +43,4 @@ Compare versions function from [em92's gist](https://gist.github.com/em92/d58944
 Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
 
 ## Help
-If you have any problems with the extension, you can describe the issue [here](https://gitlab.com/MrCraftCod/YTTracker/issues).
+If you have any problems with the extension, you can describe the issue [here](https://github.com/RakSrinaNa/YTTracker/issues).
