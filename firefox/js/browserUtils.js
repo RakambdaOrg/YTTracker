@@ -41,10 +41,7 @@ function YTTDownload(json, name, callback = null) {
  * @param config The configuration to set.
  */
 function YTTSetConfig(config, callback = null) {
-	browser.storage.sync.set(config, callback).then(r => {
-		if (callback)
-			callback(r);
-	});
+	browser.storage.sync.set(config).then(callback);
 }
 
 /**
@@ -53,10 +50,7 @@ function YTTSetConfig(config, callback = null) {
  * @param keys The keys to remove.
  */
 function YTTRemoveConfig(keys, callback = null) {
-	browser.storage.sync.remove(keys).then(r => {
-		if (callback)
-			callback(r);
-	});
+	browser.storage.sync.remove(keys).then(callback);
 }
 
 /**
@@ -65,10 +59,7 @@ function YTTRemoveConfig(keys, callback = null) {
  * @param callback The call back to call.
  */
 function YTTClearConfig(callback = null) {
-	browser.storage.sync.clear().then(r => {
-		if (callback)
-			callback(r);
-	});
+	browser.storage.sync.clear().then(callback);
 }
 
 /**
@@ -148,11 +139,7 @@ function YTTGetBrowser() {
  */
 function YTTOpenOptionsPage(onSuccess, onFail) {
 	if (browser.runtime.openOptionsPage) {
-		browser.runtime.openOptionsPage().then(r => {
-			if(onSuccess){
-				onSuccess(r);
-			}
-		});
+		browser.runtime.openOptionsPage().then(onSuccess, onFail);
 	} else if (onFail) {
 		onFail();
 	}
