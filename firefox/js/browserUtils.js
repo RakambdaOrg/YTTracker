@@ -14,14 +14,16 @@ function YTTGetConfig(values, callback) {
 /**
  * Start the download of a file.
  *
- * @param value The url of the file.
+ * @param blob The blob of the file.
  * @param name The default file name.
  */
-function YTTDownload(value, name, callback = null) {
+function YTTDownload(blob, name, callback = null) {
+	const value  = URL.createObjectURL(blob);
 	browser.downloads.download({
 		url: value,
 		filename: name
 	}).then(r => {
+		URL.revokeObjectURL(value);
 		if (callback)
 			callback(r);
 	});
