@@ -22,9 +22,8 @@ function YTTDownload(blob, name, callback = null) {
 	browser.downloads.download({
 		url: value,
 		filename: name
-	}, function(download) {
+	}).then(download => function(download) {
 		browser.downloads.onChanged.addListener(function (download) {
-			console.log( download.state);
 			if(download.state == "interrupted" || download.state == "complete"){
 				URL.revokeObjectURL(value);
 				if (callback)
@@ -40,7 +39,7 @@ function YTTDownload(blob, name, callback = null) {
  * @param config The configuration to set.
  */
 function YTTSetConfig(config, callback = null) {
-	browser.storage.sync.set(config).then(r => {
+	browser.storage.sync.set(config, callback).then(r => {
 		if (callback)
 			callback(r);
 	});
