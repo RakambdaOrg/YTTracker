@@ -7,7 +7,8 @@
  * @param callback The callback to call.
  */
 function YTTGetConfig(values, callback) {
-	browser.storage.sync.get(values).then(callback);
+	if (callback)
+		browser.storage.sync.get(values).then(callback);
 }
 
 /**
@@ -16,10 +17,13 @@ function YTTGetConfig(values, callback) {
  * @param value The url of the file.
  * @param name The default file name.
  */
-function YTTDownload(value, name) {
+function YTTDownload(value, name, callback = null) {
 	browser.downloads.download({
 		url: value,
 		filename: name
+	}).then(r => {
+		if (callback)
+			callback(r);
 	});
 }
 
@@ -28,8 +32,23 @@ function YTTDownload(value, name) {
  *
  * @param config The configuration to set.
  */
-function YTTSetConfig(config) {
-	browser.storage.sync.set(config);
+function YTTSetConfig(config, callback = null) {
+	browser.storage.sync.set(config).then(r => {
+		if (callback)
+			callback(r);
+	});
+}
+
+/**
+ * Delete keys in the configuration.
+ *
+ * @param keys The keys to remove.
+ */
+function YTTRemoveConfig(keys, callback = null) {
+	browser.storage.sync.remove(keys).then(r => {
+		if (callback)
+			callback(r);
+	});
 }
 
 /**
@@ -37,10 +56,11 @@ function YTTSetConfig(config) {
  *
  * @param callback The call back to call.
  */
-function YTTClearConfig(callback) {
-	browser.storage.sync.clear();
-	if (callback !== null)
-		callback();
+function YTTClearConfig(callback = null) {
+	browser.storage.sync.clear().then(r => {
+		if (callback)
+			callback(r);
+	});
 }
 
 /**
@@ -49,7 +69,7 @@ function YTTClearConfig(callback) {
  * @param notification The notification to send.
  */
 function YTTSendNotification(notification) {
-	chrome.notifications.create('', notification);
+	browser.notifications.create(notification);
 }
 
 /**
@@ -63,9 +83,8 @@ function YTTMessage(type, value) {
 	message[YTT_MESSAGE_TYPE_KEY] = type;
 	message[YTT_MESSAGE_VALUE_KEY] = value;
 	try {
-		chrome.runtime.sendMessage(message);
-	}
-	catch (err) {
+		browser.runtime.sendMessage(message);
+	} catch (err) {
 	}
 }
 
@@ -75,7 +94,7 @@ function YTTMessage(type, value) {
  * @param text The text to set.
  */
 function YTTSetBadge(text) {
-	chrome.browserAction.setBadgeText({text: text});
+	browser.browserAction.setBadgeText({text: text});
 }
 
 /**
@@ -84,7 +103,7 @@ function YTTSetBadge(text) {
  * @return {string}
  */
 function YTTGetVersion() {
-	return chrome.runtime.getManifest().version;
+	return browser.runtime.getManifest().version;
 }
 
 /**
@@ -93,7 +112,16 @@ function YTTGetVersion() {
  * @return {string}
  */
 function YTTGetURL(path) {
-	return chrome.extension.getURL(path);
+	return browser.extension.getURL(path);
+}
+
+/**
+ * Get the runtime url of a relative file.
+ *
+ * @return {string}
+ */
+function YTTGetRuntimeURL(path) {
+	return browser.runtime.getURL(path);
 }
 
 /**
@@ -103,4 +131,21 @@ function YTTGetURL(path) {
  */
 function YTTGetBrowser() {
 	return 'Firefox';
+}
+
+/**
+ * Open the options page of the extension if available.
+ * @param onSuccess Callback called when opening settings.
+ * @param onFail Callback if the settings can't be opened.
+ */
+function YTTOpenOptionsPage(onSuccess, onFail) {
+	if (browser.runtime.openOptionsPage) {
+		browser.runtime.openOptionsPage().then(r => {
+			if(onSuccess){
+				onSuccess(r);
+			}
+		});
+	} else if (onFail) {
+		onFail();
+	}
 }

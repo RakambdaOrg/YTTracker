@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YTTracker</title>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/chart.css">
+    <script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/lib/Popper.js/popper.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/lib/amcharts/core.js"></script>
+    <script type="text/javascript" src="js/lib/amcharts/charts.js"></script>
+    <script type="text/javascript" src="js/lib/amcharts/themes/animated.js"></script>
+    <script type="text/javascript" src="js/lib/amcharts/themes/dark.js"></script>
+    <script type="text/javascript" src="js/lib/amcharts/themes/material.js"></script>
+    <script type="text/javascript" src="js/browserUtils.js"></script>
+    <script type="text/javascript" src="js/YTTUtils.js"></script>
+    <script type="text/javascript" src="js/chart.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" role="navigation">
+    <a class="navbar-brand" href="#"><img src="assets/icon128.png" alt="Logo" style="width:40px;"></a>
+    <ul class="nav navbar-nav">
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" target="_blank" href="https://yttracker.mrcraftcod.fr/">Online Stats</a></li>
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="/options.html">Options</a></li>
+    </ul>
+</nav>
+<div class='container-fluid'>
+    <div class='card info-card box-shadow'>
+        <div class='card-header'>
+            <h5 class='card-title'>All data</h5>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class="col">Watched: <span id="totalWatched"></span></div>
+                <div class="col">Opened: <span id="totalOpened"></span></div>
+                <div class="col">Count: <span id="totalCount"></span></div>
+                <div class="col"></div>
+            </div>
+            <div class='row'>
+                <div class="col">Average watched: <span id="totalAverageWatched"></span></div>
+                <div class="col">Average opened: <span id="totalAverageOpened"></span></div>
+                <div class="col">Average count: <span id="totalAverageCount"></span></div>
+                <div class="col">Average ratio: <span id="totalAverageRatio"></span></div>
+            </div>
+        </div>
+    </div>
+    <div class='card info-card box-shadow'>
+        <div class='card-header'>
+            <h5 class='card-title'>Today data</h5>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class="col">Watched: <span id="todayWatched"></span></div>
+                <div class="col">Opened: <span id="todayOpened"></span></div>
+                <div class="col">Count: <span id="todayCount"></span></div>
+                <div class="col"></div>
+            </div>
+        </div>
+    </div>
+    <div class='card info-card box-shadow'>
+        <div class='card-header'>
+            <h5 class='card-title'>Selected period data (<span id="periodDays">7</span> days)</h5>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class="col">Watched: <span id="periodWatched"></span></div>
+                <div class="col">Opened: <span id="periodOpened"></span></div>
+                <div class="col">Count: <span id="periodCount"></span></div>
+                <div class="col"></div>
+            </div>
+            <div class='row'>
+                <div class="col">Average watched: <span id="periodAverageWatched"></span></div>
+                <div class="col">Average opened: <span id="periodAverageOpened"></span></div>
+                <div class="col">Average count: <span id="periodAverageCount"></span></div>
+                <div class="col">Average ratio: <span id="periodAverageRatio"></span></div>
+            </div>
+        </div>
+    </div>
+    <div class="chartHolder" id="chartHolder">
+        <div class="chartDiv" id="chartDiv"></div>
+    </div>
+    <div class="legendHolder" id='legendHolder'>
+        <div class="legendDiv" id='legendDiv'></div>
+    </div>
+</div>
+</body>
+</html>

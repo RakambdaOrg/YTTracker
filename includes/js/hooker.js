@@ -1,4 +1,8 @@
+/**
+ * Setup hook onto the YouTube player.
+ */
 function YTTHookProcess() {
+	const RETRY_DELAY = 250;
 	let hooked = false;
 	try {
 		let YTTPlayerTemp;
@@ -11,9 +15,12 @@ function YTTHookProcess() {
 	if (hooked)
 		YTTUpdateDOM();
 	else
-		setTimeout(YTTHookProcess, 250);
+		setTimeout(YTTHookProcess, RETRY_DELAY);
 }
 
+/**
+ * Called when the hook is successfull and start a scheduled task to update current player time continuously.
+ */
 function YTTUpdateDOM() {
 	setInterval(function () {
 		const YTTTempPlayer = YTTGetPlayer();

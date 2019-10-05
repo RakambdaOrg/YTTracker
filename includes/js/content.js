@@ -1,3 +1,7 @@
+/**
+ * Called when the DOM of the state of the player changes.
+ * @param mutation The mutation that occured.
+ */
 function YTTGetChangeState(mutation) {
 	const values = mutation.target.textContent.split(YTT_DOM_SPLITTER);
 	const event = {};
@@ -7,6 +11,10 @@ function YTTGetChangeState(mutation) {
 	YTTMessage(YTT_STATE_EVENT, event);
 }
 
+/**
+ * Called when the infos of the video changes.
+ * @param mutation The mutation that occured.
+ */
 function YTTGetChangeInfos(mutation) {
 	const values = mutation.target.textContent.split(YTT_DOM_SPLITTER);
 	const event = {};
@@ -16,12 +24,18 @@ function YTTGetChangeInfos(mutation) {
 }
 
 /**
- * @return {string}
+ * Generates a div to be injected in the DOM.
+ * @param id The id of the div element.
+ * @param content The content of the div.
+ * @return {string} The div element as a string.
  */
-function YTTGetInjectDiv(id, def) {
-	return '<div id="' + id + '" style="display: none;">' + def + '</div>';
+function YTTGetInjectDiv(id, content) {
+	return '<div id="' + id + '" style="display: none;">' + content + '</div>';
 }
 
+/**
+ * Inject required elements to track video ID, video duration, player state and current time in the video.
+ */
 function injectCode() {
 	const body = $('body');
 	body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_STATE, 0));
@@ -31,7 +45,7 @@ function injectCode() {
 
 	$(window).on('beforeunload', function () {
 		const event = {};
-		event[YTT_STATE_EVENT_STATE_KEY] = '2';
+		event[YTT_STATE_EVENT_STATE_KEY] = YTT_STATE_EVENT_STATE_KEY_WATCHED;
 		event[YTT_STATE_EVENT_TIME_KEY] = $('#' + YTT_DOM_PLAYER_TIME_2).text();
 		event[YTT_STATE_EVENT_VID_KEY] = $('#' + YTT_DOM_PLAYER_INFOS).text().split(YTT_DOM_SPLITTER)[0];
 		YTTMessage(YTT_STATE_EVENT, event);
@@ -72,7 +86,7 @@ function injectCode() {
 	YTTLog('Player hooked');
 }
 
-$(document).ready(function () {
+$(function () {
 	if (window && window.location && window.location.href && window.location.href.startsWith('https://yttracker.mrcraftcod.fr/'))
 		$('.extensionsAd').hide();
 	else
