@@ -1,6 +1,6 @@
 /************************************* CONSTANTS *************************************/
-const YTT_DATA_REAL = 'real';
-const YTT_DATA_TOTAL = 'total';
+const YTT_DATA_WATCHED = 'real';
+const YTT_DATA_OPENED = 'total';
 const YTT_DATA_COUNT = 'count';
 const YTT_CONFIG_USERNAME = 'YTT_Username';
 const YTT_CONFIG_SHARE_ONLINE = 'YTT_Share_Stats';
@@ -9,11 +9,16 @@ const YTT_CONFIG_FAILED_SHARE = 'YTT_Failed_Share';
 const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
+/**
+ * @deprecated
+ */
 const YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
+/**
+ * @deprecated
+ */
 const YTT_CONFIG_REAL_TIME_KEY = 'YTT_RealTime';
+const YTT_CONFIG_TOTAL_STATS_KEY = 'YTT_Total';
 const YTT_CONFIG_DEBUG_KEY = 'YTT_Debug';
-const YTT_CONFIG_THEME = 'YTTTheme';
-const YTT_CONFIG_HANDDRAWN = 'YTTHanddrawn';
 const YTT_MESSAGE_TYPE_KEY = 'type';
 const YTT_MESSAGE_VALUE_KEY = 'value';
 const YTT_LOG_EVENT = 'log';
@@ -25,7 +30,13 @@ const YTT_STATE_EVENT = 'playerStateChange';
 const YTT_STATE_EVENT_ID_KEY = 'ID';
 const YTT_STATE_EVENT_VID_KEY = 'videoID';
 const YTT_STATE_EVENT_STATE_KEY = 'state';
+const YTT_STATE_EVENT_STATE_KEY_PLAYING = 'opened';
+const YTT_STATE_EVENT_STATE_KEY_WATCHED = 'watched';
 const YTT_STATE_EVENT_TIME_KEY = 'time';
+const YTT_DOWNLOAD_EVENT = "download";
+const YTT_DOWNLOAD_EVENT_DATA_KEY = "downloadData";
+const YTT_DOWNLOAD_EVENT_NAME_KEY = "downloadName";
+const YTT_DOWNLOAD_EVENT_CALLBACK_KEY = "downloadCallback";
 const YTT_DOM_PLAYER_STATE = 'YTTPlayerState';
 const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
 const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
@@ -37,47 +48,46 @@ const YTT_DOM_SPLITTER = '@';
 /**
  * Creates a new YTTDay object. It represents the datas of a day.
  *
- * @param {int|object} count Initial video count.
+ * @param {int|YTTDay} count Initial video count, or object of YTTday.
  * @param {int} real Initial real time in ms.
  * @param {int} total Initial total time in ms.
  * @constructor
  */
 function YTTDay(count = 0, real = 0, total = 0) {
 	if (typeof count === 'object') {
-		this[YTT_DATA_COUNT] = count[YTT_DATA_COUNT];
-		this[YTT_DATA_REAL] = new YTTDuration(count[YTT_DATA_REAL]);
-		this[YTT_DATA_TOTAL] = new YTTDuration(count[YTT_DATA_TOTAL]);
-	}
-	else {
+		this[YTT_DATA_COUNT] = (count[YTT_DATA_COUNT] || 0);
+		this[YTT_DATA_WATCHED] = new YTTDuration(count[YTT_DATA_WATCHED]);
+		this[YTT_DATA_OPENED] = new YTTDuration(count[YTT_DATA_OPENED]);
+	} else {
 		this[YTT_DATA_COUNT] = count;
-		this[YTT_DATA_REAL] = new YTTDuration(YTT_DATA_REAL, real);
-		this[YTT_DATA_TOTAL] = new YTTDuration(YTT_DATA_TOTAL, total);
+		this[YTT_DATA_WATCHED] = new YTTDuration(YTT_DATA_WATCHED, real);
+		this[YTT_DATA_OPENED] = new YTTDuration(YTT_DATA_OPENED, total);
 	}
 }
 
 /**
  * Get the count of videos for this day.
  *
- * @returns {YTTDuration} The count of videos.
+ * @returns {number} The count of videos.
  */
 YTTDay.prototype.getCount = function () {
 	return this[YTT_DATA_COUNT];
 };
 /**
- * Get the real duration for this day.
+ * Get the watched duration for this day.
  *
  * @returns {YTTDuration} The duration.
  */
-YTTDay.prototype.getRealDuration = function () {
-	return this[YTT_DATA_REAL];
+YTTDay.prototype.getWatchedDuration = function () {
+	return this[YTT_DATA_WATCHED];
 };
 /**
- * Get the total duration for this day.
+ * Get the opened duration for this day.
  *
  * @returns {YTTDuration} The duration.
  */
-YTTDay.prototype.getTotalDuration = function () {
-	return this[YTT_DATA_TOTAL];
+YTTDay.prototype.getOpenedDuration = function () {
+	return this[YTT_DATA_OPENED];
 };
 /**
  * Add a duration to this day.
@@ -85,10 +95,10 @@ YTTDay.prototype.getTotalDuration = function () {
  * @param {YTTDuration} duration The duration to add.
  */
 YTTDay.prototype.addDuration = function (duration) {
-	if (duration.type === YTT_DATA_REAL)
-		this[YTT_DATA_REAL] = this[YTT_DATA_REAL].addDuration(duration);
-	else if (duration.type === YTT_DATA_TOTAL)
-		this[YTT_DATA_TOTAL] = this[YTT_DATA_TOTAL].addDuration(duration);
+	if (duration.type === YTT_DATA_WATCHED)
+		this[YTT_DATA_WATCHED] = this[YTT_DATA_WATCHED].addDuration(duration);
+	else if (duration.type === YTT_DATA_OPENED)
+		this[YTT_DATA_OPENED] = this[YTT_DATA_OPENED].addDuration(duration);
 };
 /**
  * Add a video count to this day.
@@ -100,7 +110,7 @@ YTTDay.prototype.addCount = function (amount) {
 };
 
 /**
- * @param {string|type} type The type of the duration.
+ * @param {string|YTTDuration} type The type of the duration, or a YTTDuration object.
  * @param {int} milliseconds
  * @param {int} seconds
  * @param {int} minutes
@@ -109,15 +119,14 @@ YTTDay.prototype.addCount = function (amount) {
  * @constructor
  */
 function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0, days = 0) {
-	if (typeof type === 'object') {
-		this.milliseconds = type.milliseconds;
-		this.seconds = type.seconds;
-		this.minutes = type.minutes;
-		this.hours = type.hours;
-		this.days = type.days;
+	if (type && typeof type === 'object') {
+		this.milliseconds = (type.milliseconds || 0);
+		this.seconds = (type.seconds || 0);
+		this.minutes = (type.minutes || 0);
+		this.hours = (type.hours || 0);
+		this.days = (type.days || 0);
 		this.type = type.type;
-	}
-	else {
+	} else {
 		this.milliseconds = milliseconds;
 		this.seconds = seconds;
 		this.minutes = minutes;
@@ -134,14 +143,6 @@ function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0
  */
 YTTDuration.prototype.getAsMilliseconds = function () {
 	return (((((this.days || 0) * 24 + (this.hours || 0)) * 60 + (this.minutes || 0)) * 60 + (this.seconds || 0)) * 1000 + (this.milliseconds || 0)) || 0;
-};
-/**
- * Get the duration in hours.
- *
- * @returns {number} The number of hours.
- */
-YTTDuration.prototype.getAsHours = function () {
-	return this.getAsMilliseconds() / (60 * 60 * 1000);
 };
 /**
  * Normalize the internal values.
@@ -163,14 +164,14 @@ YTTDuration.prototype.normalize = function () {
  * @param {YTTDuration} duration The duration to add.
  */
 YTTDuration.prototype.addDuration = function (duration) {
-	this.milliseconds += this.milliseconds + duration.milliseconds;
-	this.seconds += this.seconds + duration.seconds + parseInt(this.milliseconds / 1000.0);
+	this.milliseconds = this.milliseconds + duration.milliseconds;
+	this.seconds = this.seconds + duration.seconds + Math.floor(this.milliseconds / 1000.0);
 	this.milliseconds %= 1000;
-	this.minutes = this.minutes + duration.minutes + parseInt(this.seconds / 60.0);
+	this.minutes = this.minutes + duration.minutes + Math.floor(this.seconds / 60.0);
 	this.seconds %= 60;
-	this.hours = this.hours + duration.hours + parseInt(this.minutes / 60.0);
+	this.hours = this.hours + duration.hours + Math.floor(this.minutes / 60.0);
 	this.minutes %= 60;
-	this.days = this.days + duration.days + parseInt(this.hours / 24.0);
+	this.days = this.days + duration.days + Math.floor(this.hours / 24.0);
 	this.hours %= 24;
 };
 /**
@@ -244,20 +245,6 @@ function YTTGenUUID() {
 }
 
 /**
- * Add a number of videos watched to a day.
- *
- * @param {int} amount The number of videos to add.
- * @param {YTTDay} day The config day to modify.
- * @returns {YTTDay} The new day.
- */
-function YTTAddConfigCount(amount, day) {
-	if (!day)
-		return new YTTDay(amount);
-	day.addCount(amount);
-	return day;
-}
-
-/**
  * Compare two versions.
  *
  * @param {string} v1 Base version.
@@ -317,50 +304,6 @@ function YTTCompareVersion(v1, v2) {
 }
 
 /**
- * Add a duration into a YTTDay.
- *
- * @param {YTTDuration} duration The duration to add.
- * @param {YTTDay} day The day to add the duration to.
- * @returns {YTTDay} The new day.
- */
-function YTTAddConfigDuration(duration, day) {
-	if (!day)
-		day = new YTTDay();
-	day.addDuration(duration);
-	return day;
-}
-
-/**
- * Change the theme of the current page.
- *
- * @param {string} theme The theme to set.
- */
-function YTTApplyThemeCSS(theme) {
-	let themeDOM = $('#YTTTheme');
-
-	/**
-	 * Apply the theme.
-	 *
-	 * @param {string} theme The name of the css file.
-	 */
-	function setTheme(theme) {
-		if (themeDOM)
-			themeDOM.remove();
-		themeDOM = $('<link id="YTTTheme" rel="stylesheet" href="css/themes/' + theme + '.css">');
-		themeDOM.appendTo('head');
-	}
-
-	switch (theme) {
-		case 'light':
-			setTheme('light');
-			break;
-		case 'dark':
-		default:
-			setTheme('dark');
-	}
-}
-
-/**
  * Get the config key for a date.
  *
  * @param {Date} now The date to get the key for.
@@ -372,7 +315,7 @@ function YTTGetDayConfigKey(now = null) {
 }
 
 /**
- * Get a date as a string.
+ * Get a timestamp as a date string.
  *
  * @param {number} time The timestamp.
  * @return {string} The date as YYY-MM-DD.
@@ -406,13 +349,12 @@ function YTTCompareConfigDate(base, test) {
  * @returns {{year: number, day: number}}
  */
 function YTTConvertConfigDateToObject(date) {
-	let year = 0;
+	let year;
 	let day = 0;
 	if (date.length > 4) {
 		year = parseFloat(date.toString().substring(date.toString().length - 4));
 		day = parseFloat(date.toString().substring(0, date.toString().length - 4));
-	}
-	else
+	} else
 		year = parseFloat(date.toString());
 	return {year: year, day: day};
 }
@@ -427,4 +369,39 @@ function YTTLog(text) {
 		YTTMessage(YTT_LOG_EVENT, text);
 	else
 		console.log(text);
+}
+
+/**
+ * Add a value in an array in the config.
+ * @param key The key of the value.
+ * @param valueToAdd The value to add.
+ * @param callback The callback called after it is done.
+ */
+function YTTConfigAddInArray(key, valueToAdd, callback) {
+	YTTGetConfig(key, function (conf) {
+		if (!conf[key])
+			conf[key] = [];
+		conf[key].push(valueToAdd);
+		YTTSetConfig(conf, callback);
+	})
+}
+
+function YTTGetBackGroundListener(){
+	return function (request, sender) {
+		if (request[YTT_MESSAGE_TYPE_KEY] === YTT_LOG_EVENT) {
+			logDebug(request[YTT_MESSAGE_VALUE_KEY] || 'undefined');
+		}
+		else if(request[YTT_MESSAGE_TYPE_KEY] === YTT_DOWNLOAD_EVENT){
+			const payload = request[YTT_MESSAGE_VALUE_KEY];
+			YTTDownload(payload[YTT_DOWNLOAD_EVENT_DATA_KEY], payload[YTT_DOWNLOAD_EVENT_NAME_KEY], payload[YTT_DOWNLOAD_EVENT_CALLBACK_KEY]);
+		}
+		else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
+			request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
+			playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
+		}
+		else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DURATION_EVENT) {
+			request[YTT_MESSAGE_VALUE_KEY][YTT_DURATION_EVENT_TABID_KEY] = sender.tab.id;
+			setVideoDuration(request[YTT_MESSAGE_VALUE_KEY]);
+		}
+	}
 }

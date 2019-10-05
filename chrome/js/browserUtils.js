@@ -9,15 +9,24 @@ function YTTGetConfig(values, callback) {
 }
 
 /**
- * Start the download of a file.
+ * Start the download of a json file.
  *
- * @param value The url of the file.
+ * @param json The json of the file.
  * @param name The default file name.
  */
-function YTTDownload(value, name) {
+function YTTDownload(json, name, callback = null) {
+	const value = 'data:application/json;base64,' + btoa(JSON.stringify(json));
 	chrome.downloads.download({
 		url: value,
 		filename: name
+	}, function(downloadId) {
+		chrome.downloads.onChanged.addListener(function (download) {
+			if(download.id === downloadId && (download.state == "interrupted" || download.state == "complete")){
+				URL.revokeObjectURL(value);
+				if (callback)
+					callback(r);
+			}
+		});
 	});
 }
 
@@ -26,8 +35,8 @@ function YTTDownload(value, name) {
  *
  * @param config The configuration to set.
  */
-function YTTSetConfig(config) {
-	chrome.storage.sync.set(config);
+function YTTSetConfig(config, callback = null) {
+	chrome.storage.sync.set(config, callback);
 }
 
 /**
@@ -35,8 +44,17 @@ function YTTSetConfig(config) {
  *
  * @param callback The call back to call.
  */
-function YTTClearConfig(callback) {
+function YTTClearConfig(callback = null) {
 	chrome.storage.sync.clear(callback);
+}
+
+/**
+ * Delete keys in the configuration.
+ *
+ * @param keys The keys to remove.
+ */
+function YTTRemoveConfig(keys, callback = null) {
+	chrome.storage.sync.remove(keys, callback);
 }
 
 /**
@@ -64,8 +82,7 @@ function YTTMessage(type, value) {
 	message[YTT_MESSAGE_VALUE_KEY] = value;
 	try {
 		chrome.runtime.sendMessage(message);
-	}
-	catch (err) {
+	} catch (err) {
 	}
 }
 
@@ -83,8 +100,7 @@ function YTTSetBadge(text) {
  *
  * @return {string}
  */
-function YTTGetVersion()
-{
+function YTTGetVersion() {
 	return chrome.runtime.getManifest().version;
 }
 
@@ -93,17 +109,37 @@ function YTTGetVersion()
  *
  * @return {string}
  */
-function YTTGetURL(path)
-{
+function YTTGetURL(path) {
 	return chrome.extension.getURL(path);
 }
 
 /**
- * Get the browser's name.
- * 
+ * Get the runtime url of a relative file.
+ *
  * @return {string}
  */
-function YTTGetBrowser()
-{
+function YTTGetRuntimeURL(path) {
+	return chrome.runtime.getURL(path);
+}
+
+/**
+ * Get the browser's name.
+ *
+ * @return {string}
+ */
+function YTTGetBrowser() {
 	return 'Chrome';
+}
+
+/**
+ * Open the options page of the extension if available.
+ * @param onSuccess Callback called when opening settings.
+ * @param onFail Callback if the settings can't be opened.
+ */
+function YTTOpenOptionsPage(onSuccess, onFail) {
+	if (chrome.runtime.openOptionsPage) {
+		chrome.runtime.openOptionsPage(onSuccess);
+	} else if (onFail) {
+		onFail();
+	}
 }

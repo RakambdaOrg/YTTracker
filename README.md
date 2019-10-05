@@ -1,7 +1,5 @@
-<p>
-    <h1 align="center">YTTracker</h1>
-    <h3 align="center">An extension to track time on YouTube</h3>
-</p>
+# YTTracker
+An extension to track time on YouTube
 
 ## Description
 This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
@@ -21,23 +19,15 @@ You can also choose to send those data to a server to be able to compare your se
     <p>Popup window:</p>
     <img style="width:65%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/popup.png"/>
     <hr style="width:85%"/>
-    <p>Chart view (dark theme):</p>
-    <img style="width:75%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/chartDark.png"/>
+    <p>Chart view:</p>
+    <img style="width:75%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/chart.png"/>
     <hr style="width:85%"/>
-    <p>Chart view (light theme):</p>
-    <img style="width:75%" src="https://github.com/RakSrinaNa/YTTracker/raw/master/extras/screenshots/chartLight.png"/>
 </div>
-
-## Firefox
-Please make sure the sync storage is activated. For that go to ```about:config``` and set ```webextensions.storage.sync.enabled``` to ```true```.
-
-## Development/Beta releases
-<a alt="Chrome extension" href="https://chrome.google.com/webstore/detail/youtube-tracker/moboafdnejnjnppicfiadaalobjeemec" style="color: white; text-decoration:none;">Chrome beta version: <img alt="Chrome extension" src="https://img.shields.io/chrome-web-store/v/moboafdnejnjnppicfiadaalobjeemec.svg?maxAge=2592000&style=flat" /></a>
 
 ## Libraries
 Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
 
-CSS Element Queries - [https://github.com/marcj/css-element-queries](https://github.com/marcj/css-element-queries)
+Bootstrap - [https://getbootstrap.com/](https://getbootstrap.com/)
 
 JQuery - [https://github.com/jquery/jquery](https://github.com/jquery/jquery)
 

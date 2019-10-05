@@ -3,80 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>YTTracker settings</title>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="css/tipsy.css">
-    <link rel="stylesheet" href="css/options.css">
-    <link rel="stylesheet" href="css/common.css">
-    <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
-    <script type="text/javascript" src="js/lib/Tipsy/jquery.tipsy.js"></script>
+    <script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/lib/Popper.js/popper.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/browserUtils.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
 </head>
 <body>
-<div id="wrap">
-    <div id="main">
-        <ul class="options">
-            <li class="option" id="optionTheme">
-                <div>
-                    <span class="optionDesc">Theme:</span>
-                    <select title="Theme" id="themeSelect">
-                        <option value="dark" id="darkTheme" selected>Dark</option>
-                        <option value="light" id="lightTheme">Light</option>
-                    </select>
-                </div>
-            </li>
-            <li class="option" id="optionHandDrawn">
-                <div>
-                    <span class="optionDesc">Chart hand drawn:</span>
-                    <select title="Chart hand drawn" id="handDrawnSelect">
-                        <option value="true" id="handDrawnTrue">Yes</option>
-                        <option value="false" id="handDrawnFalse" selected>No</option>
-                    </select>
-                </div>
-            </li>
-            <hr/>
-            <li class="option" id="optionExport">
-                <div>
-                    <button class="optionDesc" id="exportButton">Export data</button>
-                </div>
-            </li>
-            <li class="option" id="optionImport">
-                <div>
-                    <input type="file" id="importFileInput" style="display: none;"/>
-                    <button class="optionDesc" id="importButton">Import data</button>
-                </div>
-            </li>
-            <li class="option" id="optionReset">
-                <div>
-                    <button class="optionDesc" id="resetButton">Reset all data</button>
-                </div>
-            </li>
-            <hr/>
-            <li class="option" id="openShareStats">
-                <div>
-                    <span class="optionDesc">Put stats online:</span>
-                    <input type="checkbox" id="shareStats" name="shareStats" value="share" title="Share stats"/>
-                </div>
-            </li>
-            <li class="option" id="optionUsername">
-                <div>
-                    <span class="optionDesc">Username:</span>
-                    <input type="text" id="username" name="username" title="Username"/>
-                    <button id="validUsername">Valid</button>
-                </div>
-            </li>
-        </ul>
+<div class='container-fluid' style="margin-top:10px">
+    <div class='row'>
+        <div class='col'>
+            <button type="button" class="btn btn-primary btn-block" id="exportButton" data-toggle="tooltip" data-placement="bottom" title="Export your data in a JSON file that you can download and import back later">
+                Export data
+            </button>
+        </div>
+        <div class='col'>
+            <label class="btn btn-info btn-block" role='button' data-toggle="tooltip" data-placement="bottom" title="Import a JSON file (!! THIS WILL RESET EVERYTHING AND CAN'T BE UNDONE !!)">
+                Import data<input type="file" id="importFileInput" hidden>
+            </label>
+        </div>
+        <div class='col'>
+            <button type="button" class="btn btn-danger btn-block" id="resetButton" data-toggle="tooltip" data-placement="bottom" title="Reset all your current data (!! THIS WILL RESET EVERYTHING AND CAN'T BE UNDONE !!)">
+                Reset all data
+            </button>
+        </div>
     </div>
-</div>
-<footer>
+    <hr>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                Send stats online
+            </div>
+            <div class="input-group-text">
+                <input id="shareStats" name='shareStats' value="share" type="checkbox" aria-label="Allow the extension to send data to a server">
+            </div>
+        </div>
+        <input id='username' type="text" class="form-control" aria-label="Enter the username you desire" placeholder="Enter your username">
+        <div class="input-group-append">
+            <button id="validUsername" class='btn btn-success'>Valid</button>
+        </div>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="debug" value="debug" title="Debug" id="debug">
+        <label class="form-check-label" for="debug">
+            Debug mode
+        </label>
+    </div>
     <hr/>
-    <button id="backButton">Back to chart</button>
-    <a class="bottomLeft" href="javascript: void(0)" id="uuidReveal">UUID: <span id="UUID"></span></a>
-    <div class="bottomRight">
-        <span>Debug:</span>
-        <input type="checkbox" id="debug" name="debug" value="debug" title="Debug"/>
-        <span>Version: <span id="versionNumber"></span></span>
-    </div>
-</footer>
+    <span class="float-left">UUID: <span id="UUID"></span></span>
+    <span class="float-right">Version: <span id="versionNumber"></span></span>
+    <button type="button" class="btn btn-primary btn-block" id="backButton">
+        Back to chart
+    </button>
+</div>
 </body>
 </html>

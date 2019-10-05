@@ -1,10 +1,15 @@
-body
-{
-	background-color : #EEEEEE;
-	width            : 300px;
+html,
+body {
+	height: 100%;
+	text-align: center;
+	margin: auto;
+	width : 500px;
 }
 
-#infos
-{
-	text-align : center;
+.box-shadow{
+	box-shadow: 0 .1rem .75rem rgba(0, 0, 0, .05);
+}
+
+.info-card{
+	margin-top: 5px;
 }

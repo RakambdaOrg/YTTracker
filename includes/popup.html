@@ -3,35 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>YouTube Tracker</title>
-    <link rel="stylesheet" href="css/tipsy.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="css/popup.css">
-    <link rel="stylesheet" href="css/common.css">
-    <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
-    <script type="text/javascript" src="js/lib/Tipsy/jquery.tipsy.js"></script>
+    <script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/lib/Popper.js/popper.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/browserUtils.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
     <script type="text/javascript" src="js/popup.js"></script>
 </head>
 <body>
-<div id="infos">
-    <p>
-        <span id="textrealdurationtoday">Total playing time today: <span id="realdurationtoday"></span></span><br/>
-        <span id="texttotaldurationtoday">Total time of opened videos today: <span
-                id="durationtoday"></span></span><br/>
-        <span id="textcounttoday">Total count videos today: <span id="counttoday"></span></span>
-    </p>
-    <hr/>
-    <p>
-        <span id="textrealduration">Total playing time: <span id="realduration"></span></span><br/>
-        <span id="texttotalduration">Total time of opened videos: <span id="duration"></span></span><br/>
-        <span id="textsince">Data since: <span id="start"></span></span>
-    </p>
-    <hr/>
-    <button id="openchart" type="button">Open chart</button>
-    <hr/>
-    <button id="openstats" type="button">Open online stats</button>
-    <hr/>
-    <button id="openoptions" type="button">Open options</button>
+<div class='container-fluid'>
+    <div class='card info-card box-shadow'>
+        <div class='card-header'>
+            <h5 class='card-title'>Today data</h5>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class="col text-nowrap">Watched</div>
+                <div class="col text-nowrap">Opened</div>
+                <div class="col text-nowrap">Count</div>
+            </div>
+            <div class='row'>
+                <div class="col text-nowrap"><span id="todayWatched">Loading value...</span></div>
+                <div class="col text-nowrap"><span id="todayOpened">Loading value...</span></div>
+                <div class="col text-nowrap"><span id="todayCount">Loading value...</span></div>
+            </div>
+        </div>
+    </div>
+    <div class='card info-card box-shadow' style='margin-bottom: 10px'>
+        <div class='card-header'>
+            <h5 class='card-title'>All data since <span id="totalStartDate"></span></h5>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class="col text-nowrap">Watched</div>
+                <div class="col text-nowrap">Opened</div>
+                <div class="col text-nowrap">Count</div>
+            </div>
+            <div class='row'>
+                <div class="col text-nowrap"><span id="totalWatched">Loading value...</span></div>
+                <div class="col text-nowrap"><span id="totalOpened">Loading value...</span></div>
+                <div class="col text-nowrap"><span id="totalCount">Loading value...</span></div>
+            </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col'>
+            <button type="button" class="btn btn-primary btn-block text-nowrap" id="openChartButton" data-toggle="tooltip" data-placement="bottom" title="Open the chart page with has more information">
+                Open chart
+            </button>
+        </div>
+        <div class='col'>
+            <button type="button"  class="btn btn-info btn-block text-nowrap" data-toggle="tooltip" id='openOnlineStatsButton' data-placement="bottom" title="Open stats of all users that share their data">
+                Online stats
+            </button>
+        </div>
+        <div class='col'>
+            <button type="button" class="btn btn-secondary btn-block text-nowrap" id="openOptionsButton" data-toggle="tooltip" data-placement="bottom" title="Open the option page">
+                Options
+            </button>
+        </div>
+    </div>
 </div>
+<div style='height:10px;'></div>
 </body>
 </html>

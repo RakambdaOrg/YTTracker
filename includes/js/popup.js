@@ -1,49 +1,36 @@
-$(document).ready(function () {
-	YTTApplyThemeCSS('light');
-
-	$('#openoptions').click(function () {
-		window.open(chrome.runtime.getURL('options.html'));
+$(function () {
+	$('#openOptionsButton').on("click", function () {
+		YTTOpenOptionsPage(null, function(){
+			window.open(YTTGetRuntimeURL('options.html'));
+		});
 	});
 
-	$('#openchart').click(function () {
-		if (chrome.runtime.openOptionsPage) {
-			chrome.runtime.openOptionsPage();
-		} else {
-			window.open(chrome.runtime.getURL('chart.html'));
-		}
+	$('#openChartButton').on("click", function () {
+		window.open(YTTGetRuntimeURL('chart.html'));
 	});
 
-	$('#openstats').click(function () {
+	$('#openOnlineStatsButton').on("click", function () {
 		window.open('https://yttracker.mrcraftcod.fr/');
 	});
 
-	addTooltip('textrealdurationtoday', 'Time of videos in the "playing state" today');
-	addTooltip('texttotaldurationtoday', 'Time of video pages opened today');
-	addTooltip('textrealduration', 'Time of videos in the "playing state"');
-	addTooltip('texttotalduration', 'Time of video pages opened');
-	addTooltip('textcounttoday', 'Number of videos opened today');
-	addTooltip('textsince', 'Date since the first record');
+	const todayKey = YTTGetDayConfigKey();
+	YTTGetConfig([YTT_CONFIG_TOTAL_STATS_KEY, YTT_CONFIG_START_TIME_KEY, todayKey], function (config) {
+		const configDay = config[todayKey];
+		if (configDay) {
+			const todayDay = new YTTDay(configDay);
 
-	showValue();
+			$('#todayWatched').text(todayDay.getWatchedDuration().getAsString());
+			$('#todayOpened').text(todayDay.getOpenedDuration().getAsString());
+			$('#todayCount').text(todayDay.getCount());
+		}
+
+		const totals = new YTTDay(config[YTT_CONFIG_TOTAL_STATS_KEY]);
+		$('#totalWatched').text(totals.getWatchedDuration().getAsString());
+		$('#totalOpened').text(totals.getOpenedDuration().getAsString());
+		$('#totalCount').text(totals.getCount());
+
+		$('#totalStartDate').text(YTTGetDateString(config[YTT_CONFIG_START_TIME_KEY]));
+	});
+
 });
 
-function addTooltip(id, text) {
-	$('#' + id).tipsy({
-		gravity: 'n', html: true, title: function () {
-			return text;
-		}
-	});
-}
-
-function showValue() {
-	YTTLog('UPDATING PRINTED VALUE');
-	const TODAY_KEY = YTTGetDayConfigKey();
-	YTTGetConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY, TODAY_KEY], function (result) {
-		$('#duration').text(new YTTDuration(result[YTT_CONFIG_TOTAL_TIME_KEY]).getAsString());
-		$('#realduration').text(new YTTDuration(result[YTT_CONFIG_REAL_TIME_KEY]).getAsString());
-		$('#durationtoday').text(new YTTDay(result[TODAY_KEY]).getTotalDuration().getAsString());
-		$('#counttoday').text(new YTTDay(result[TODAY_KEY]).getCount());
-		$('#realdurationtoday').text(new YTTDay(result[TODAY_KEY]).getRealDuration().getAsString());
-		$('#start').text(YTTGetDateString(result[YTT_CONFIG_START_TIME_KEY]));
-	});
-}
