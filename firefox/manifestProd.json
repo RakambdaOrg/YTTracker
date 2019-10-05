@@ -39,7 +39,7 @@
         "https://yttracker.mrcraftcod.fr/*"
       ],
       "js": [
-        "js/lib/jquery/jquery.js",
+        "js/lib/jquery/jquery.min.js",
         "js/browserUtils.js",
         "js/YTTUtils.js",
         "js/content.js"
@@ -50,7 +50,7 @@
   ],
   "background": {
     "scripts": [
-      "js/lib/jquery/jquery.js",
+      "js/lib/jquery/jquery.min.js",
       "js/browserUtils.js",
       "js/YTTUtils.js",
       "js/background.js",
