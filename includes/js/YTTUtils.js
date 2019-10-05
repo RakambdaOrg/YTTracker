@@ -33,6 +33,10 @@ const YTT_STATE_EVENT_STATE_KEY = 'state';
 const YTT_STATE_EVENT_STATE_KEY_PLAYING = 'opened';
 const YTT_STATE_EVENT_STATE_KEY_WATCHED = 'watched';
 const YTT_STATE_EVENT_TIME_KEY = 'time';
+const YTT_DOWNLOAD_EVENT = "download";
+const YTT_DOWNLOAD_EVENT_DATA_KEY = "downloadData";
+const YTT_DOWNLOAD_EVENT_NAME_KEY = "downloadName";
+const YTT_DOWNLOAD_EVENT_CALLBACK_KEY = "downloadCallback";
 const YTT_DOM_PLAYER_STATE = 'YTTPlayerState';
 const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
 const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
@@ -386,6 +390,10 @@ function YTTGetBackGroundListener(){
 	return function (request, sender) {
 		if (request[YTT_MESSAGE_TYPE_KEY] === YTT_LOG_EVENT) {
 			logDebug(request[YTT_MESSAGE_VALUE_KEY] || 'undefined');
+		}
+		else if(request[YTT_MESSAGE_TYPE_KEY] === YTT_DOWNLOAD_EVENT){
+			const payload = request[YTT_MESSAGE_VALUE_KEY];
+			YTTDownload(payload[YTT_DOWNLOAD_EVENT_DATA_KEY], payload[YTT_DOWNLOAD_EVENT_NAME_KEY], payload[YTT_DOWNLOAD_EVENT_CALLBACK_KEY]);
 		}
 		else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
 			request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;

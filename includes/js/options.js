@@ -8,9 +8,13 @@ $(function () {
 			const json = JSON.stringify(config);
 			const blob = new Blob([json], {type: "application/json"});
 			const url  = URL.createObjectURL(blob);
-			YTTDownload(url, 'YTTExport.json', r => {
+			let payload = {};
+			payload[YTT_DOWNLOAD_EVENT_DATA_KEY] = url;
+			payload[YTT_DOWNLOAD_EVENT_NAME_KEY] = 'YTTExport.json';
+			payload[YTT_DOWNLOAD_EVENT_CALLBACK_KEY] = function(){
 				URL.revokeObjectURL(url);
-			});
+			};
+			YTTMessage(YTT_DOWNLOAD_EVENT, payload);
 		});
 	});
 
