@@ -22,10 +22,15 @@ function YTTDownload(blob, name, callback = null) {
 	browser.downloads.download({
 		url: value,
 		filename: name
-	}).then(r => {
-		URL.revokeObjectURL(value);
-		if (callback)
-			callback(r);
+	}, function(download) {
+		browser.downloads.onChanged.addListener(function (download) {
+			console.log( download.state);
+			if(download.state == "interrupted" || download.state == "complete"){
+				URL.revokeObjectURL(value);
+				if (callback)
+					callback(r);
+			}
+		});
 	});
 }
 
