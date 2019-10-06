@@ -17,6 +17,10 @@ $(function () {
 		$('#importFileInput').trigger("click");
 	});
 
+	$('#importYoutubeButton').on("click",function () {
+		$('#importYoutubeFileInput').trigger("click");
+	});
+
 	$('#settingsButton').on("click",function () {
 		YTTGetConfig(null, function(conf){
 			console.log(conf);
@@ -40,6 +44,31 @@ $(function () {
 					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?'))
 						return;
 					YTTSetConfig(dataObject);
+					location.reload();
+				};
+				importData(reader.target.result);
+			};
+			reader.readAsText(file);
+		}
+	});
+
+	$('#importYoutubeFileInput').on("change",function (event) {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function (reader) {
+				let importData = function (data) {
+					let dataObject;
+					try {
+						dataObject = JSON.parse(data);
+					}
+					catch (err) {
+						alert('Corrupted file!');
+						return;
+					}
+					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?'))
+						return;
+					console.log(dataObject);
 					location.reload();
 				};
 				importData(reader.target.result);
