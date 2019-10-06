@@ -1,9 +1,9 @@
 .idea/
+node_modules/
 temp/
 
 *.zip
 *.ipr
 *.iws
 *.pem
-chrome/manifest.json
-node_modules
+*.xpi
