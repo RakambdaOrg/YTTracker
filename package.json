@@ -22,14 +22,15 @@
     "copyIncludes": "node deploy/copyFolder.js includes temp",
     "replaceManifestVersion": "replace-in-file !!!VERSION!!! ${npm_package_version} temp/manifest.json",
     "chromeBuild": "npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
-    "chromePackage": "npm run chromeBuild && cd temp && zip -r chromeExtension.zip ./* -x \\\\\\\"*.DS_Store\\\\\\\" && cd ../ && node run deploy/moveFile.js  temp/chromeExtension.zip chromeExtension.zip && npm run removeTempDirectory",
-    "chromeRelease": "npm run chromePackage && npm run chromeSend && node run deploy/removeFile.js chromeExtension.zip",
+    "chromePackage": "npm run chromeBuild && deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
+    "chromeRelease": "npm run chromePackage && npm run chromeSend && node deploy/removeFile.js chromeExtension.zip",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
     "firefoxBuild": "npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
-    "firefoxPackage": "npm run firefoxBuild && cd temp && zip -r firefoxExtension.xpi ./* -x \\\"*.DS_Store\\\" && cd ../ && node run deploy/moveFile.js temp/firefoxExtension.xpi firefoxExtension.xpi && npm run removeTempDirectory",
+    "firefoxPackage": "npm run firefoxBuild && node deploy/zipFolder.js firefoxExtension.xpi temp && npm run removeTempDirectory",
     "firefoxClear": "rm firefoxExtension.xpi"
   },
   "devDependencies": {
+    "archiver": "^3.1.1",
     "chrome-webstore-upload-cli": "^1.2.0",
     "eslint": "^6.5.1",
     "eslint-plugin-json": "^1.4.0",
