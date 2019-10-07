@@ -24,7 +24,7 @@ $(function () {
 					watched: conf.getWatchedDuration().getAsMilliseconds(),
 					opened: conf.getOpenedDuration().getAsMilliseconds(),
 					count: conf.getCount(),
-					ratio: conf.getWatchedDuration().getAsMilliseconds() / Math.max(conf.getWatchedDuration().getAsMilliseconds(), conf.getOpenedDuration().getAsMilliseconds())
+					ratio: conf.getWatchedDuration().getAsMilliseconds() / Math.max(1, Math.max(conf.getWatchedDuration().getAsMilliseconds(), conf.getOpenedDuration().getAsMilliseconds()))
 				});
 			});
 
