@@ -16,29 +16,28 @@
   "scripts": {
     "eslint": "eslint . --ext .json --ext .js",
     "test": "npm run eslint",
-    "clean": "rm -R temp",
-    "init": "mkdir temp",
-    "includes": "cp -R includes/* temp",
-    "chromeInit": "npm run init && cp -R chrome/* temp",
-    "chromeManifest": "cd temp && mv manifestProd.json manifest.json && replace-in-file !!!VERSION!!! ${npm_package_version} manifest.json && cd ../",
-    "chromePackage": "npm run includes && cd temp && zip -r chromeExtension.zip ./* -x \"*.DS_Store\" && cd ../ && mv temp/chromeExtension.zip chromeExtension.zip",
-    "chromeBuild": "npm run chromeInit && npm run chromeManifest && npm run chromePackage && npm run clean",
-    "chromeRelease": "npm run chromeBuild && npm run chromeSend && npm run chromeClear",
+    "clean": "npm run removeTempDirectory && node deploy/removeFile.js chromeExtension.zip && node deploy/removeFile.js firefoxExtension.xpi",
+    "removeTempDirectory": "node deploy/removeFile.js temp",
+    "createTempDirectory": "node deploy/createDirectory.js temp",
+    "copyIncludes": "node deploy/copyFolder.js includes temp",
+    "replaceManifestVersion": "replace-in-file !!!VERSION!!! ${npm_package_version} temp/manifest.json",
+    "chromeBuild": "npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
+    "chromePackage": "npm run chromeBuild && deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
+    "chromeRelease": "npm run chromePackage && npm run chromeSend && node deploy/removeFile.js chromeExtension.zip",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
-    "chromeClear": "rm chromeExtension.zip",
-    "firefoxInit": "npm run init && cp -R firefox/* temp",
-    "firefoxManifest": "cd temp && mv manifestProd.json manifest.json && replace-in-file !!!VERSION!!! ${npm_package_version} manifest.json && cd ../",
-    "firefoxPackage": "npm run includes && cd temp && zip -r firefoxExtension.xpi ./* -x \"*.DS_Store\" && cd ../ && mv temp/firefoxExtension.xpi firefoxExtension.xpi",
-    "firefoxBuild": "npm run firefoxInit && npm run firefoxManifest && npm run firefoxPackage && npm run clean",
+    "firefoxBuild": "npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
+    "firefoxPackage": "npm run firefoxBuild && node deploy/zipFolder.js firefoxExtension.xpi temp && npm run removeTempDirectory",
     "firefoxClear": "rm firefoxExtension.xpi"
   },
   "devDependencies": {
+    "archiver": "^3.1.1",
     "chrome-webstore-upload-cli": "^1.2.0",
     "eslint": "^6.5.1",
     "eslint-plugin-json": "^1.4.0",
     "eslint-plugin-no-unsanitized": "^3.0.2",
-    "xo": "^0.25.3",
-    "replace-in-file": "^4.1.3"
+    "fs-extra": "^8.1.0",
+    "replace-in-file": "^4.1.3",
+    "xo": "^0.25.3"
   },
   "xo": {
     "envs": [
