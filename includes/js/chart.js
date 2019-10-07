@@ -14,10 +14,10 @@ $(function () {
 	if (chartDiv) {
 		YTTGetConfig(null, function (config) {
 			const data = [];
-			Object.keys(config).filter(k => k.startsWith("day")).map(k => k.replace("day", "")).sort(function (a, b) {
+			Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort(function (a, b) {
 				return YTTCompareConfigDate(b, a);
 			}).forEach(function (day) {
-				const conf = new YTTDay(config["day" + day]);
+				const conf = new YTTDay(config['day' + day]);
 				data.push({
 					day: day,
 					date: dateFromDay(day),
@@ -66,8 +66,8 @@ $(function () {
 			chart.colors.step = 2;
 			chart.data = data;
 			chart.dateFormat = 'yyyy-MM-dd';
-			chart.numberFormatter.numberFormat = "#.###";
-			chart.durationFormatter.durationFormat = "hh':'mm':'ss";
+			chart.numberFormatter.numberFormat = '#.###';
+			chart.durationFormatter.durationFormat = 'hh\':\'mm\':\'ss';
 
 			chart.exporting.menu = new am4core.ExportMenu();
 
@@ -75,29 +75,29 @@ $(function () {
 			xDateAxis.showOnInit = false;
 			xDateAxis.title.text = 'Date';
 			xDateAxis.skipEmptyPeriods = true;
-			xDateAxis.dateFormats.setKey("year", "yyyy");
-			xDateAxis.dateFormats.setKey("month", "MMM yyyy");
-			xDateAxis.dateFormats.setKey("week", "dd MMM yyyy");
-			xDateAxis.dateFormats.setKey("day", "dd MMM");
-			xDateAxis.dateFormats.setKey("hour", "HH:00");
-			xDateAxis.dateFormats.setKey("minute", "HH:mm");
-			xDateAxis.dateFormats.setKey("second", "HH:mm:ss");
+			xDateAxis.dateFormats.setKey('year', 'yyyy');
+			xDateAxis.dateFormats.setKey('month', 'MMM yyyy');
+			xDateAxis.dateFormats.setKey('week', 'dd MMM yyyy');
+			xDateAxis.dateFormats.setKey('day', 'dd MMM');
+			xDateAxis.dateFormats.setKey('hour', 'HH:00');
+			xDateAxis.dateFormats.setKey('minute', 'HH:mm');
+			xDateAxis.dateFormats.setKey('second', 'HH:mm:ss');
 			xDateAxis.baseInterval = {
-				"timeUnit": "day",
-				"count": 1
+				'timeUnit': 'day',
+				'count': 1
 			};
 			xDateAxis.renderer.axisFills.template.disabled = false;
 			xDateAxis.renderer.axisFills.template.fillOpacity = 0.1;
-			xDateAxis.renderer.axisFills.template.fill = am4core.color("gray");
+			xDateAxis.renderer.axisFills.template.fill = am4core.color('gray');
 
 			let yDurationAxis = chart.yAxes.push(new am4charts.DurationAxis());
-			yDurationAxis.baseUnit = "millisecond";
-			yDurationAxis.title.text = "Duration";
+			yDurationAxis.baseUnit = 'millisecond';
+			yDurationAxis.title.text = 'Duration';
 			yDurationAxis.min = 0;
 			yDurationAxis.strictMinMax = true;
 
 			let yCountAxis = chart.yAxes.push(new am4charts.ValueAxis());
-			yCountAxis.title.text = "Count";
+			yCountAxis.title.text = 'Count';
 			yCountAxis.renderer.opposite = true;
 			// yCountAxis.renderer.baseGrid.disabled = true;
 			yCountAxis.renderer.grid.template.disabled = true;
@@ -108,36 +108,36 @@ $(function () {
 			chart.legend = new am4charts.Legend();
 			chart.legend.useDefaultMarker = true;
 
-			const legendContainer = am4core.create("legendDiv", am4core.Container);
+			const legendContainer = am4core.create('legendDiv', am4core.Container);
 			legendContainer.width = am4core.percent(100);
 			legendContainer.height = am4core.percent(100);
 			chart.legend.parent = legendContainer;
 
 			function resizeLegend(event) {
-				document.getElementById("legendDiv").style.height = chart.legend.contentHeight + "px";
+				document.getElementById('legendDiv').style.height = chart.legend.contentHeight + 'px';
 			}
 
-			chart.events.on("datavalidated", resizeLegend);
-			chart.events.on("maxsizechanged", resizeLegend);
+			chart.events.on('datavalidated', resizeLegend);
+			chart.events.on('maxsizechanged', resizeLegend);
 
 			let marker = chart.legend.markers.template.children.getIndex(0);
 			marker.cornerRadius(12, 12, 12, 12);
 			marker.strokeWidth = 2;
 			marker.strokeOpacity = 1;
-			marker.stroke = am4core.color("#CCCCCC");
+			marker.stroke = am4core.color('#CCCCCC');
 
 			chart.cursor = new am4charts.XYCursor();
 			chart.cursor.xAxis = xDateAxis;
 
 			let seriesWatched = chart.series.push(new am4charts.LineSeries());
-			seriesWatched.dataFields.valueY = "watched";
-			seriesWatched.dataFields.dateX = "date";
+			seriesWatched.dataFields.valueY = 'watched';
+			seriesWatched.dataFields.dateX = 'date';
 			seriesWatched.yAxis = yDurationAxis;
 			seriesWatched.minBulletDistance = 20;
 			seriesWatched.showOnInit = false;
 			seriesWatched.tooltipText = '[bold]{date.formatDate("yyyy-MM-dd")}[/]\nWatched: {watched.formatDuration("hh\'h\' mm\'m\' ss\'s\'")}';
 
-			seriesWatched.name = "Watched";
+			seriesWatched.name = 'Watched';
 			seriesWatched.strokeWidth = 2;
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
@@ -146,14 +146,14 @@ $(function () {
 			bulletWatched.radius = 5;
 
 			let seriesOpened = chart.series.push(new am4charts.LineSeries());
-			seriesOpened.dataFields.valueY = "opened";
-			seriesOpened.dataFields.dateX = "date";
+			seriesOpened.dataFields.valueY = 'opened';
+			seriesOpened.dataFields.dateX = 'date';
 			seriesOpened.yAxis = yDurationAxis;
 			seriesOpened.minBulletDistance = 20;
 			seriesOpened.showOnInit = false;
 			seriesOpened.tooltipText = '[bold]{date.formatDate("yyyy-MM-dd")}[/]\nOpened: {opened.formatDuration("hh\'h\' mm\'m\' ss\'s\'")}';
 
-			seriesOpened.name = "Opened";
+			seriesOpened.name = 'Opened';
 			seriesOpened.strokeWidth = 2;
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
@@ -162,14 +162,14 @@ $(function () {
 			bulletOpened.radius = 5;
 
 			let seriesCount = chart.series.push(new am4charts.LineSeries());
-			seriesCount.dataFields.valueY = "count";
-			seriesCount.dataFields.dateX = "date";
+			seriesCount.dataFields.valueY = 'count';
+			seriesCount.dataFields.dateX = 'date';
 			seriesCount.yAxis = yCountAxis;
 			seriesCount.minBulletDistance = 20;
 			seriesCount.showOnInit = false;
 			seriesCount.tooltipText = '[bold]{date.formatDate("yyyy-MM-dd")}[/]\nCount: {count}';
 
-			seriesCount.name = "Count";
+			seriesCount.name = 'Count';
 			seriesCount.strokeWidth = 2;
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
@@ -188,12 +188,12 @@ $(function () {
 				axis.disabled = disabled;
 			}
 
-			seriesWatched.events.on("hidden", toggleAxes);
-			seriesWatched.events.on("shown", toggleAxes);
-			seriesOpened.events.on("hidden", toggleAxes);
-			seriesOpened.events.on("shown", toggleAxes);
-			seriesCount.events.on("hidden", toggleAxes);
-			seriesCount.events.on("shown", toggleAxes);
+			seriesWatched.events.on('hidden', toggleAxes);
+			seriesWatched.events.on('shown', toggleAxes);
+			seriesOpened.events.on('hidden', toggleAxes);
+			seriesOpened.events.on('shown', toggleAxes);
+			seriesCount.events.on('hidden', toggleAxes);
+			seriesCount.events.on('shown', toggleAxes);
 
 			let scrollbarX = new am4charts.XYChartScrollbar();
 			scrollbarX.series.push(seriesWatched);
@@ -202,18 +202,19 @@ $(function () {
 			chart.scrollbarX = scrollbarX;
 			chart.scrollbarY = new am4core.Scrollbar();
 
-			xDateAxis.events.on("startchanged", dateAxisChanged);
-			xDateAxis.events.on("endchanged", dateAxisChanged);
+			xDateAxis.events.on('startchanged', dateAxisChanged);
+			xDateAxis.events.on('endchanged', dateAxisChanged);
+
 			function dateAxisChanged(ev) {
 				const startDate = new Date(ev.target.minZoomed);
 				const endDate = new Date(ev.target.maxZoomed);
 				const periodData = data.filter(d => {
-					return d['date'] >= startDate && d['date'] <= endDate
+					return d['date'] >= startDate && d['date'] <= endDate;
 				});
 				updatePeriodData(periodData);
 			}
 
-			chart.events.on("ready", function () {
+			chart.events.on('ready', function () {
 				let oneWeekAgo = new Date();
 				oneWeekAgo.setHours(0);
 				oneWeekAgo.setMinutes(0);
@@ -237,6 +238,10 @@ $(function () {
 				$('#todayWatched').text(todayDay.getWatchedDuration().getAsString());
 				$('#todayOpened').text(todayDay.getOpenedDuration().getAsString());
 				$('#todayCount').text(todayDay.getCount());
+			} else {
+				$('#todayWatched').text('No data');
+				$('#todayOpened').text('No data');
+				$('#todayCount').text('No data');
 			}
 
 			$('#totalWatched').text(new YTTDuration(null, totals['watched']).getAsString());
@@ -248,7 +253,7 @@ $(function () {
 			$('#totalAverageCount').text(average['count'].toFixed(2));
 			$('#totalAverageRatio').text((100 * average['ratio']).toFixed(2) + '%');
 
-			function updatePeriodData(periodData){
+			function updatePeriodData(periodData) {
 				const periodTotal = getTotals(periodData);
 				const periodAverage = getAverages(periodData, periodTotal);
 
