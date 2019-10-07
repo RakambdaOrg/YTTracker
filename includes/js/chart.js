@@ -195,11 +195,7 @@ $(function () {
 			seriesCount.events.on('hidden', toggleAxes);
 			seriesCount.events.on('shown', toggleAxes);
 
-			let scrollbarX = new am4charts.XYChartScrollbar();
-			scrollbarX.series.push(seriesWatched);
-			scrollbarX.series.push(seriesOpened);
-			scrollbarX.series.push(seriesCount);
-			chart.scrollbarX = scrollbarX;
+			chart.scrollbarX = new am4core.Scrollbar();
 			chart.scrollbarY = new am4core.Scrollbar();
 
 			xDateAxis.events.on('startchanged', dateAxisChanged);

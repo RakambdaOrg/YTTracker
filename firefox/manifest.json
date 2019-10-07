@@ -15,13 +15,14 @@
     }
   },
   "author": "MrCraftCod",
-  "homepage_url": "https://github.com/MrCraftCod/YTTracker",
+  "homepage_url": "https://github.com/RakSrinaNa/YTTracker",
   "permissions": [
     "https://www.youtube.com/*",
     "https://yttracker.mrcraftcod.fr/*",
     "storage",
     "downloads",
-    "notifications"
+    "notifications",
+    "unlimitedStorage"
   ],
   "options_ui": {
     "page": "options.html",

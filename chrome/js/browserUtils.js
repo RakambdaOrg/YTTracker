@@ -1,3 +1,4 @@
+
 /**
  * Get values from the configuration.
  *
@@ -5,7 +6,19 @@
  * @param callback The callback to call.
  */
 function YTTGetConfig(values, callback) {
-	chrome.storage.sync.get(values, callback);
+	if (callback)
+		chrome.storage.local.get(values, callback);
+}
+
+/**
+ * Get values from the configuration.
+ *
+ * @param values The values to get.
+ * @param callback The callback to call.
+ */
+function YTTGetSyncConfig(values, callback) {
+	if (callback)
+		chrome.storage.sync.get(values, callback);
 }
 
 /**
@@ -36,7 +49,7 @@ function YTTDownload(json, name, callback = null) {
  * @param config The configuration to set.
  */
 function YTTSetConfig(config, callback = null) {
-	chrome.storage.sync.set(config, callback);
+	chrome.storage.local.set(config, callback || function(){});
 }
 
 /**
@@ -45,7 +58,16 @@ function YTTSetConfig(config, callback = null) {
  * @param callback The call back to call.
  */
 function YTTClearConfig(callback = null) {
-	chrome.storage.sync.clear(callback);
+	chrome.storage.local.clear(callback || function(){});
+}
+
+/**
+ * Reset the configuration.
+ *
+ * @param callback The call back to call.
+ */
+function YTTClearSyncConfig(callback = null) {
+	chrome.storage.sync.clear(callback || function(){});
 }
 
 /**
@@ -54,7 +76,7 @@ function YTTClearConfig(callback = null) {
  * @param keys The keys to remove.
  */
 function YTTRemoveConfig(keys, callback = null) {
-	chrome.storage.sync.remove(keys, callback);
+	chrome.storage.local.remove(keys, callback || function(){});
 }
 
 /**

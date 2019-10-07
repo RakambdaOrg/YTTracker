@@ -13,20 +13,6 @@ $(function () {
 		});
 	});
 
-	$('#importButton').on('click', function () {
-		$('#importFileInput').trigger('click');
-	});
-
-	$('#importYoutubeButton').on('click', function () {
-		$('#importYoutubeFileInput').trigger('click');
-	});
-
-	$('#settingsButton').on('click', function () {
-		YTTGetConfig(null, function (conf) {
-			console.log(conf);
-		});
-	});
-
 	$('#importFileInput').on('change', function (event) {
 		const file = event.target.files[0];
 		if (file) {
@@ -42,8 +28,9 @@ $(function () {
 					}
 					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?'))
 						return;
-					YTTSetConfig(dataObject);
-					location.reload();
+					YTTSetConfig(dataObject, function () {
+						location.reload();
+					});
 				};
 				importData(reader.target.result);
 			};
