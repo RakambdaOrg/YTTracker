@@ -31,12 +31,6 @@ Bootstrap - [https://getbootstrap.com/](https://getbootstrap.com/)
 
 JQuery - [https://github.com/jquery/jquery](https://github.com/jquery/jquery)
 
-JQuery tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
-
-Moment JS - [https://github.com/moment/moment](https://github.com/moment/moment)
-
-Tipsy - [https://github.com/jaz303/tipsy](https://github.com/jaz303/tipsy)
-
 ## Other
 Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
 
