@@ -14,54 +14,69 @@
 <body>
 <div class='container-fluid' style="margin-top:10px">
     <div class='row'>
-        <div class='col'>
-            <button type="button" class="btn btn-primary btn-block" id="exportButton" data-toggle="tooltip" data-placement="bottom" title="Export your data in a JSON file that you can download and import back later">
+        <div class='col form-group'>
+            <button type="button" class="btn btn-primary btn-block" id="exportButton" aria-describedby="exportDataHelp">
                 Export data
             </button>
+            <small id="exportDataHelp" class="text-justify form-text text-muted">Export your data in a JSON file that you can download and import back later (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-Export'>the wiki</a>).</small>
         </div>
-        <div class='col'>
-            <label class="btn btn-info btn-block" role='button' data-toggle="tooltip" data-placement="bottom" title="Import a JSON file (!! THIS WILL RESET EVERYTHING AND CAN'T BE UNDONE !!)">
+        <div class='col form-group'>
+            <label class="btn btn-info btn-block" role='button' aria-describedby='importFileHelp'>
                 Import data<input type="file" id="importFileInput" hidden>
             </label>
+            <small id="importFileHelp" class="text-justify form-text text-muted">Import a JSON file the you previously exported (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-Export'>the wiki</a>). <span class='text-danger'>Be carefull, ALL data currently present will be wiped out and replaced by the data in the file.</span></small>
         </div>
-        <div class='col'>
-            <label class="btn btn-info btn-block" role='button' data-toggle="tooltip" data-placement="bottom" title="Import your history from youtube">
-                Import watch history<input type="file" id="importYoutubeFileInput" hidden>
+        <div class='col form-group'>
+            <label class="btn btn-info btn-block" role='button' aria-describedby='importYoutubeFileHelp'>
+                Import YouTube history<input type="file" id="importYoutubeFileInput" hidden>
             </label>
+            <small id="importYoutubeFileHelp" class="text-justify form-text text-muted">Import data from an export of your YouTube history (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-YouTube-history'>the wiki</a>). <span class='text-warning'>Only the days with no data will be imported as we can only retrieve the number of videos opened.</span></small>
         </div>
-        <div class='col'>
-            <button type="button" class="btn btn-danger btn-block" id="resetButton" data-toggle="tooltip" data-placement="bottom" title="Reset all your current data (!! THIS WILL RESET EVERYTHING AND CAN'T BE UNDONE !!)">
+        <div class='col form-group'>
+            <button type="button" class="btn btn-danger btn-block" id="resetButton" aria-describedby='resetHelp'>
                 Reset all data
             </button>
+            <small id="resetHelp" class="text-justify form-text text-muted">Reset all the data saved by this extension. <span class='text-danger'>This cannot be undone!</span></small>
         </div>
     </div>
     <hr>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <div class="input-group-text">
-                Send stats online
+    <div>
+        <p>
+            If you wish to, you can share your data with other users.
+            They will only be able to see the <span class='text-info'>watched time</span>, <span class='text-info'>opened time</span> and <span class='text-info'>opened count</span> (more infos <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Online-Sharing'>here</a>).
+            <br/>
+            To do so just check the box under, pick a username and press <span class='text-success'>Valid</span>.
+            You can change it at anytime.
+            If you let it blank, you'll be shown as <span class='text-info'>Anonymous</span>.
+        </p>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    Send stats online
+                </div>
+                <div class="input-group-text">
+                    <input id="shareStats" name='shareStats' value="share" type="checkbox" aria-label="Allow the extension to send data to a server">
+                </div>
             </div>
-            <div class="input-group-text">
-                <input id="shareStats" name='shareStats' value="share" type="checkbox" aria-label="Allow the extension to send data to a server">
+            <input id='username' type="text" class="form-control" aria-label="Enter the username you desire" placeholder="Enter your username">
+            <div class="input-group-append">
+                <button id="validUsername" class='btn btn-success'>Valid</button>
             </div>
         </div>
-        <input id='username' type="text" class="form-control" aria-label="Enter the username you desire" placeholder="Enter your username">
-        <div class="input-group-append">
-            <button id="validUsername" class='btn btn-success'>Valid</button>
-        </div>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="debug" value="debug" title="Debug" id="debug">
-        <label class="form-check-label" for="debug">
-            Debug mode
-        </label>
     </div>
     <hr/>
-    <span class="float-left">UUID: <span id="UUID"></span></span>
-    <span class="float-right">Version: <span id="versionNumber"></span></span>
     <button type="button" class="btn btn-primary btn-block" id="backButton">
         Back to chart
     </button>
+    <small class="float-left text-muted">UUID: <span id="UUID"></span></small>
+    <small class="float-right text-muted">Version: <span id="versionNumber"></span></small>
+    <br/>
+    <div class="float-left form-control-sm form-check">
+        <input class="form-check-input" type="checkbox" value="debug" id="debug">
+        <label class="form-check-label" for="debug">
+            <small class='text-muted'>Debug mode</small>
+        </label>
+    </div>
 </div>
 </body>
 </html>
