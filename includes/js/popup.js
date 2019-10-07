@@ -23,6 +23,12 @@ $(function () {
 			$('#todayOpened').text(todayDay.getOpenedDuration().getAsString());
 			$('#todayCount').text(todayDay.getCount());
 		}
+		else
+		{
+			$('#todayWatched').text("No data");
+			$('#todayOpened').text("No data");
+			$('#todayCount').text("No data");
+		}
 
 		const totals = new YTTDay(config[YTT_CONFIG_TOTAL_STATS_KEY]);
 		$('#totalWatched').text(totals.getWatchedDuration().getAsString());

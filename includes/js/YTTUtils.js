@@ -54,12 +54,12 @@ const YTT_DOM_SPLITTER = '@';
  * @constructor
  */
 function YTTDay(count = 0, real = 0, total = 0) {
-	if (typeof count === 'object') {
+	if (count && typeof count === 'object') {
 		this[YTT_DATA_COUNT] = (count[YTT_DATA_COUNT] || 0);
 		this[YTT_DATA_WATCHED] = new YTTDuration(count[YTT_DATA_WATCHED]);
 		this[YTT_DATA_OPENED] = new YTTDuration(count[YTT_DATA_OPENED]);
 	} else {
-		this[YTT_DATA_COUNT] = count;
+		this[YTT_DATA_COUNT] = count || 0;
 		this[YTT_DATA_WATCHED] = new YTTDuration(YTT_DATA_WATCHED, real);
 		this[YTT_DATA_OPENED] = new YTTDuration(YTT_DATA_OPENED, total);
 	}
