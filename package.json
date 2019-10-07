@@ -1,6 +1,6 @@
 {
   "name": "yttracker",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/RakSrinaNa/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://github.com/RakSrinaNa/YTTracker/blob/master/README.md",
@@ -21,11 +21,11 @@
     "createTempDirectory": "node deploy/createDirectory.js temp",
     "copyIncludes": "node deploy/copyFolder.js includes temp",
     "replaceManifestVersion": "cross-var replace-in-file !!!VERSION!!! $npm_package_version temp/manifest.json",
-    "chromeBuild": "npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
+    "chromeBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
     "chromePackage": "npm run chromeBuild && node deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
     "chromeRelease": "npm run chromePackage && npm run chromeSend && node deploy/removeFile.js chromeExtension.zip",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
-    "firefoxBuild": "npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
+    "firefoxBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
     "firefoxPackage": "npm run firefoxBuild && node deploy/zipFolder.js firefoxExtension.xpi temp && npm run removeTempDirectory",
     "firefoxClear": "rm firefoxExtension.xpi"
   },
