@@ -19,6 +19,7 @@ const YTT_CONFIG_TOTAL_TIME_KEY = 'YTT_TotalTime';
 const YTT_CONFIG_REAL_TIME_KEY = 'YTT_RealTime';
 const YTT_CONFIG_TOTAL_STATS_KEY = 'YTT_Total';
 const YTT_CONFIG_DEBUG_KEY = 'YTT_Debug';
+const YTT_CONFIG_WEIRD_DATA_THRESHOLD = 'YTT_Weird_Data_Threshold';
 const YTT_MESSAGE_TYPE_KEY = 'type';
 const YTT_MESSAGE_VALUE_KEY = 'value';
 const YTT_LOG_EVENT = 'log';
@@ -328,6 +329,20 @@ function YTTGetDateString(time) {
 	const m = ('0' + (date.getMonth() + 1)).slice(-2);
 	const d = ('0' + date.getDate()).slice(-2);
 	return y + '-' + m + '-' + d;
+}
+
+/**
+ * Transforms a date from the config into a date object.
+ *
+ * @param str The date string as DDDYYYY
+ * @returns {Date} A date object for the given date string.
+ */
+function YTTGetDateFromDay(str) {
+	const year = parseFloat(str.substring(str.length - 4));
+	const day = parseFloat(str.substring(0, str.length - 4));
+	const date = new Date(year, 0);
+	date.setDate(day);
+	return date;
 }
 
 /**

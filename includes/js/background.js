@@ -14,6 +14,7 @@ function setupExtension(){
 		newConfig[YTT_CONFIG_DEBUG_KEY] = conf[YTT_CONFIG_DEBUG_KEY] || false;
 		newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
 		newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
+		newConfig[YTT_CONFIG_WEIRD_DATA_THRESHOLD] = conf[YTT_CONFIG_WEIRD_DATA_THRESHOLD] || 48 * 60 * 60 * 1000;
 
 		if(!conf[YTT_CONFIG_TOTAL_STATS_KEY] || conf[YTT_CONFIG_TOTAL_TIME_KEY] || conf[YTT_CONFIG_REAL_TIME_KEY]){
 			const watchedDur = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getWatchedDuration()).reduce((acc, cv) => {
