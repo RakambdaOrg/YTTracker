@@ -1,31 +1,29 @@
 $(function () {
+
 	am4core.useTheme(am4themes_animated);
 	am4core.useTheme(am4themes_material);
-
-	function dateFromDay(str) {
-		const year = parseFloat(str.substring(str.length - 4));
-		const day = parseFloat(str.substring(0, str.length - 4));
-		const date = new Date(year, 0);
-		date.setDate(day);
-		return date;
-	}
 
 	const chartDiv = document.getElementById('chartDiv');
 	if (chartDiv) {
 		YTTGetConfig(null, function (config) {
-			const data = [];
-			Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort(function (a, b) {
+			const WEIRD_DATA_THRESHOLD = config[YTT_CONFIG_WEIRD_DATA_THRESHOLD];
+			const weirdData = [];
+			const data = Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort(function (a, b) {
 				return YTTCompareConfigDate(b, a);
-			}).forEach(function (day) {
+			}).map(function (day) {
 				const conf = new YTTDay(config['day' + day]);
-				data.push({
+				const dayData = {
 					day: day,
-					date: dateFromDay(day),
+					date: YTTGetDateFromDay(day),
 					watched: conf.getWatchedDuration().getAsMilliseconds(),
 					opened: conf.getOpenedDuration().getAsMilliseconds(),
 					count: conf.getCount(),
 					ratio: conf.getWatchedDuration().getAsMilliseconds() / Math.max(1, Math.max(conf.getWatchedDuration().getAsMilliseconds(), conf.getOpenedDuration().getAsMilliseconds()))
-				});
+				};
+				if (dayData.watched > WEIRD_DATA_THRESHOLD || dayData.opened > WEIRD_DATA_THRESHOLD) {
+					weirdData.push(dayData);
+				}
+				return dayData;
 			});
 
 			function getTotals(list) {
@@ -99,7 +97,6 @@ $(function () {
 			let yCountAxis = chart.yAxes.push(new am4charts.ValueAxis());
 			yCountAxis.title.text = 'Count';
 			yCountAxis.renderer.opposite = true;
-			// yCountAxis.renderer.baseGrid.disabled = true;
 			yCountAxis.renderer.grid.template.disabled = true;
 			yCountAxis.maxPrecision = 0;
 			yCountAxis.min = 0;
@@ -139,8 +136,8 @@ $(function () {
 
 			seriesWatched.name = 'Watched';
 			seriesWatched.strokeWidth = 2;
-			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
-			// series.fillOpacity = 0.3;
+			seriesWatched.stroke = 'green';
+			seriesWatched.fill = 'green';
 
 			let bulletWatched = seriesWatched.bullets.push(new am4core.Circle());
 			bulletWatched.radius = 5;
@@ -155,8 +152,8 @@ $(function () {
 
 			seriesOpened.name = 'Opened';
 			seriesOpened.strokeWidth = 2;
-			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
-			// series.fillOpacity = 0.3;
+			seriesOpened.stroke = 'red';
+			seriesOpened.fill = 'red';
 
 			let bulletOpened = seriesOpened.bullets.push(new am4core.Circle());
 			bulletOpened.radius = 5;
@@ -171,8 +168,8 @@ $(function () {
 
 			seriesCount.name = 'Count';
 			seriesCount.strokeWidth = 2;
-			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
-			// series.fillOpacity = 0.3;
+			seriesCount.stroke = 'blue';
+			seriesCount.fill = 'blue';
 
 			let bulletCount = seriesCount.bullets.push(new am4core.Circle());
 			bulletCount.radius = 5;
@@ -223,6 +220,12 @@ $(function () {
 					false,
 					true
 				);
+				yDurationAxis.zoomToValues(
+					0,
+					48 * 60 * 60 * 1000,
+					false,
+					true
+				);
 			});
 
 			const todayKey = YTTGetDayConfigKey();
@@ -262,6 +265,11 @@ $(function () {
 				$('#periodAverageOpened').text(new YTTDuration(null, periodAverage['opened']).getAsString());
 				$('#periodAverageCount').text(periodAverage['count'].toFixed(2));
 				$('#periodAverageRatio').text((100 * periodAverage['ratio']).toFixed(2) + '%');
+			}
+
+			if(weirdData.length > 0){
+				$('#weird-day-counter').text(weirdData.length);
+				$('#weridValueAlert').removeClass('d-none');
 			}
 		});
 	}
