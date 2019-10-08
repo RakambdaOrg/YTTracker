@@ -2,49 +2,49 @@
 
 const activePlayers = {};
 
-/**
- * Init config.
- */
-YTTGetConfig(null, function (conf) {
-	const newConfig = {};
+function setupExtension(){
+	YTTClearSyncConfig();
+	YTTGetConfig(null, function (conf) {
+		const newConfig = {};
 
-	if (!conf[YTT_CONFIG_USERID]) {
-		newConfig[YTT_CONFIG_USERID] = YTTGenUUID();
-	}
+		if (!conf[YTT_CONFIG_USERID]) {
+			newConfig[YTT_CONFIG_USERID] = YTTGenUUID();
+		}
 
-	newConfig[YTT_CONFIG_DEBUG_KEY] = conf[YTT_CONFIG_DEBUG_KEY] || false;
-	newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
-	newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
+		newConfig[YTT_CONFIG_DEBUG_KEY] = conf[YTT_CONFIG_DEBUG_KEY] || false;
+		newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
+		newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
 
-	if(!conf[YTT_CONFIG_TOTAL_STATS_KEY] || conf[YTT_CONFIG_TOTAL_TIME_KEY] || conf[YTT_CONFIG_REAL_TIME_KEY]){
-		const watchedDur = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getWatchedDuration()).reduce((acc, cv) => {
-			let t = new YTTDuration(acc);
-			t.addDuration(cv);
-			return t;
-		}, new YTTDuration(YTT_DATA_WATCHED));
+		if(!conf[YTT_CONFIG_TOTAL_STATS_KEY] || conf[YTT_CONFIG_TOTAL_TIME_KEY] || conf[YTT_CONFIG_REAL_TIME_KEY]){
+			const watchedDur = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getWatchedDuration()).reduce((acc, cv) => {
+				let t = new YTTDuration(acc);
+				t.addDuration(cv);
+				return t;
+			}, new YTTDuration(YTT_DATA_WATCHED));
 
-		const openedDur = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getOpenedDuration()).reduce((acc, cv) => {
-			let t = new YTTDuration(acc);
-			t.addDuration(cv);
-			return t;
-		}, new YTTDuration(YTT_DATA_OPENED));
+			const openedDur = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getOpenedDuration()).reduce((acc, cv) => {
+				let t = new YTTDuration(acc);
+				t.addDuration(cv);
+				return t;
+			}, new YTTDuration(YTT_DATA_OPENED));
 
-		const openedCount = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getCount()).reduce((acc, cv) => (acc || 0) + (cv || 0), 0);
+			const openedCount = Object.keys(conf).filter(k => k.startsWith("day")).map(k => new YTTDay(conf[k])).map(c => c.getCount()).reduce((acc, cv) => (acc || 0) + (cv || 0), 0);
 
-		let totalStats = new YTTDay();
-		totalStats.getOpenedDuration().addDuration(openedDur);
-		totalStats.getWatchedDuration().addDuration(watchedDur);
-		totalStats.addCount(openedCount);
+			let totalStats = new YTTDay();
+			totalStats.getOpenedDuration().addDuration(openedDur);
+			totalStats.getWatchedDuration().addDuration(watchedDur);
+			totalStats.addCount(openedCount);
 
-		newConfig[YTT_CONFIG_TOTAL_STATS_KEY] = totalStats;
+			newConfig[YTT_CONFIG_TOTAL_STATS_KEY] = totalStats;
 
-		YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY], null);
-	}
+			YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY], null);
+		}
 
-	YTTRemoveConfig(["YTTHanddrawn", "YTTTheme"], null);
+		YTTRemoveConfig(["YTTHanddrawn", "YTTTheme"], null);
 
-	YTTSetConfig(newConfig, null);
-});
+		YTTSetConfig(newConfig, null);
+	});
+}
 
 /**
  * Send a request to the distant server.
@@ -271,3 +271,14 @@ function setVideoDuration(event) {
 		}
 	});
 }
+
+/**
+ * Init config.
+ */
+YTTGetSyncConfig(null, function (config) {
+	if(config[YTT_CONFIG_USERID]){
+		YTTSetConfig(config, setupExtension);
+	}
+	else
+		setupExtension();
+});

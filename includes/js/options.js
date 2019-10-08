@@ -13,20 +13,6 @@ $(function () {
 		});
 	});
 
-	$('#importButton').on('click', function () {
-		$('#importFileInput').trigger('click');
-	});
-
-	$('#importYoutubeButton').on('click', function () {
-		$('#importYoutubeFileInput').trigger('click');
-	});
-
-	$('#settingsButton').on('click', function () {
-		YTTGetConfig(null, function (conf) {
-			console.log(conf);
-		});
-	});
-
 	$('#importFileInput').on('change', function (event) {
 		const file = event.target.files[0];
 		if (file) {
@@ -42,8 +28,9 @@ $(function () {
 					}
 					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?'))
 						return;
-					YTTSetConfig(dataObject);
-					location.reload();
+					YTTSetConfig(dataObject, function () {
+						location.reload();
+					});
 				};
 				importData(reader.target.result);
 			};
@@ -64,9 +51,6 @@ $(function () {
 						alert('Corrupted file!');
 						return;
 					}
-					if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?'))
-						return;
-
 					YTTGetConfig(null, function (config) {
 						let foundCount = 0;
 						let newConf = {};
@@ -116,7 +100,10 @@ $(function () {
 
 	YTTGetConfig([YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME, YTT_CONFIG_DEBUG_KEY], function (config) {
 		$('#validUsername').on('click', function () {
-			const newUsername = $('#username').val();
+			let newUsername = $('#username').val();
+			if(newUsername === ""){
+				newUsername = "Anonymous";
+			}
 			$.ajax({
 				url: 'https://yttracker.mrcraftcod.fr/api/v2/' + encodeURI(config[YTT_CONFIG_USERID]) + '/username',
 				data: {

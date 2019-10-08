@@ -24,7 +24,7 @@ $(function () {
 					watched: conf.getWatchedDuration().getAsMilliseconds(),
 					opened: conf.getOpenedDuration().getAsMilliseconds(),
 					count: conf.getCount(),
-					ratio: conf.getWatchedDuration().getAsMilliseconds() / Math.max(conf.getWatchedDuration().getAsMilliseconds(), conf.getOpenedDuration().getAsMilliseconds())
+					ratio: conf.getWatchedDuration().getAsMilliseconds() / Math.max(1, Math.max(conf.getWatchedDuration().getAsMilliseconds(), conf.getOpenedDuration().getAsMilliseconds()))
 				});
 			});
 
@@ -139,6 +139,8 @@ $(function () {
 
 			seriesWatched.name = 'Watched';
 			seriesWatched.strokeWidth = 2;
+			seriesWatched.stroke = "green";
+			seriesWatched.fill = "green";
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
 
@@ -155,6 +157,8 @@ $(function () {
 
 			seriesOpened.name = 'Opened';
 			seriesOpened.strokeWidth = 2;
+			seriesOpened.stroke = "red";
+			seriesOpened.fill = "red";
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
 
@@ -171,6 +175,8 @@ $(function () {
 
 			seriesCount.name = 'Count';
 			seriesCount.strokeWidth = 2;
+			seriesCount.stroke = "blue";
+			seriesCount.fill = "blue";
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
 
@@ -195,11 +201,7 @@ $(function () {
 			seriesCount.events.on('hidden', toggleAxes);
 			seriesCount.events.on('shown', toggleAxes);
 
-			let scrollbarX = new am4charts.XYChartScrollbar();
-			scrollbarX.series.push(seriesWatched);
-			scrollbarX.series.push(seriesOpened);
-			scrollbarX.series.push(seriesCount);
-			chart.scrollbarX = scrollbarX;
+			chart.scrollbarX = new am4core.Scrollbar();
 			chart.scrollbarY = new am4core.Scrollbar();
 
 			xDateAxis.events.on('startchanged', dateAxisChanged);
