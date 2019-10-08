@@ -139,6 +139,8 @@ $(function () {
 
 			seriesWatched.name = 'Watched';
 			seriesWatched.strokeWidth = 2;
+			seriesWatched.stroke = "green";
+			seriesWatched.fill = "green";
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
 
@@ -155,6 +157,8 @@ $(function () {
 
 			seriesOpened.name = 'Opened';
 			seriesOpened.strokeWidth = 2;
+			seriesOpened.stroke = "red";
+			seriesOpened.fill = "red";
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
 
@@ -171,6 +175,8 @@ $(function () {
 
 			seriesCount.name = 'Count';
 			seriesCount.strokeWidth = 2;
+			seriesCount.stroke = "blue";
+			seriesCount.fill = "blue";
 			//series.legendSettings.valueText = "<?php //echo $this->getLegendText(); ?>//";
 			// series.fillOpacity = 0.3;
 
