@@ -12,7 +12,7 @@ The datas tracked are:
 
 The count and time of videos opened are counted only one time per each hour maximum. This is to avoid having unintended reloads of the page bringing up the statistics.
 
-You can also choose to send those data to a server to be able to compare your self with others. The stats are available [here](https://yttracker.mrcraftcod.fr/).
+You can also choose to send those data to a server to be able to compare yourself with others. The stats are available [here](https://yttracker.mrcraftcod.fr/).
 
 ## Screenshots
 <div align="center">
