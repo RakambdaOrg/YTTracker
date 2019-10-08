@@ -30,14 +30,14 @@ function YTTGetSyncConfig(values, callback) {
  */
 function YTTDownload(json, name, callback = null) {
 	const jsonStr = JSON.stringify(json);
-	const blob = new Blob([jsonStr], {type: "application/json"});
-	const value  = URL.createObjectURL(blob);
+	const blob = new Blob([jsonStr], {type: 'application/json'});
+	const value = URL.createObjectURL(blob);
 	browser.downloads.download({
 		url: value,
 		filename: name
-	}).then(function(downloadId) {
+	}).then(function (downloadId) {
 		browser.downloads.onChanged.addListener(function (download) {
-			if(download.id === downloadId && (download.state == "interrupted" || download.state == "complete")){
+			if (download.id === downloadId && (download.state == 'interrupted' || download.state == 'complete')) {
 				URL.revokeObjectURL(value);
 				if (callback)
 					callback(r);
@@ -163,4 +163,20 @@ function YTTOpenOptionsPage(onSuccess, onFail) {
 	} else if (onFail) {
 		onFail();
 	}
+}
+
+/**
+ * Opens a new tab.
+ * @param data The data of the tab to open.
+ */
+function YTTOpenTabURL(data) {
+	browser.tabs.create(data);
+}
+
+/**
+ * Opens a new window.
+ * @param data The data of the window to open.
+ */
+function YTTOpenWindowURL(data) {
+	browser.windows.create(data);
 }

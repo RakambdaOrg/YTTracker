@@ -1,16 +1,16 @@
 $(function () {
 	$('#openOptionsButton').on("click", function () {
 		YTTOpenOptionsPage(null, function(){
-			window.open(YTTGetRuntimeURL('options.html'));
+			YTTOpenTabURL({url: YTTGetRuntimeURL('options.html')});
 		});
 	});
 
 	$('#openChartButton').on("click", function () {
-		window.open(YTTGetRuntimeURL('chart.html'));
+		YTTOpenTabURL({url: YTTGetRuntimeURL('chart.html')});
 	});
 
 	$('#openOnlineStatsButton').on("click", function () {
-		window.open('https://yttracker.mrcraftcod.fr/');
+		YTTOpenTabURL({url:'https://yttracker.mrcraftcod.fr/'});
 	});
 
 	const todayKey = YTTGetDayConfigKey();

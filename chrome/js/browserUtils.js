@@ -165,3 +165,19 @@ function YTTOpenOptionsPage(onSuccess, onFail) {
 		onFail();
 	}
 }
+
+/**
+ * Opens a new tab.
+ * @param data The data of the tab to open.
+ */
+function YTTOpenTabURL(data) {
+	chrome.tabs.create(data);
+}
+
+/**
+ * Opens a new window.
+ * @param data The data of the window to open.
+ */
+function YTTOpenWindowURL(data) {
+	chrome.windows.create(data);
+}
