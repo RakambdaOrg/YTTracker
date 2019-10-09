@@ -219,12 +219,6 @@ $(function () {
 					false,
 					true
 				);
-				yDurationAxis.zoomToValues(
-					0,
-					48 * 60 * 60 * 1000,
-					false,
-					true
-				);
 			});
 
 			const todayKey = YTTGetDayConfigKey();
