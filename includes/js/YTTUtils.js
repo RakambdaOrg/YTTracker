@@ -389,14 +389,14 @@ function YTTLog(text) {
 /**
  * Add a value in an array in the config.
  * @param key The key of the value.
- * @param valueToAdd The value to add.
+ * @param {array} valueToAdd The value to add.
  * @param callback The callback called after it is done.
  */
 function YTTConfigAddInArray(key, valueToAdd, callback) {
 	YTTGetConfig(key, function (conf) {
 		if (!conf[key])
 			conf[key] = [];
-		conf[key].push(valueToAdd);
+		conf[key] = conf[key].concat(valueToAdd);
 		YTTSetConfig(conf, callback);
 	})
 }
