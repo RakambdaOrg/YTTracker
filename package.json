@@ -40,7 +40,8 @@
     "fs-extra": "^8.1.0",
     "replace-in-file": "^4.2.0",
     "xo": "^0.25.3",
-    "glob": "latest"
+    "glob": "latest",
+    "dropbox": "^4.0.30"
   },
   "xo": {
     "envs": [

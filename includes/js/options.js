@@ -4,7 +4,7 @@ $(function () {
 	});
 
 	$('#exportButton').on('click', function () {
-		YTTGetConfig(null, function (config) {
+		YTTGetConfigForExport(function (config) {
 			let payload = {};
 			payload[YTT_DOWNLOAD_EVENT_DATA_KEY] = config;
 			payload[YTT_DOWNLOAD_EVENT_NAME_KEY] = 'YTTExport.json';
@@ -147,5 +147,9 @@ $(function () {
 			newConfig[YTT_CONFIG_DEBUG_KEY] = state;
 			YTTSetConfig(newConfig);
 		});
+	});
+
+	$('#exportDropboxButton').on('click', function () {
+		exportSettingsToDropbox();
 	});
 });

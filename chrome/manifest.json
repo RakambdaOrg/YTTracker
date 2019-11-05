@@ -18,7 +18,8 @@
     "storage",
     "downloads",
     "notifications",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "identity"
   ],
   "options_page": "options.html",
   "browser_action": {

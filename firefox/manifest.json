@@ -22,7 +22,8 @@
     "storage",
     "downloads",
     "notifications",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "identity"
   ],
   "options_ui": {
     "page": "options.html",

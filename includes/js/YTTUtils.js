@@ -9,6 +9,7 @@ const YTT_CONFIG_FAILED_SHARE = 'YTT_Failed_Share';
 const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
+const YTT_CONFIG_DROPBOX_ACCESS_TOKEN = 'YTT_Dropbox_Access_Token';
 /**
  * @deprecated
  */
@@ -34,10 +35,10 @@ const YTT_STATE_EVENT_STATE_KEY = 'state';
 const YTT_STATE_EVENT_STATE_KEY_PLAYING = 'opened';
 const YTT_STATE_EVENT_STATE_KEY_WATCHED = 'watched';
 const YTT_STATE_EVENT_TIME_KEY = 'time';
-const YTT_DOWNLOAD_EVENT = "download";
-const YTT_DOWNLOAD_EVENT_DATA_KEY = "downloadData";
-const YTT_DOWNLOAD_EVENT_NAME_KEY = "downloadName";
-const YTT_DOWNLOAD_EVENT_CALLBACK_KEY = "downloadCallback";
+const YTT_DOWNLOAD_EVENT = 'download';
+const YTT_DOWNLOAD_EVENT_DATA_KEY = 'downloadData';
+const YTT_DOWNLOAD_EVENT_NAME_KEY = 'downloadName';
+const YTT_DOWNLOAD_EVENT_CALLBACK_KEY = 'downloadCallback';
 const YTT_DOM_PLAYER_STATE = 'YTTPlayerState';
 const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
 const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
@@ -398,25 +399,30 @@ function YTTConfigAddInArray(key, valueToAdd, callback) {
 			conf[key] = [];
 		conf[key] = conf[key].concat(valueToAdd);
 		YTTSetConfig(conf, callback);
-	})
+	});
 }
 
-function YTTGetBackGroundListener(){
+function YTTGetBackGroundListener() {
 	return function (request, sender) {
 		if (request[YTT_MESSAGE_TYPE_KEY] === YTT_LOG_EVENT) {
 			logDebug(request[YTT_MESSAGE_VALUE_KEY] || 'undefined');
-		}
-		else if(request[YTT_MESSAGE_TYPE_KEY] === YTT_DOWNLOAD_EVENT){
+		} else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DOWNLOAD_EVENT) {
 			const payload = request[YTT_MESSAGE_VALUE_KEY];
 			YTTDownload(payload[YTT_DOWNLOAD_EVENT_DATA_KEY], payload[YTT_DOWNLOAD_EVENT_NAME_KEY], payload[YTT_DOWNLOAD_EVENT_CALLBACK_KEY]);
-		}
-		else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
+		} else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
 			request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
 			playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
-		}
-		else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DURATION_EVENT) {
+		} else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DURATION_EVENT) {
 			request[YTT_MESSAGE_VALUE_KEY][YTT_DURATION_EVENT_TABID_KEY] = sender.tab.id;
 			setVideoDuration(request[YTT_MESSAGE_VALUE_KEY]);
 		}
-	}
+	};
+}
+
+function YTTGetConfigForExport(callback) {
+	return YTTGetConfig(null).then(config => {
+		if (YTT_CONFIG_DROPBOX_ACCESS_TOKEN in config)
+			delete config[YTT_CONFIG_DROPBOX_ACCESS_TOKEN];
+		return config;
+	}).then(callback);
 }

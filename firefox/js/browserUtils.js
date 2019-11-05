@@ -7,8 +7,7 @@
  * @param callback The callback to call.
  */
 function YTTGetConfig(values, callback) {
-	if (callback)
-		browser.storage.local.get(values).then(callback);
+	return browser.storage.local.get(values).then(callback);
 }
 
 /**
@@ -18,8 +17,7 @@ function YTTGetConfig(values, callback) {
  * @param callback The callback to call.
  */
 function YTTGetSyncConfig(values, callback) {
-	if (callback)
-		browser.storage.sync.get(values).then(callback);
+	browser.storage.sync.get(values).then(callback);
 }
 
 /**
@@ -179,4 +177,12 @@ function YTTOpenTabURL(data) {
  */
 function YTTOpenWindowURL(data) {
 	browser.windows.create(data);
+}
+
+function YTTGetRedirectURL() {
+	return browser.identity.getRedirectURL();
+}
+
+function YTTLaunchWebAuthFlow(details) {
+	return browser.identity.launchWebAuthFlow(details);
 }

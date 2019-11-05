@@ -1,4 +1,3 @@
-
 /**
  * Get values from the configuration.
  *
@@ -6,8 +5,9 @@
  * @param callback The callback to call.
  */
 function YTTGetConfig(values, callback) {
-	if (callback)
-		chrome.storage.local.get(values, callback);
+	return new Promise(resolve => {
+		chrome.storage.local.get(values, resolve);
+	}).then(callback);
 }
 
 /**
@@ -32,9 +32,9 @@ function YTTDownload(json, name, callback = null) {
 	chrome.downloads.download({
 		url: value,
 		filename: name
-	}, function(downloadId) {
+	}, function (downloadId) {
 		chrome.downloads.onChanged.addListener(function (download) {
-			if(download.id === downloadId && (download.state == "interrupted" || download.state == "complete")){
+			if (download.id === downloadId && (download.state == 'interrupted' || download.state == 'complete')) {
 				URL.revokeObjectURL(value);
 				if (callback)
 					callback(r);
@@ -49,7 +49,8 @@ function YTTDownload(json, name, callback = null) {
  * @param config The configuration to set.
  */
 function YTTSetConfig(config, callback = null) {
-	chrome.storage.local.set(config, callback || function(){});
+	chrome.storage.local.set(config, callback || function () {
+	});
 }
 
 /**
@@ -58,7 +59,8 @@ function YTTSetConfig(config, callback = null) {
  * @param callback The call back to call.
  */
 function YTTClearConfig(callback = null) {
-	chrome.storage.local.clear(callback || function(){});
+	chrome.storage.local.clear(callback || function () {
+	});
 }
 
 /**
@@ -67,7 +69,8 @@ function YTTClearConfig(callback = null) {
  * @param callback The call back to call.
  */
 function YTTClearSyncConfig(callback = null) {
-	chrome.storage.sync.clear(callback || function(){});
+	chrome.storage.sync.clear(callback || function () {
+	});
 }
 
 /**
@@ -76,7 +79,8 @@ function YTTClearSyncConfig(callback = null) {
  * @param keys The keys to remove.
  */
 function YTTRemoveConfig(keys, callback = null) {
-	chrome.storage.local.remove(keys, callback || function(){});
+	chrome.storage.local.remove(keys, callback || function () {
+	});
 }
 
 /**
@@ -180,4 +184,14 @@ function YTTOpenTabURL(data) {
  */
 function YTTOpenWindowURL(data) {
 	chrome.windows.create(data);
+}
+
+function YTTGetRedirectURL() {
+	return chrome.identity.getRedirectURL();
+}
+
+function YTTLaunchWebAuthFlow(details) {
+	return new Promise(resolve => {
+		chrome.identity.launchWebAuthFlow(details, resolve);
+	});
 }
