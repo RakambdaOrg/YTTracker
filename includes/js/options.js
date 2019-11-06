@@ -134,6 +134,24 @@ $(function () {
 		$('#UUID').text(config[YTT_CONFIG_USERID] ? config[YTT_CONFIG_USERID] : 'Unknown');
 		$('#username').val(config[YTT_CONFIG_USERNAME] ? config[YTT_CONFIG_USERNAME] : '');
 
+		$.ajax({
+			url: 'https://yttracker.mrcraftcod.fr/api/v2/' + encodeURI(config[YTT_CONFIG_USERID]) + '/username',
+			data: {
+			},
+			method: 'GET',
+			success: function (data) {
+				if(data && data.code === 200 && data.username){
+					$('#username').val(data.username);
+					let newConfig = {};
+					newConfig[YTT_CONFIG_USERNAME] = data.username;
+					YTTSetConfig(newConfig);
+				}
+			},
+			error: function () {
+				console.error('Failed to fetch online username');
+			}
+		});
+
 		$('#shareStats').on('change', function () {
 			const state = document.getElementById('shareStats').checked;
 			const newConfig = {};
