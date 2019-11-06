@@ -167,6 +167,9 @@ $(function () {
 		});
 	});
 
+	if(typeof browser === 'undefined')
+		$('#exportDropboxSection').css('visibility','hidden');
+
 	$('#exportDropboxButton').on('click', function () {
 		exportSettingsToDropbox();
 	});

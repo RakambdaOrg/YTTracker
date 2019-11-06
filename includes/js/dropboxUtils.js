@@ -9,15 +9,14 @@ function requestDropboxAccessToken() {
 	const authUrl = client.getAuthenticationUrl(YTTGetRedirectURL());
 	return YTTLaunchWebAuthFlow({url: authUrl, interactive: true})
 		.then(urlReturned => {
-			if(urlReturned){
+			if (urlReturned) {
 				const params = new URLSearchParams(new URL(urlReturned).hash.replace('#', ''));
 				const conf = {};
 				conf[YTT_CONFIG_DROPBOX_ACCESS_TOKEN] = params.get('access_token');
 				YTTSetConfig(conf);
 				return params.get('access_token');
-			}
-			else{
-				return Promise.reject("Failed to open authentication page");
+			} else {
+				return Promise.reject('Failed to open authentication page');
 			}
 		});
 }
@@ -41,9 +40,16 @@ function exportSettingsToDropbox() {
 						if (error.status === HTTP_STATUS_CANCEL) {
 							return;
 						}
-						console.error(error);
-						alert('Error saving data');
+						console.error(typeof error, error);
+						alert('Error saving dropbox data');
+
 					});
 			}
-		);
+		)
+		.catch(error => {
+			if (typeof error === 'string')
+				alert(error);
+			else
+				alert('Error getting dropbox auth');
+		});
 }
