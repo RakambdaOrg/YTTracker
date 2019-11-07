@@ -7,24 +7,39 @@
     <script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="js/lib/Popper.js/popper.js"></script>
     <script type="text/javascript" src="js/lib/bootstrap/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/browserUtils.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
+    <script type="text/javascript" src="js/utils/dropboxUtils.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
+    <script type="text/javascript" src="js/lib/dropbox/dropbox-sdk.js" async></script>
 </head>
 <body>
 <div class='container-fluid' style="margin-top:10px">
     <div class='row'>
         <div class='col form-group'>
             <button type="button" class="btn btn-primary btn-block" id="exportButton" aria-describedby="exportDataHelp">
-                Export data
+                Export data to file
             </button>
             <small id="exportDataHelp" class="text-justify form-text text-muted">Export your data in a JSON file that you can download and import back later (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-Export'>the wiki</a>).</small>
         </div>
         <div class='col form-group'>
             <label class="btn btn-info btn-block" role='button' aria-describedby='importFileHelp'>
-                Import data<input type="file" id="importFileInput" hidden>
+                Import data from file<input type="file" id="importFileInput" hidden>
             </label>
             <small id="importFileHelp" class="text-justify form-text text-muted">Import a JSON file the you previously exported (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-Export'>the wiki</a>). <span class='text-danger'>Be carefull, ALL data currently present will be wiped out and replaced by the data in the file.</span></small>
+        </div>
+        <div class='col form-group'>
+            <button type="button" class="btn btn-danger btn-block" id="resetButton" aria-describedby='resetHelp'>
+                Reset all data
+            </button>
+            <small id="resetHelp" class="text-justify form-text text-muted">Reset all the data saved by this extension. <span class='text-danger'>This cannot be undone!</span></small>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col form-group' id='exportDropboxSection'>
+            <button type="button" class="btn btn-primary btn-block" id="exportDropboxButton" aria-describedby="exportDropboxHelp">
+                Export data to Dropbox
+            </button>
+            <small id="exportDropboxHelp" class="text-justify form-text text-muted">Export your data in a JSON file directly in your Dropbox. You can then import it back later (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-Export'>the wiki</a>).</small>
         </div>
         <div class='col form-group'>
             <label class="btn btn-info btn-block" role='button' aria-describedby='importYoutubeFileHelp'>
@@ -32,11 +47,7 @@
             </label>
             <small id="importYoutubeFileHelp" class="text-justify form-text text-muted">Import data from an export of your YouTube history (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-YouTube-history'>the wiki</a>). <span class='text-warning'>Only the days with no data will be imported as we can only retrieve the number of videos opened.</span></small>
         </div>
-        <div class='col form-group'>
-            <button type="button" class="btn btn-danger btn-block" id="resetButton" aria-describedby='resetHelp'>
-                Reset all data
-            </button>
-            <small id="resetHelp" class="text-justify form-text text-muted">Reset all the data saved by this extension. <span class='text-danger'>This cannot be undone!</span></small>
+        <div class='col'>
         </div>
     </div>
     <hr>

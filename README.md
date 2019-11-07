@@ -1,6 +1,12 @@
 # YTTracker
 An extension to track time on YouTube
 
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/knnlnielflnfhdohmihofhdelgahgjdb?label=Chrome%20version)
+![Chrome Web Store](https://img.shields.io/chrome-web-store/users/knnlnielflnfhdohmihofhdelgahgjdb?label=Chrome%20suers)](https://chrome.google.com/webstore/detail/youtube-tracker/knnlnielflnfhdohmihofhdelgahgjdb)
+
+[![Mozilla Add-on](https://img.shields.io/amo/v/youtube-tracker?label=Firefox%20version)
+![Mozilla Add-on](https://img.shields.io/amo/users/youtube-tracker?label=Firefox%20users&color=green)](https://addons.mozilla.org/en-US/firefox/addon/youtube-tracker/)
+
 ## Description
 This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
 

@@ -1,1 +1,0 @@
-chrome.runtime.onMessage.addListener(YTTGetBackGroundListener());

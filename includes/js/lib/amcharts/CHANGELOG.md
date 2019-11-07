@@ -5,6 +5,131 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 Please note, that this project, while following numbering syntax, it DOES NOT
 adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
+## [4.7.7] - 2019-11-02
+
+### Added
+- `NumberFormatter` now supports `numberFormat` in [Intl.DateTimeFormatOptions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) objects. E.g. `chart.numberFormatter.numberFormat = { style: "decimal", minimumFractionDigits: 3 }`. [More info](https://www.amcharts.com/docs/v4/tutorials/formatting-date-time-and-numbers-using-intl-object/).
+- New built-in pattern: `CirclePattern`.
+- `PictorialStackedSeries` now supports `align`/`valign` settings, allowing controlling its position inside chart container.
+
+### Changed
+- Default pattern list in `PatternSet` is expanded and revamped for better look and increased contrast.
+- Pattern elements are now centered, so they work better with `rotation`.
+- `MapChart` now will shift zoom towards center gradually when zooming out.
+
+### Fixed
+- `getIndex()` method of `PatternSet` was always returning current pattern, not particular index.
+- Sometimes Export's user-added `"data"` adapter was kicking in before amCharts built-in adapter, causing data edits to be overwritten.
+- Built-in adapters (e.g. for export `"data"`) sometimes were being added multiple times.
+- Export no longer errors out on pages with missing external CSS files.
+- Using `addData()` on `PercentChart` was reusing colors from the beginning for the newly added slices.
+- `SliceGrouped` on `PercentSeries` when used on a chart with responsive fetures enabled, could display labels of the hidden slices after chart resize.
+- Issue with zooming `DateAxis` with single data item fixed (the single item used to disappear in certain cases).
+
+
+## [4.7.6] - 2019-10-29
+
+### Added
+- Added more pre-set patterns to `PatternSet`, including one with circles.
+
+### Changed
+- Using `patterns` theme will no longer reset Series' colors.
+- Using `patterns` theme now respects series' `fillOpacity` setting to set pattern background transparency.
+
+### Fixed
+- Formatted strings were being cut off at specific `\]]` character combination.
+- `LineSeries` with `RectPattern` for a fill was failing on chart with a legend.
+
+
+## [4.7.5] - 2019-10-26
+
+### Added
+- New theme: `microchart`. Automatically adapts all charts for very small containers.
+- New theme: `patterns`. Automatically fills `ColumnSeries` and `PercentSeries` with distinctive patterns.
+- New object `PatternSet` used in conjunction with `XYChart` or `PercentSeries` to auto-assign distinctive pattern fills.
+- New property `patterns` on `XYChart` and `PercentSeries`.
+
+### Changed
+- `tooltipX` and `tooltipY` properties now can be set in `Percent` for relative positioning.
+
+### Fixed
+- Cursor on all-`ValueAxis` setups and behavior set to "zoomXY" was not working properly.
+
+
+## [4.7.4] - 2019-10-22
+
+## Added
+- New global option: `am4core.options.viewportTarget`. If you are placing charts into a scrollable container and using `onlyShowOnViewport`, set this option to a reference to the container. The system will monitor both window and individual scroll of the container to know where to reveal the lazy-loaded chart.
+- New `MapChart` property: `geodataNames`. It can now be used to automatically translate country names into multiple languages. Check out [usage instructions](https://www.amcharts.com/docs/v4/tutorials/using-map-country-name-translations/).
+- `hideParentColumns` property added to `TreeMap`. If set to `true` columns of the parent series will be hidden when user drills-down into deeper levels.
+
+### Fixed
+- `ColorSet` was starting to generate grayscale colors at some point.
+- Accessibility: Series that has items with roles "menuitem" will now have its role set to "menu" automatically.
+- Series bullets were dislocated on `XYChart` with `DateAxis` and `dateFormatter.utc = true`.
+- In some specific cases 3D columns used incorrect `zIndex`.
+- Index of dataItem of `PercentSeries` could be `-`1 after first render.
+- `yRange` of `XYCursor` was inversed.
+
+
+## [4.7.3] - 2019-10-18
+
+### Fixed
+- `ColumnSeries` with `simplifiedProcessing = true` setting was sometimes producing visual glitches.
+
+
+## [4.7.2] - 2019-10-18
+
+### Added
+- `RadarColumn` now supports `width` adapter (the adapter should return `Percent` object).
+
+### Changed
+- `minWidth`/`minHeight` set on Axis to 0.0001 to avoid ready event to be not called on super small divs.
+
+### Fixed
+- A link between two fixed `ForcedDirectedTree` nodes was not visible.
+- If `maxZoomCount` was set on a series which was used for `XYChartScrollbar`, scrollbar series was zoomed-in.
+- `PercentChart`'s legend, if placed to an external div could loose text formatting after data update.
+- `gridType = "polygons"` of `RadialAxis` was not working.
+- Label of `PinBullet` was not being cloned.
+- `rangeChangeEasing` function was not being passed to `ValueAxis` min/max animation which resulted in some unwanted animation effects when min/max of the axis changed.
+
+
+## [4.7.1] - 2019-10-16
+
+### Added
+- Two additional auto-calculated values (used in `valueXShow` and `valueYShow` data fields) added: `startChange` and `startChangePercent`. Shows change from starting value of the first data item in series.
+
+### Changed
+- Animated theme: Default values for `rangeChangeDuration` and `interpolationDuration` changed to `500` (was `700`). Makes zooming animations more snappy.
+
+### Fixed
+- Data item grouping was sometimes producing visual anomalies when multiple data sets were being loaded /set to chart/series asynchronously.
+
+
+## [4.7.0] - 2019-10-14
+
+### Added
+- Dynamic data item grouping capabilities added to `XYSeries` in `DateAxis` + `ValueAxis` setups. [More details](https://www.amcharts.com/docs/v4/concepts/axes/date-axis/#Dynamic_data_item_grouping).
+- Export: Two new data export options "HTML" and "PDF" (exports data as a table in PDF).
+- Export: Ability to include data table into PDF export (`addData` option in PDF options).
+
+### Fixed
+- Regression plugin: Plugin was not generating proper regression lines if data was loaded via `dataSource`.
+- Fixed number formatting for data exports on non-default-locale charts.
+- `min`/`max` of `ValueAxis` was not always correct when series showed not actual but calculated values using `valueYShow`/`valueXShow` data fields like `"sum"`, `"change"`, or `"changePercent"`.
+
+
+## [4.6.9] - 2019-10-08
+
+### Fixed
+- Accessibility: `itemReaderText` on `XYSeries` (and all inheriting series types) now respects value set from user code.
+- Accessibility: Default `role` for chart changed to `widget`.
+- Accessibility: `Axis` has now `readerHidden = true` set by default, to prevent screen readers from reading out useless numbers.
+- Accessibility: `readerTitle` was not being populated by data item data via curly bracket data placeholders.
+- Accessibility: Bullets were ignoring Series' `skipFocusThreshold` setting.
+
+
 ## [4.6.8] - 2019-10-07
 
 ### Added
