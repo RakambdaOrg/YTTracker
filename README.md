@@ -37,6 +37,8 @@ Bootstrap - [https://getbootstrap.com/](https://getbootstrap.com/)
 
 JQuery - [https://github.com/jquery/jquery](https://github.com/jquery/jquery)
 
+Dropbox SDK - [https://www.dropbox.com/developers/documentation/javascript](https://www.dropbox.com/developers/documentation/javascript)
+
 ## Other
 Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
 

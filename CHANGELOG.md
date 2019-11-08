@@ -1,10 +1,15 @@
 # Changelog
 
+## [2.2.1] - 2019-11-08
+
+- Update Amcharts to 4.7.8.
+- Improve player detection.
+
 ## [2.2.0] - 2019-11-07
 
 - Update Amcharts to 4.7.7.
 - When watching a video across several days the time is split between these days instead of all being on the last day  (#15).
-- Added a button in the settings to export the data directly on Dropbox.
+- Added a button in the settings to export the data directly on Dropbox (#10).
 
 ## [2.1.3] - 2019-10-08
 

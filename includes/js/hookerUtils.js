@@ -1,4 +1,3 @@
-let YTTHooked = false;
 let YTTPlayer;
 
 /**
@@ -6,6 +5,7 @@ let YTTPlayer;
  * @param {number} playerState The event of the player (player status).
  */
 function changeDOMTime(playerState) {
+    console.log("ps", playerState);
     if (playerState === 1) {
         document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = YTT_STATE_EVENT_STATE_KEY_PLAYING + YTT_DOM_SPLITTER + YTTGetPlayer().getCurrentTime();
     } else if (playerState === 2 || playerState === 0 || playerState === -5 || playerState === 3) {
@@ -26,6 +26,7 @@ function changeDOMInfos() {
  * Called when the video changes.
  */
 function changeVideo() {
+    console.log("v");
     if (YTTGetPlayer().getVideoData && YTTGetPlayer().getVideoData()['video_id'] !== (document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML.split(YTT_DOM_SPLITTER)[0] || '') && YTTGetPlayer().getCurrentTime && YTTGetPlayer().getDuration) {
         changeDOMTime(-5);
         changeDOMInfos();
@@ -46,11 +47,10 @@ function YTTGetPlayer() {
  * @returns {boolean} True if successfull, false otherwise.
  */
 function hookYTTPlayer(player) {
-    if (YTTHooked || typeof player !== 'object' || !(player.getCurrentTime || player.getVideoData || player.getDuration || player.getPlayerState)) {
+    if (typeof player !== 'object' || !(player.getCurrentTime || player.getVideoData || player.getDuration || player.getPlayerState)) {
         return false;
     }
     console.log('Player hooked');
-    YTTHooked = true;
     YTTPlayer = player;
     document.getElementById(YTT_DOM_PLAYER_TIME_1).innerHTML = YTTPlayer.getCurrentTime();
     document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML = YTTPlayer.getCurrentTime();

@@ -1,5 +1,3 @@
-'use strict';
-
 const YTT_MS_PER_DAY = 86400 * 1000;
 const activePlayers = {};
 
@@ -39,7 +37,7 @@ function setupExtension() {
 
             newConfig[YTT_CONFIG_TOTAL_STATS_KEY] = totalStats;
 
-            YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY], null);
+            YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY]);
         }
 
         YTTRemoveConfig(['YTTHanddrawn', 'YTTTheme']);
@@ -93,14 +91,14 @@ function sendRequestsToAPI(requests) {
             },
             method: 'POST',
             async: true,
-            error: function () {
+            error: () => {
                 notify(`Failed to send ${type} time to server`, `VideoID: ${videoId}\nDuration: ${duration.getAsString(true)}\nDate: ${timeStr}`);
                 console.error('Failed to send request to API', uuid, videoId, duration, date, type);
                 if (onFail) {
                     onFail();
                 }
             },
-            success: function () {
+            success: () => {
                 notify(`Sent ${type} time to server`, `VideoID: ${videoId}\nDuration: ${duration.getAsString(true)}\nDate: ${timeStr}`);
                 console.debug('Sent to API', uuid, videoId, duration, date, type);
                 if (onSuccess) {
@@ -121,7 +119,7 @@ function sendRequestsToAPI(requests) {
             if (trackData && trackData['videoID'] && trackData['duration']) {
                 sendRequest(uuid, trackData['videoID'], new YTTDuration(trackData['duration']), trackData['date'], trackData['type'], function () {
                     sendAllRequests(uuid, requests);
-                }, function () {
+                }, () => {
                     YTTConfigAddInArray(YTT_CONFIG_FAILED_SHARE, [trackData]);
                     sendAllRequests(uuid, requests);
                 });

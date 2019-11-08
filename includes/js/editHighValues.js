@@ -1,5 +1,5 @@
 $(function () {
-    $('#backButton').on('click', function () {
+    $('#backButton').on('click', () => {
         document.location.href = 'chart.html';
     });
 
@@ -21,7 +21,7 @@ $(function () {
             $('#days-edit-input').val(obj.conf[kind].days);
         }
 
-        $('#edit-form').on('submit', function (e) {
+        $('#edit-form').on('submit', e => {
             e.preventDefault();
             const newDuration = new YTTDuration(editingKind, 0, parseInt($('#seconds-edit-input').val() || '0', 10), parseInt($('#minutes-edit-input').val() || '0', 10), parseInt($('#hours-edit-input').val() || '0', 10), parseInt($('#days-edit-input').val() || '0', 10));
             console.log('New duration parsed', newDuration, editingKind, editingVar.dayStr);
@@ -44,9 +44,7 @@ $(function () {
             });
         });
 
-        Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort(function (a, b) {
-            return YTTCompareConfigDate(b, a);
-        }).map(day => {
+        Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort((a, b) => YTTCompareConfigDate(b, a)).map(day => {
             return {
                 day: YTTGetDateFromDay(day),
                 dayStr: day,
@@ -64,7 +62,7 @@ $(function () {
             if (obj.conf.getOpenedDuration().getAsMilliseconds() > WEIRD_DATA_THRESHOLD) {
                 let buttonEditOpened = $(`<button type="button" class="btn btn-primary btn-block edit-conf-value" data-toggle="modal" data-target="#modal-time">`)
                     .text(`Edit opened time of the ${YTTGetDateString(obj.day.getTime())} (${obj.conf.getOpenedDuration().getAsString()})`);
-                buttonEditOpened.on('click', function (e) {
+                buttonEditOpened.on('click', e => {
                     startEdit($(this), obj, YTT_DATA_OPENED);
                 });
                 $('<div class="row mt-1">').append(buttonEditOpened).appendTo(editDiv);

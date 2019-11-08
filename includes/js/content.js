@@ -43,7 +43,7 @@ function injectCode() {
     body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_1, '0'));
     body.append(YTTGetInjectDiv(YTT_DOM_PLAYER_TIME_2, '0'));
 
-    $(window).on('beforeunload', function () {
+    $(window).on('beforeunload', () => {
         const event = {};
         event[YTT_STATE_EVENT_STATE_KEY] = YTT_STATE_EVENT_STATE_KEY_WATCHED;
         event[YTT_STATE_EVENT_TIME_KEY] = $(`#${YTT_DOM_PLAYER_TIME_2}`).text();
@@ -77,7 +77,7 @@ function injectCode() {
      * @param {function} callback
      */
     function observeElement(id, callback) {
-        const observer = new MutationObserver(function (mutations) {
+        const observer = new MutationObserver(mutations => {
             mutations.forEach(callback);
         });
         observer.observe(document.getElementById(id), {
@@ -91,7 +91,7 @@ function injectCode() {
     YTTLog('Injected player dom');
 }
 
-$(function () {
+$(() => {
     if (window && window.location && window.location.href && window.location.href.startsWith('https://yttracker.mrcraftcod.fr/')) {
         $('.extensionsAd').hide();
     } else {

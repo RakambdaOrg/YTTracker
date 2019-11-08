@@ -1,12 +1,12 @@
-$(function () {
+$(() => {
     const shareStatsCheck = $('#shareStats');
     const debugCheck = $('#debug');
 
-    $('#backButton').on('click', function () {
+    $('#backButton').on('click', () => {
         document.location.href = 'chart.html';
     });
 
-    $('#exportButton').on('click', function () {
+    $('#exportButton').on('click', () => {
         YTTGetConfigForExport().then(config => {
             let payload = {};
             payload[YTT_DOWNLOAD_EVENT_DATA_KEY] = config;
@@ -16,12 +16,12 @@ $(function () {
         });
     });
 
-    $('#importFileInput').on('change', function (event) {
+    $('#importFileInput').on('change', event => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (reader) {
-                let importData = function (data) {
+            reader.onload = reader => {
+                let importData = data => {
                     let dataObject;
                     try {
                         dataObject = JSON.parse(data);
@@ -40,12 +40,12 @@ $(function () {
         }
     });
 
-    $('#importYoutubeFileInput').on('change', function (event) {
+    $('#importYoutubeFileInput').on('change', event => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (reader) {
-                let importData = function (data) {
+            reader.onload = reader => {
+                let importData = data => {
                     let dataObject;
                     try {
                         dataObject = JSON.parse(data);
@@ -86,7 +86,7 @@ $(function () {
         }
     });
 
-    $('#resetButton').on('click', function () {
+    $('#resetButton').on('click', () => {
         if (!confirm('This action will wipe all your data!\nAre you sure to continue?')) {
             return;
         }
@@ -97,7 +97,7 @@ $(function () {
     });
 
     YTTGetConfig([YTT_CONFIG_VERSION, YTT_CONFIG_USERID, YTT_CONFIG_SHARE_ONLINE, YTT_CONFIG_USERNAME, YTT_CONFIG_DEBUG_KEY]).then(config => {
-        $('#validUsername').on('click', function () {
+        $('#validUsername').on('click', () => {
             let newUsername = $('#username').val();
             if (newUsername === '') {
                 newUsername = 'Anonymous';
@@ -108,13 +108,13 @@ $(function () {
                     username: newUsername
                 },
                 method: 'POST',
-                success: function () {
+                success: () => {
                     let newConfig = {};
                     newConfig[YTT_CONFIG_USERNAME] = newUsername;
                     YTTSetConfig(newConfig);
                     alert('Username changed');
                 },
-                error: function () {
+                error: () => {
                     alert('Failed to change username');
                 }
             });
@@ -136,7 +136,7 @@ $(function () {
             url: `https://yttracker.mrcraftcod.fr/api/v2/${encodeURI(config[YTT_CONFIG_USERID])}/username`,
             data: {},
             method: 'GET',
-            success: function (data) {
+            success: data => {
                 if (data && data.code === 200 && data.username) {
                     $('#username').val(data.username);
                     let newConfig = {};
@@ -144,19 +144,19 @@ $(function () {
                     YTTSetConfig(newConfig);
                 }
             },
-            error: function () {
+            error: () => {
                 console.error('Failed to fetch online username');
             }
         });
 
-        shareStatsCheck.on('change', function () {
+        shareStatsCheck.on('change', () => {
             const state = shareStatsCheck.is(':checked');
             const newConfig = {};
             newConfig[YTT_CONFIG_SHARE_ONLINE] = state;
             YTTSetConfig(newConfig);
         });
 
-        debugCheck.on('change', function () {
+        debugCheck.on('change', () => {
             const state = debugCheck.is(':checked');
             const newConfig = {};
             newConfig[YTT_CONFIG_DEBUG_KEY] = state;
@@ -164,8 +164,8 @@ $(function () {
         });
     });
 
-    $('#exportDropboxButton').on('click', function () {
-        exportSettingsToDropbox();
-    });
+    $('#exportDropboxButton').on('click', () => exportSettingsToDropbox());
+
+    $('#dropboxDisconnect').on('click', () => YTTRemoveConfig[DROPBOX_API_KEY]);
 })
 ;
