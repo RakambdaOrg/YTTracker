@@ -7,9 +7,7 @@ $(function () {
         YTTGetConfig(null).then(config => {
             const WEIRD_DATA_THRESHOLD = config[YTT_CONFIG_WEIRD_DATA_THRESHOLD];
             const weirdData = [];
-            const data = Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort(function (a, b) {
-                return YTTCompareConfigDate(b, a);
-            }).map(function (day) {
+            const data = Object.keys(config).filter(k => k.startsWith('day')).map(k => k.replace('day', '')).sort((a, b) => YTTCompareConfigDate(b, a)).map(day => {
                 const conf = new YTTDay(config[`day${day}`]);
                 const dayData = {
                     day: day,
@@ -206,7 +204,7 @@ $(function () {
                 updatePeriodData(periodData);
             }
 
-            chart.events.on('ready', function () {
+            chart.events.on('ready', () => {
                 let oneWeekAgo = new Date();
                 oneWeekAgo.setHours(0);
                 oneWeekAgo.setMinutes(0);

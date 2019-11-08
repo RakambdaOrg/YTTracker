@@ -10,6 +10,7 @@ function requestDropboxAccessToken() {
         clientId: DROPBOX_API_KEY,
         fetch
     });
+    console.log('Requestion new Dropbox token');
     const authUrl = client.getAuthenticationUrl(YTTGetRedirectURL());
     return YTTLaunchWebAuthFlow({url: authUrl, interactive: true})
         .then(urlReturned => {
@@ -31,7 +32,7 @@ function requestDropboxAccessToken() {
 function exportSettingsToDropbox() {
     const filePath = `/YTTracker.${new Date().getTime()}.json`;
     YTTGetConfig([YTT_CONFIG_DROPBOX_ACCESS_TOKEN])
-        .then(config => Promise.resolve(config[YTT_CONFIG_DROPBOX_ACCESS_TOKEN]) || requestDropboxAccessToken())
+        .then(config => config[YTT_CONFIG_DROPBOX_ACCESS_TOKEN] ? Promise.resolve(config[YTT_CONFIG_DROPBOX_ACCESS_TOKEN]) : requestDropboxAccessToken())
         .then(token => {
             const client = new Dropbox.Dropbox({
                 clientId: DROPBOX_API_KEY,
