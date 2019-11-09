@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.2.2] - 
+## [2.2.2] - 2019-11-09
 
 - Try to avoid sending watched time twice when switching video.
 - Do not attempt to hook forever.

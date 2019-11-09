@@ -5,7 +5,6 @@ let YTTPlayer;
  * @param {number} playerState The event of the player (player status).
  */
 function changeDOMTime(playerState) {
-    console.log("ps", playerState);
     if (playerState === 1) {
         document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = YTT_STATE_EVENT_STATE_KEY_PLAYING + YTT_DOM_SPLITTER + YTTGetPlayer().getCurrentTime();
     } else if (playerState === 2 || playerState === 0 || playerState === -5 || playerState === 3) {
@@ -19,7 +18,6 @@ function changeDOMTime(playerState) {
  * Update the video infos in the DOM.
  */
 function changeDOMInfos() {
-    console.log("di");
     document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML = YTTPlayer.getVideoData()['video_id'] + YTT_DOM_SPLITTER + YTTPlayer.getDuration();
 }
 
@@ -27,7 +25,6 @@ function changeDOMInfos() {
  * Called when the video changes.
  */
 function changeVideo() {
-    console.log("v");
     if (YTTGetPlayer().getVideoData && YTTGetPlayer().getVideoData()['video_id'] !== (document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML.split(YTT_DOM_SPLITTER)[0] || '') && YTTGetPlayer().getCurrentTime && YTTGetPlayer().getDuration) {
         changeDOMTime(-5);
         changeDOMInfos();
