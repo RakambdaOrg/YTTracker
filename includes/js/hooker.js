@@ -1,8 +1,9 @@
 /**
  * Setup hook onto the YouTube player.
  */
-function YTTHookProcess() {
+function YTTHookProcess(attempt) {
     const RETRY_DELAY = 250;
+    const MAX_ATTEMPT = 500;
     let hooked = false;
     try {
         console.debug('Trying to hook to player');
@@ -15,8 +16,8 @@ function YTTHookProcess() {
     }
     if (hooked) {
         YTTUpdateDOM();
-    } else {
-        setTimeout(YTTHookProcess, RETRY_DELAY);
+    } else if (attempt < MAX_ATTEMPT) {
+        setTimeout(() => YTTHookProcess(attempt + 1), RETRY_DELAY);
     }
 }
 
@@ -33,4 +34,4 @@ function YTTUpdateDOM() {
     }, 75);
 }
 
-YTTHookProcess();
+YTTHookProcess(0);

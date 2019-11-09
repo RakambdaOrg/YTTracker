@@ -19,6 +19,7 @@ function changeDOMTime(playerState) {
  * Update the video infos in the DOM.
  */
 function changeDOMInfos() {
+    console.log("di");
     document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML = YTTPlayer.getVideoData()['video_id'] + YTT_DOM_SPLITTER + YTTPlayer.getDuration();
 }
 
@@ -56,6 +57,8 @@ function hookYTTPlayer(player) {
     document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML = YTTPlayer.getCurrentTime();
     changeDOMInfos();
     changeDOMTime(YTTPlayer.getPlayerState());
+    YTTPlayer.removeEventListener('onStateChange', changeDOMTime);
+    YTTPlayer.removeEventListener('onApiChange', changeVideo);
     YTTPlayer.addEventListener('onStateChange', changeDOMTime);
     YTTPlayer.addEventListener('onApiChange', changeVideo);
     return true;

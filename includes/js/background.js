@@ -189,14 +189,16 @@ function playerStateChange(event) {
             vid: event[YTT_STATE_EVENT_VID_KEY],
             videoTime: event[YTT_STATE_EVENT_TIME_KEY]
         };
-    } else if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_WATCHED && activePlayers[event[YTT_STATE_EVENT_ID_KEY]] !== null) {
-        if (!activePlayers[event[YTT_STATE_EVENT_ID_KEY]]) {
+    } else if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_WATCHED) {
+        let activePlayer = activePlayers[event[YTT_STATE_EVENT_ID_KEY]];
+        if (!activePlayer) {
             return;
         }
+        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
         logDebug(`Ended playing at ${event[YTT_STATE_EVENT_TIME_KEY]}s`);
 
         let currentTime = new Date();
-        let watchedMilliseconds = currentTime - activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['time'];
+        let watchedMilliseconds = currentTime - activePlayer['time'];
 
         let startDayDate = new Date();
         startDayDate.setHours(0, 0, 0, 0);
@@ -229,8 +231,7 @@ function playerStateChange(event) {
             };
         }
 
-        const videoID = activePlayers[event[YTT_STATE_EVENT_ID_KEY]]['vid'];
-        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
+        const videoID = activePlayer['vid'];
         let size = 0;
         for (const key in activePlayers) {
             if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null) {
