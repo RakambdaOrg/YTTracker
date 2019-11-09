@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.2] - 
+
+- Try to avoid sending watched time twice when switching video.
+- Do not attempt to hook forever.
+- If username is empty, send null to the server instead of `Anonymous`.
+
 ## [2.2.1] - 2019-11-08
 
 - Update Amcharts to 4.7.8.
