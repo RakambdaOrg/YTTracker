@@ -26,7 +26,7 @@
     "chromeBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
     "chromeBuildBeta": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && node deploy/copyFolder.js chromeBeta temp && npm run replaceManifestVersion",
     "chromePackage": "npm run chromeBuild && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
-    "chromePackageBeta": "npm run chromeBuildBeta && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
+    "chromePackageBeta": "npm run chromeBuildBeta && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtensionBeta.zip temp && npm run removeTempDirectory",
     "chromeRelease": "npm run chromePackage && npm run chromeSend && node deploy/removeFile.js chromeExtension.zip",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
     "firefoxBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
