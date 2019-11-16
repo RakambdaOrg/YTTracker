@@ -1,7 +1,7 @@
 Library used:
 
 jQuery 3.4.1 from https://jquery.com/download/ "Download the compressed, production jQuery 3.4.1"
-Amcharts 4.7.7 from https://www.amcharts.com/download/ "Download a standalone JavaScript version"
+Amcharts 4.7.10 from https://www.amcharts.com/download/ "Download a standalone JavaScript version"
 Bootstrap 4.3.1 from https://getbootstrap.com/docs/4.3/getting-started/download/#compiled-css-and-js
 Popper.js 1.15.0 from https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.js
 DropboxSDK 4.0.30 from https://www.npmjs.com/package/dropbox/v/4.0.30

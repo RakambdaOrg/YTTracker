@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.2.3] - 2019-11-16
+
+- Update Amcharts to 4.7.10.
+- Do not count play time if less than 500ms.
+
 ## [2.2.2] - 2019-11-09
 
 - Try to avoid sending watched time twice when switching video.
