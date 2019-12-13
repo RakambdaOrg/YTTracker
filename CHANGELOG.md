@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.2.4] - 2019-12-13
+
+- Update Amcharts to 4.7.14.
+- Update libraries to those from their respective GitHub repositories.
+
 ## [2.2.3] - 2019-11-16
 
 - Update Amcharts to 4.7.10.
