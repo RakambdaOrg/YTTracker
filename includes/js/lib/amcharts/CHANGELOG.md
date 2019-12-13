@@ -5,6 +5,61 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 Please note, that this project, while following numbering syntax, it DOES NOT
 adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
+## [4.7.14] - 2019-12-10
+
+### Fixed
+- valueAxis could be shown zoomed-in if series were added later in some rare cases.
+- strokeLinecap and strokeLinejoin was not copied to Legend markers from Series.
+- Some charts were not displaying after css-element-queries dependency update, temporary downgraded css-element-queries.
+- Sometimes if using imagesToConnect with MapLine of MapLineSeries, the lines were not drawn if the imagesToConnect was set initially and not after the series initialized.
+
+### Added
+- A possibility to set individual startAngle and endAngle on Pie Series added.
+- You can now use baseValue adapter on ValueAxis.
+
+## [4.7.13] - 2019-12-07
+
+### Fixed
+- Since last release only - min and max were not updated when scrolling chart with CategoryAxis.
+- Map could zoom to incorrect rectangle when using chart.zoomToRectangle() method.
+- DateAxis with groupData = true could hide series when zoomed in (when using big count of baseInterval, a very rare scenario).
+- Tooltips of stacked series could show up in incorrect order in FireFox.
+- Horizontal cone series could cut off part of the cone.
+- If series were prehidden initially and shown later, the min/max was not adjusted.
+- Grid/fills of the axis set as above were in wrong positions on stacked axes charts.
+- ForceDirectedSeries now behaves better when nodes are hidden.
+- In some cases connect = false set on StepLineSeries resulted error.
+- If zoom-out button was initially disabled and enabled later, it was not shown.
+
+### Added
+- FunnelSeries ticks now will have horizontal part, consistent with PieSeries.
+- heatLegend now supports reversedOrder = true.
+- You can now set custom tooltipText on CategoryAxis.
+
+
+## [4.7.12] - 2019-12-04
+
+### Fixed
+- Export menu was still shown data download options for HTML and PDF even if chart had no data.
+- 3D columns with horizontally or vertically stacked axes were not positioned properly.
+- Setting tooltipText on MapLine resulted stack overflow when hovered over line.
+- Force-directed links were not showing tooltips.
+- coordinateToPosition of AxisRendererY was not working properly if axis was zoomed-in.
+- Value axes of a XY chart might appear zoomed-in after chart.invalidateData() was called or after series were added to the chart after init.
+
+### Added
+- horizontalMouseWheelBehavior with options "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | "none" added to XYChart. Will work with both horizontal scrollers (if available) and two finger-horizontal swipe on the touchpad.
+- centerMapOnZoomOut added to MapChart, with default value true. 
+
+
+## [4.7.11] - 2019-11-26
+
+### Fixed
+- Visual glitch with `ColumnSeries3D` used in a stacked axis scenario fixed.
+- `PercentSeries` was sometimes jumping over 2 colors in `ColorSet`.
+- Fixed possible compilation issues with some configurations.
+
+
 ## [4.7.10] - 2019-11-15
 
 ### Added
