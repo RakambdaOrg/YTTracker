@@ -4,7 +4,6 @@
 
 |Package|Copyright (c)|License|
 |-------|-------------|-------|
-|CSS Element Queries|Marc J. Schmidt|[License](https://github.com/marcj/css-element-queries/blob/master/LICENSE)|
 |canvg|Gabe Lerner|[License](https://github.com/canvg/canvg/blob/master/LICENSE)|
 |d3-geo|Mike Bostock|[License](https://github.com/d3/d3-geo/blob/master/LICENSE)|
 |d3-geo-projection|Mike Bostock|[License](https://github.com/d3/d3-geo-projection/blob/master/LICENSE)|
@@ -21,3 +20,4 @@
 |-------|-------------|-------|
 |d3-force|Mike Bostock|[License](https://github.com/d3/d3-force/blob/master/LICENSE)|
 |regression-js|Tom Alexander|[License](https://github.com/Tom-Alexander/regression-js/blob/master/LICENSE)|
+|venn.js|Ben Frederickson|[License](https://github.com/benfred/venn.js/blob/master/LICENSE)
