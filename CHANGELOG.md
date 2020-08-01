@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.6] - 2020-08-01
+
+- Update dependencies
+
 ## [2.2.4] - 2019-12-13
 
 - Update Amcharts to 4.7.14.
