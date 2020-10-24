@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.3.0] - Upcoming
+## [2.3.0] - 2020-10-24
 
 - Update dependencies
 - Exporting config asks where to save it
