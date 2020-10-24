@@ -56,15 +56,15 @@ const YTT_DOM_SPLITTER = '@';
  * @constructor
  */
 function YTTDay(count = 0, real = 0, total = 0) {
-    if (count && typeof count === 'object') {
-        this[YTT_DATA_COUNT] = (count[YTT_DATA_COUNT] || 0);
-        this[YTT_DATA_WATCHED] = new YTTDuration(count[YTT_DATA_WATCHED]);
-        this[YTT_DATA_OPENED] = new YTTDuration(count[YTT_DATA_OPENED]);
-    } else {
-        this[YTT_DATA_COUNT] = count || 0;
-        this[YTT_DATA_WATCHED] = new YTTDuration(YTT_DATA_WATCHED, real);
-        this[YTT_DATA_OPENED] = new YTTDuration(YTT_DATA_OPENED, total);
-    }
+	if (count && typeof count === 'object') {
+		this[YTT_DATA_COUNT] = (count[YTT_DATA_COUNT] || 0);
+		this[YTT_DATA_WATCHED] = new YTTDuration(count[YTT_DATA_WATCHED]);
+		this[YTT_DATA_OPENED] = new YTTDuration(count[YTT_DATA_OPENED]);
+	} else {
+		this[YTT_DATA_COUNT] = count || 0;
+		this[YTT_DATA_WATCHED] = new YTTDuration(YTT_DATA_WATCHED, real);
+		this[YTT_DATA_OPENED] = new YTTDuration(YTT_DATA_OPENED, total);
+	}
 }
 
 /**
@@ -73,7 +73,7 @@ function YTTDay(count = 0, real = 0, total = 0) {
  * @returns {number} The count of videos.
  */
 YTTDay.prototype.getCount = function () {
-    return this[YTT_DATA_COUNT];
+	return this[YTT_DATA_COUNT];
 };
 /**
  * Get the watched duration for this day.
@@ -81,7 +81,7 @@ YTTDay.prototype.getCount = function () {
  * @returns {YTTDuration} The duration.
  */
 YTTDay.prototype.getWatchedDuration = function () {
-    return this[YTT_DATA_WATCHED];
+	return this[YTT_DATA_WATCHED];
 };
 /**
  * Get the opened duration for this day.
@@ -89,7 +89,7 @@ YTTDay.prototype.getWatchedDuration = function () {
  * @returns {YTTDuration} The duration.
  */
 YTTDay.prototype.getOpenedDuration = function () {
-    return this[YTT_DATA_OPENED];
+	return this[YTT_DATA_OPENED];
 };
 /**
  * Add a duration to this day.
@@ -97,11 +97,11 @@ YTTDay.prototype.getOpenedDuration = function () {
  * @param {YTTDuration} duration The duration to add.
  */
 YTTDay.prototype.addDuration = function (duration) {
-    if (duration.type === YTT_DATA_WATCHED) {
-        this[YTT_DATA_WATCHED] = this[YTT_DATA_WATCHED].addDuration(duration);
-    } else if (duration.type === YTT_DATA_OPENED) {
-        this[YTT_DATA_OPENED] = this[YTT_DATA_OPENED].addDuration(duration);
-    }
+	if (duration.type === YTT_DATA_WATCHED) {
+		this[YTT_DATA_WATCHED] = this[YTT_DATA_WATCHED].addDuration(duration);
+	} else if (duration.type === YTT_DATA_OPENED) {
+		this[YTT_DATA_OPENED] = this[YTT_DATA_OPENED].addDuration(duration);
+	}
 };
 /**
  * Add a video count to this day.
@@ -109,7 +109,7 @@ YTTDay.prototype.addDuration = function (duration) {
  * @param {int} amount The number of videos to add.
  */
 YTTDay.prototype.addCount = function (amount) {
-    this[YTT_DATA_COUNT] = this[YTT_DATA_COUNT] + amount;
+	this[YTT_DATA_COUNT] = this[YTT_DATA_COUNT] + amount;
 };
 
 /**
@@ -122,21 +122,21 @@ YTTDay.prototype.addCount = function (amount) {
  * @constructor
  */
 function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0, days = 0) {
-    if (type && typeof type === 'object') {
-        this.milliseconds = (type.milliseconds || 0);
-        this.seconds = (type.seconds || 0);
-        this.minutes = (type.minutes || 0);
-        this.hours = (type.hours || 0);
-        this.days = (type.days || 0);
-        this.type = type.type;
-    } else {
-        this.milliseconds = milliseconds;
-        this.seconds = seconds;
-        this.minutes = minutes;
-        this.hours = hours;
-        this.days = days;
-        this.type = type;
-    }
+	if (type && typeof type === 'object') {
+		this.milliseconds = (type.milliseconds || 0);
+		this.seconds = (type.seconds || 0);
+		this.minutes = (type.minutes || 0);
+		this.hours = (type.hours || 0);
+		this.days = (type.days || 0);
+		this.type = type.type;
+	} else {
+		this.milliseconds = milliseconds;
+		this.seconds = seconds;
+		this.minutes = minutes;
+		this.hours = hours;
+		this.days = days;
+		this.type = type;
+	}
 }
 
 /**
@@ -145,21 +145,21 @@ function YTTDuration(type, milliseconds = 0, seconds = 0, minutes = 0, hours = 0
  * @returns {number} The number of milliseconds.
  */
 YTTDuration.prototype.getAsMilliseconds = function () {
-    return (((((this.days || 0) * 24 + (this.hours || 0)) * 60 + (this.minutes || 0)) * 60 + (this.seconds || 0)) * 1000 + (this.milliseconds || 0)) || 0;
+	return (((((this.days || 0) * 24 + (this.hours || 0)) * 60 + (this.minutes || 0)) * 60 + (this.seconds || 0)) * 1000 + (this.milliseconds || 0)) || 0;
 };
 /**
  * Normalize the internal values.
  */
 YTTDuration.prototype.normalize = function () {
-    if (this.getAsMilliseconds() <= 0) {
-        this.milliseconds = 0;
-        this.seconds = 0;
-        this.minutes = 0;
-        this.hours = 0;
-        this.days = 0;
-        return;
-    }
-    this.addDuration(new YTTDuration(''));
+	if (this.getAsMilliseconds() <= 0) {
+		this.milliseconds = 0;
+		this.seconds = 0;
+		this.minutes = 0;
+		this.hours = 0;
+		this.days = 0;
+		return;
+	}
+	this.addDuration(new YTTDuration(''));
 };
 /**
  * Add a duration to this one.
@@ -167,15 +167,15 @@ YTTDuration.prototype.normalize = function () {
  * @param {YTTDuration} duration The duration to add.
  */
 YTTDuration.prototype.addDuration = function (duration) {
-    this.milliseconds = this.milliseconds + duration.milliseconds;
-    this.seconds = this.seconds + duration.seconds + Math.floor(this.milliseconds / 1000.0);
-    this.milliseconds %= 1000;
-    this.minutes = this.minutes + duration.minutes + Math.floor(this.seconds / 60.0);
-    this.seconds %= 60;
-    this.hours = this.hours + duration.hours + Math.floor(this.minutes / 60.0);
-    this.minutes %= 60;
-    this.days = this.days + duration.days + Math.floor(this.hours / 24.0);
-    this.hours %= 24;
+	this.milliseconds = this.milliseconds + duration.milliseconds;
+	this.seconds = this.seconds + duration.seconds + Math.floor(this.milliseconds / 1000.0);
+	this.milliseconds %= 1000;
+	this.minutes = this.minutes + duration.minutes + Math.floor(this.seconds / 60.0);
+	this.seconds %= 60;
+	this.hours = this.hours + duration.hours + Math.floor(this.minutes / 60.0);
+	this.minutes %= 60;
+	this.days = this.days + duration.days + Math.floor(this.hours / 24.0);
+	this.hours %= 24;
 };
 /**
  * Get this duration as a string.
@@ -184,27 +184,27 @@ YTTDuration.prototype.addDuration = function (duration) {
  * @returns {string} The duration.
  */
 YTTDuration.prototype.getAsString = function (showMillisec = false) {
-    this.normalize();
-    let text = '';
-    if (this.days) {
-        text += `${this.days}D `;
-    }
-    if (this.hours) {
-        text += `${this.hours}H `;
-    }
-    if (this.minutes) {
-        text += `${this.minutes}M `;
-    }
-    if (this.seconds) {
-        text += `${this.seconds}S `;
-    }
-    if (showMillisec) {
-        text += `${this.milliseconds}MS `;
-    }
-    if (text === '') {
-        return '0S';
-    }
-    return text;
+	this.normalize();
+	let text = '';
+	if (this.days) {
+		text += `${this.days}D `;
+	}
+	if (this.hours) {
+		text += `${this.hours}H `;
+	}
+	if (this.minutes) {
+		text += `${this.minutes}M `;
+	}
+	if (this.seconds) {
+		text += `${this.seconds}S `;
+	}
+	if (showMillisec) {
+		text += `${this.milliseconds}MS `;
+	}
+	if (text === '') {
+		return '0S';
+	}
+	return text;
 };
 
 /**
@@ -213,11 +213,11 @@ YTTDuration.prototype.getAsString = function (showMillisec = false) {
  * @returns {boolean} True if lap year, false else.
  */
 Date.prototype.isLeapYear = function () {
-    const year = this.getFullYear();
-    if ((year & 3) !== 0) {
-        return false;
-    }
-    return ((year % 100) !== 0 || (year % 400) === 0);
+	const year = this.getFullYear();
+	if ((year & 3) !== 0) {
+		return false;
+	}
+	return ((year % 100) !== 0 || (year % 400) === 0);
 };
 /**
  * Get the number of the day in the year.
@@ -225,14 +225,14 @@ Date.prototype.isLeapYear = function () {
  * @returns {int} The day number.
  */
 Date.prototype.getDayOfYear = function () {
-    const dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-    const mn = this.getMonth();
-    const dn = this.getDate();
-    let dayOfYear = dayCount[mn] + dn;
-    if (mn > 1 && this.isLeapYear()) {
-        dayOfYear++;
-    }
-    return dayOfYear;
+	const dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+	const mn = this.getMonth();
+	const dn = this.getDate();
+	let dayOfYear = dayCount[mn] + dn;
+	if (mn > 1 && this.isLeapYear()) {
+		dayOfYear++;
+	}
+	return dayOfYear;
 };
 
 
@@ -243,18 +243,18 @@ Date.prototype.getDayOfYear = function () {
  * @return {string}
  */
 function YTTGenUUID() {
-    const lut = [];
-    for (let i = 0; i < 256; i++) {
-        lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
-    }
-    const d0 = Math.random() * 0xffffffff | 0;
-    const d1 = Math.random() * 0xffffffff | 0;
-    const d2 = Math.random() * 0xffffffff | 0;
-    const d3 = Math.random() * 0xffffffff | 0;
-    return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + '-' +
-        lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + '-' + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + '-' +
-        lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + '-' + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
-        lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
+	const lut = [];
+	for (let i = 0; i < 256; i++) {
+		lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
+	}
+	const d0 = Math.random() * 0xffffffff | 0;
+	const d1 = Math.random() * 0xffffffff | 0;
+	const d2 = Math.random() * 0xffffffff | 0;
+	const d3 = Math.random() * 0xffffffff | 0;
+	return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + '-' +
+		lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + '-' + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + '-' +
+		lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + '-' + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
+		lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
 }
 
 /**
@@ -265,62 +265,62 @@ function YTTGenUUID() {
  * @return {int} 1 if v1 is greater, -1 if lower, 0 if equals.
  */
 function YTTCompareVersion(v1, v2) {
-    if (v2 === undefined) {
-        return 1;
-    }
-    const v1parts = v1.split(/[.-]/);
-    const v2parts = v2.split(/[.-]/);
+	if (v2 === undefined) {
+		return 1;
+	}
+	const v1parts = v1.split(/[.-]/);
+	const v2parts = v2.split(/[.-]/);
 
-    function compareParts(v1parts, v2parts) {
-        for (let i = 0; i < v1parts.length; ++i) {
-            if (v2parts.length === i) {
-                return 1;
-            }
+	function compareParts(v1parts, v2parts) {
+		for (let i = 0; i < v1parts.length; ++i) {
+			if (v2parts.length === i) {
+				return 1;
+			}
 
-            let v1part = parseInt(v1parts[i]);
-            let v2part = parseInt(v2parts[i]);
-            const v1part_is_string = !(v1part === v1part);
-            const v2part_is_string = !(v2part === v2part);
-            v1part = v1part_is_string ? v1parts[i] : v1part;
-            v2part = v2part_is_string ? v2parts[i] : v2part;
+			let v1part = parseInt(v1parts[i]);
+			let v2part = parseInt(v2parts[i]);
+			const v1part_is_string = !(v1part === v1part);
+			const v2part_is_string = !(v2part === v2part);
+			v1part = v1part_is_string ? v1parts[i] : v1part;
+			v2part = v2part_is_string ? v2parts[i] : v2part;
 
-            if (v1part_is_string === v2part_is_string) {
-                if (v1part_is_string === false) {
-                    if (v1part > v2part) {
-                        return 1;
-                    } else if (v1part < v2part) {
-                        return -1;
-                    }
-                } else {
-                    const v1subparts = v1part.match(/[a-zA-Z]+|[0-9]+/g);
-                    const v2subparts = v2part.match(/[a-zA-Z]+|[0-9]+/g);
-                    if ((v1subparts.length === 1) && (v2subparts.length === 1)) {
-                        v1part = v1subparts[0];
-                        v2part = v2subparts[0];
-                        if (v1part === v2part) {
-                            continue;
-                        } else if (v1part > v2part) {
-                            return 1;
-                        } else {
-                            return -1;
-                        }
-                    }
-                    const result = compareParts(v1subparts, v2subparts);
-                    if (result !== 0) {
-                        return result;
-                    }
-                }
-            } else {
-                return v2part_is_string ? 1 : -1;
-            }
-        }
-        if (v1parts.length !== v2parts.length) {
-            return -1;
-        }
-        return 0;
-    }
+			if (v1part_is_string === v2part_is_string) {
+				if (v1part_is_string === false) {
+					if (v1part > v2part) {
+						return 1;
+					} else if (v1part < v2part) {
+						return -1;
+					}
+				} else {
+					const v1subparts = v1part.match(/[a-zA-Z]+|[0-9]+/g);
+					const v2subparts = v2part.match(/[a-zA-Z]+|[0-9]+/g);
+					if ((v1subparts.length === 1) && (v2subparts.length === 1)) {
+						v1part = v1subparts[0];
+						v2part = v2subparts[0];
+						if (v1part === v2part) {
+							continue;
+						} else if (v1part > v2part) {
+							return 1;
+						} else {
+							return -1;
+						}
+					}
+					const result = compareParts(v1subparts, v2subparts);
+					if (result !== 0) {
+						return result;
+					}
+				}
+			} else {
+				return v2part_is_string ? 1 : -1;
+			}
+		}
+		if (v1parts.length !== v2parts.length) {
+			return -1;
+		}
+		return 0;
+	}
 
-    return compareParts(v1parts, v2parts);
+	return compareParts(v1parts, v2parts);
 }
 
 /**
@@ -330,8 +330,8 @@ function YTTCompareVersion(v1, v2) {
  * @return {string} The config key.
  */
 function YTTGetDayConfigKey(now = null) {
-    now = now || new Date();
-    return `day${now.getDayOfYear()}${now.getFullYear()}`;
+	now = now || new Date();
+	return `day${now.getDayOfYear()}${now.getFullYear()}`;
 }
 
 /**
@@ -341,14 +341,14 @@ function YTTGetDayConfigKey(now = null) {
  * @return {string} The date as YYY-MM-DD.
  */
 function YTTGetDateString(time) {
-    if (!time) {
-        return '';
-    }
-    const date = new Date(time);
-    const y = date.getFullYear();
-    const m = `0${date.getMonth() + 1}`.slice(-2);
-    const d = `0${date.getDate() + 1}`.slice(-2);
-    return `${y}-${m}-${d}`;
+	if (!time) {
+		return '';
+	}
+	const date = new Date(time);
+	const y = date.getFullYear();
+	const m = `0${date.getMonth() + 1}`.slice(-2);
+	const d = `0${date.getDate() + 1}`.slice(-2);
+	return `${y}-${m}-${d}`;
 }
 
 /**
@@ -358,11 +358,11 @@ function YTTGetDateString(time) {
  * @returns {Date} A date object for the given date string.
  */
 function YTTGetDateFromDay(str) {
-    const year = parseFloat(str.substring(str.length - 4));
-    const day = parseFloat(str.substring(0, str.length - 4));
-    const date = new Date(year, 0);
-    date.setDate(day);
-    return date;
+	const year = parseFloat(str.substring(str.length - 4));
+	const day = parseFloat(str.substring(0, str.length - 4));
+	const date = new Date(year, 0);
+	date.setDate(day);
+	return date;
 }
 
 /**
@@ -373,9 +373,9 @@ function YTTGetDateFromDay(str) {
  * @return {number} The number of difference days, negative if base if before test.
  */
 function YTTCompareConfigDate(base, test) {
-    const baseObj = YTTConvertConfigDateToObject(base);
-    const testObj = YTTConvertConfigDateToObject(test);
-    return testObj.year !== baseObj.year ? (testObj.year - baseObj.year) * 365 : testObj.day - baseObj.day;
+	const baseObj = YTTConvertConfigDateToObject(base);
+	const testObj = YTTConvertConfigDateToObject(test);
+	return testObj.year !== baseObj.year ? (testObj.year - baseObj.year) * 365 : testObj.day - baseObj.day;
 }
 
 /**
@@ -384,15 +384,15 @@ function YTTCompareConfigDate(base, test) {
  * @returns {{year: number, day: number}}
  */
 function YTTConvertConfigDateToObject(date) {
-    let year;
-    let day = 0;
-    if (date.length > 4) {
-        year = parseFloat(date.toString().substring(date.toString().length - 4));
-        day = parseFloat(date.toString().substring(0, date.toString().length - 4));
-    } else {
-        year = parseFloat(date.toString());
-    }
-    return {year: year, day: day};
+	let year;
+	let day = 0;
+	if (date.length > 4) {
+		year = parseFloat(date.toString().substring(date.toString().length - 4));
+		day = parseFloat(date.toString().substring(0, date.toString().length - 4));
+	} else {
+		year = parseFloat(date.toString());
+	}
+	return {year: year, day: day};
 }
 
 /**
@@ -401,7 +401,7 @@ function YTTConvertConfigDateToObject(date) {
  * @param {string} text The message to log.
  */
 function YTTLog(text) {
-    YTTMessage(YTT_LOG_EVENT, text);
+	YTTMessage(YTT_LOG_EVENT, text);
 }
 
 /**
@@ -411,13 +411,13 @@ function YTTLog(text) {
  * @return {Promise<void>}
  */
 function YTTConfigAddInArray(key, valueToAdd) {
-    return YTTGetConfig(key).then(conf => {
-        if (!conf[key]) {
-            conf[key] = [];
-        }
-        conf[key] = conf[key].concat(valueToAdd);
-        return YTTSetConfig(conf);
-    });
+	return YTTGetConfig(key).then(conf => {
+		if (!conf[key]) {
+			conf[key] = [];
+		}
+		conf[key] = conf[key].concat(valueToAdd);
+		return YTTSetConfig(conf);
+	});
 }
 
 /**
@@ -425,12 +425,12 @@ function YTTConfigAddInArray(key, valueToAdd) {
  * @returns {Promise<Object>} A promise containing the config.
  */
 function YTTGetConfigForExport() {
-    return YTTGetConfig().then(config => {
-        if (YTT_CONFIG_DROPBOX_ACCESS_TOKEN in config) {
-            delete config[YTT_CONFIG_DROPBOX_ACCESS_TOKEN];
-        }
-        return config;
-    });
+	return YTTGetConfig().then(config => {
+		if (YTT_CONFIG_DROPBOX_ACCESS_TOKEN in config) {
+			delete config[YTT_CONFIG_DROPBOX_ACCESS_TOKEN];
+		}
+		return config;
+	});
 }
 
 /**
@@ -439,12 +439,12 @@ function YTTGetConfigForExport() {
  * @returns {Promise<string>} A promise with the result URL (callback).
  */
 function YTTLaunchWebAuthFlow(details) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => {
-            chrome.identity.launchWebAuthFlow(details, resolve);
-        });
-    }
-    return browser.identity.launchWebAuthFlow(details);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => {
+			chrome.identity.launchWebAuthFlow(details, resolve);
+		});
+	}
+	return browser.identity.launchWebAuthFlow(details);
 }
 
 /**
@@ -453,10 +453,10 @@ function YTTLaunchWebAuthFlow(details) {
  * @returns {string} The URL to redirect to.
  */
 function YTTGetRedirectURL(path) {
-    if (typeof browser === 'undefined') {
-        return chrome.identity.getRedirectURL(path);
-    }
-    return browser.identity.getRedirectURL(path);
+	if (typeof browser === 'undefined') {
+		return chrome.identity.getRedirectURL(path);
+	}
+	return browser.identity.getRedirectURL(path);
 }
 
 /**
@@ -465,10 +465,10 @@ function YTTGetRedirectURL(path) {
  * @return {Promise<chrome.windows.Window|browser.windows.Window|undefined>}
  */
 function YTTOpenWindowURL(data) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.windows.create(data, resolve));
-    }
-    return browser.windows.create(data);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.windows.create(data, resolve));
+	}
+	return browser.windows.create(data);
 }
 
 /**
@@ -478,10 +478,10 @@ function YTTOpenWindowURL(data) {
  * @return {Promise<void>}
  */
 function YTTSetConfig(config) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.storage.local.set(config, resolve));
-    }
-    return browser.storage.local.set(config);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.storage.local.set(config, resolve));
+	}
+	return browser.storage.local.set(config);
 }
 
 /**
@@ -490,10 +490,10 @@ function YTTSetConfig(config) {
  * @return {Promise<chrome.tabs.Tab|browser.tabs.Tab>}
  */
 function YTTOpenTabURL(data) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.tabs.create(data, resolve));
-    }
-    return browser.tabs.create(data);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.tabs.create(data, resolve));
+	}
+	return browser.tabs.create(data);
 }
 
 /**
@@ -501,10 +501,10 @@ function YTTOpenTabURL(data) {
  * @return {Promise<void>}
  */
 function YTTOpenOptionsPage() {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.runtime.openOptionsPage(resolve));
-    }
-    return browser.runtime.openOptionsPage();
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.runtime.openOptionsPage(resolve));
+	}
+	return browser.runtime.openOptionsPage();
 }
 
 /**
@@ -513,7 +513,7 @@ function YTTOpenOptionsPage() {
  * @return {string}
  */
 function YTTGetBrowser() {
-    return typeof browser === 'undefined' ? 'Chrome' : 'Firefox';
+	return typeof browser === 'undefined' ? 'Chrome' : 'Firefox';
 }
 
 /**
@@ -523,10 +523,10 @@ function YTTGetBrowser() {
  * @return {string}
  */
 function YTTGetRuntimeURL(path) {
-    if (typeof browser === 'undefined') {
-        return chrome.runtime.getURL(path);
-    }
-    return browser.runtime.getURL(path);
+	if (typeof browser === 'undefined') {
+		return chrome.runtime.getURL(path);
+	}
+	return browser.runtime.getURL(path);
 }
 
 /**
@@ -536,10 +536,10 @@ function YTTGetRuntimeURL(path) {
  * @return {string}
  */
 function YTTGetURL(path) {
-    if (typeof browser === 'undefined') {
-        return chrome.extension.getURL(path);
-    }
-    return browser.extension.getURL(path);
+	if (typeof browser === 'undefined') {
+		return chrome.extension.getURL(path);
+	}
+	return browser.extension.getURL(path);
 }
 
 /**
@@ -548,10 +548,10 @@ function YTTGetURL(path) {
  * @return {string}
  */
 function YTTGetVersion() {
-    if (typeof browser === 'undefined') {
-        return chrome.runtime.getManifest().version;
-    }
-    return browser.runtime.getManifest().version;
+	if (typeof browser === 'undefined') {
+		return chrome.runtime.getManifest().version;
+	}
+	return browser.runtime.getManifest().version;
 }
 
 /**
@@ -560,11 +560,11 @@ function YTTGetVersion() {
  * @param {string} text The text to set.
  */
 function YTTSetBadge(text) {
-    if (typeof browser === 'undefined') {
-        chrome.browserAction.setBadgeText({text: text});
-    } else {
-        browser.browserAction.setBadgeText({text: text});
-    }
+	if (typeof browser === 'undefined') {
+		chrome.browserAction.setBadgeText({text: text});
+	} else {
+		browser.browserAction.setBadgeText({text: text});
+	}
 }
 
 /**
@@ -574,14 +574,14 @@ function YTTSetBadge(text) {
  * @param {*} value Its value.
  */
 function YTTMessage(type, value) {
-    let message = {};
-    message[YTT_MESSAGE_TYPE_KEY] = type;
-    message[YTT_MESSAGE_VALUE_KEY] = value;
-    if (typeof browser === 'undefined') {
-        chrome.runtime.sendMessage(message);
-    } else {
-        browser.runtime.sendMessage(message);
-    }
+	let message = {};
+	message[YTT_MESSAGE_TYPE_KEY] = type;
+	message[YTT_MESSAGE_VALUE_KEY] = value;
+	if (typeof browser === 'undefined') {
+		chrome.runtime.sendMessage(message);
+	} else {
+		browser.runtime.sendMessage(message);
+	}
 }
 
 /**
@@ -591,16 +591,16 @@ function YTTMessage(type, value) {
  * @return {Promise<string|undefined>}
  */
 function YTTSendNotification(notification) {
-    if (typeof browser === 'undefined') {
-        return new Promise((resolve, reject) => chrome.notifications.getPermissionLevel(function (permissionLevel) {
-            if (permissionLevel === 'granted') {
-                chrome.notifications.create('', notification, resolve);
-            } else {
-                reject(`Permission is ${permissionLevel}`);
-            }
-        }));
-    }
-    browser.notifications.create(notification);
+	if (typeof browser === 'undefined') {
+		return new Promise((resolve, reject) => chrome.notifications.getPermissionLevel(function (permissionLevel) {
+			if (permissionLevel === 'granted') {
+				chrome.notifications.create('', notification, resolve);
+			} else {
+				reject(`Permission is ${permissionLevel}`);
+			}
+		}));
+	}
+	browser.notifications.create(notification);
 }
 
 /**
@@ -609,10 +609,10 @@ function YTTSendNotification(notification) {
  * @return {Promise<void>}
  */
 function YTTClearSyncConfig() {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.storage.sync.clear(resolve));
-    }
-    return browser.storage.sync.clear();
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.storage.sync.clear(resolve));
+	}
+	return browser.storage.sync.clear();
 }
 
 /**
@@ -621,10 +621,10 @@ function YTTClearSyncConfig() {
  * @return {Promise<void>}
  */
 function YTTClearConfig() {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.storage.local.clear(resolve));
-    }
-    return browser.storage.local.clear();
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.storage.local.clear(resolve));
+	}
+	return browser.storage.local.clear();
 }
 
 /**
@@ -634,10 +634,10 @@ function YTTClearConfig() {
  * @return {Promise<void>}
  */
 function YTTRemoveConfig(keys) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.storage.local.remove(keys, resolve));
-    }
-    return browser.storage.local.remove(keys);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.storage.local.remove(keys, resolve));
+	}
+	return browser.storage.local.remove(keys);
 }
 
 /**
@@ -646,10 +646,10 @@ function YTTRemoveConfig(keys) {
  * @return {Promise<number|undefined>}
  */
 function YTTDownload(options) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.downloads.download(options, resolve));
-    }
-    return browser.downloads.download(options);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.downloads.download(options, resolve));
+	}
+	return browser.downloads.download(options);
 }
 
 /**
@@ -660,20 +660,21 @@ function YTTDownload(options) {
  * @return {Promise<chrome.downloads.DownloadDelta>}
  */
 function YTTDownloadObject(obj, name) {
-    const jsonStr = JSON.stringify(obj);
-    const blob = new Blob([jsonStr], {type: 'application/json'});
-    const value = URL.createObjectURL(blob);
-    return YTTDownload({
-        url: value,
-        filename: name
-    }).then(downloadId => {
-        return new Promise(resolve => (typeof browser === 'undefined' ? chrome : browser).downloads.onChanged.addListener(download => {
-            if (download.id === downloadId && (download.state && (download.state.current === 'interrupted' || download.state.current === 'complete'))) {
-                URL.revokeObjectURL(value);
-                resolve(download);
-            }
-        }));
-    });
+	const jsonStr = JSON.stringify(obj);
+	const blob = new Blob([jsonStr], {type: 'application/json'});
+	const value = URL.createObjectURL(blob);
+	return YTTDownload({
+		url: value,
+		filename: name,
+		saveAs: true
+	}).then(downloadId => {
+		return new Promise(resolve => (typeof browser === 'undefined' ? chrome : browser).downloads.onChanged.addListener(download => {
+			if (download.id === downloadId && (download.state && (download.state.current === 'interrupted' || download.state.current === 'complete'))) {
+				URL.revokeObjectURL(value);
+				resolve(download);
+			}
+		}));
+	});
 }
 
 /**
@@ -683,10 +684,10 @@ function YTTDownloadObject(obj, name) {
  * @return {Promise<{[p: string]: any}>}
  */
 function YTTGetSyncConfig(keys) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.storage.sync.get(keys, resolve));
-    }
-    return browser.storage.sync.get(keys);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.storage.sync.get(keys, resolve));
+	}
+	return browser.storage.sync.get(keys);
 }
 
 /**
@@ -696,8 +697,22 @@ function YTTGetSyncConfig(keys) {
  * @return {Promise<{[p: string]: any}>}
  */
 function YTTGetConfig(values) {
-    if (typeof browser === 'undefined') {
-        return new Promise(resolve => chrome.storage.local.get(values, resolve));
-    }
-    return browser.storage.local.get(values);
+	if (typeof browser === 'undefined') {
+		return new Promise(resolve => chrome.storage.local.get(values, resolve));
+	}
+	return browser.storage.local.get(values);
+}
+
+function YTTImportConfig(data) {
+	let dataObject;
+	try {
+		dataObject = JSON.parse(data);
+	} catch (err) {
+		alert('Corrupted file!');
+		return;
+	}
+	if (!confirm('This action will reset all your current data and replace it with the one in the file!\nAre you sure to continue?')) {
+		return;
+	}
+	YTTSetConfig(dataObject).then(() => location.reload());
 }

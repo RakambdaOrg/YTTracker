@@ -1,6 +1,6 @@
 {
   "name": "yttracker",
-  "version": "2.2.6",
+  "version": "2.3.0",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/RakSrinaNa/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://github.com/RakSrinaNa/YTTracker/blob/master/README.md",
@@ -21,30 +21,30 @@
     "removeTempDirectory": "node deploy/removeFile.js temp",
     "createTempDirectory": "node deploy/createDirectory.js temp",
     "copyIncludes": "node deploy/copyFolder.js includes temp",
+    "copyLibraries": "node deploy/copyFolder.js node_modules/bootstrap/dist temp/lib/bootstrap && node deploy/copyFolder.js node_modules/popper.js/dist temp/lib/popper.js && node deploy/copyFolder.js node_modules/dropbox/dist temp/lib/dropbox && node deploy/copyFolder.js node_modules/jquery/dist temp/lib/jquery",
     "replaceManifestVersion": "cross-var replace-in-file !!!VERSION!!! $npm_package_version temp/manifest.json",
     "removeUselessFilesForStores": "node deploy/removeUselessFilesForStores.js",
-    "chromeBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
-    "chromeBuildBeta": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js chrome temp && node deploy/copyFolder.js chromeBeta temp && npm run replaceManifestVersion",
+    "chromeBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
+    "chromeBuildBeta": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js chrome temp && node deploy/copyFolder.js chromeBeta temp && npm run replaceManifestVersion",
     "chromePackage": "npm run chromeBuild && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
     "chromePackageBeta": "npm run chromeBuildBeta && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtensionBeta.zip temp && npm run removeTempDirectory",
     "chromeRelease": "npm run chromePackage && npm run chromeSend && node deploy/removeFile.js chromeExtension.zip",
     "chromeSend": "webstore upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
-    "firefoxBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
+    "firefoxBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
     "firefoxPackage": "npm run firefoxBuild && npm run removeUselessFilesForStores && node deploy/zipFolder.js firefoxExtension.xpi temp && npm run removeTempDirectory",
     "firefoxClear": "rm firefoxExtension.xpi"
   },
   "devDependencies": {
-    "archiver": "^5.0.0",
+    "archiver": "^5.0.2",
     "chrome-webstore-upload-cli": "^1.2.0",
     "cross-var": "^1.1.0",
-    "eslint": "^7.6.0",
+    "eslint": "^7.12.0",
     "eslint-plugin-json": "^2.1.2",
-    "eslint-plugin-no-unsanitized": "^3.1.2",
+    "eslint-plugin-no-unsanitized": "^3.1.4",
     "fs-extra": "^9.0.1",
-    "replace-in-file": "^6.1.0",
-    "xo": "^0.32.1",
     "glob": "latest",
-    "dropbox": "^5.2.1"
+    "replace-in-file": "^6.1.0",
+    "xo": "^0.34.1"
   },
   "xo": {
     "envs": [
@@ -93,5 +93,10 @@
         }
       ]
     }
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.3",
+    "dropbox": "^7.2.1",
+    "jquery": "^3.5.1"
   }
 }

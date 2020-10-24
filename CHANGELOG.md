@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0] - Upcoming
+
+- Update dependencies
+- Exporting config asks where to save it
+- Import data from Dropbox
+
 ## [2.2.6] - 2020-08-01
 
 - Update dependencies

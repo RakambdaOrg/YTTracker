@@ -191,7 +191,8 @@ function playerStateChange(event) {
             vid: event[YTT_STATE_EVENT_VID_KEY],
             videoTime: event[YTT_STATE_EVENT_TIME_KEY]
         };
-    } else if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_WATCHED) {
+    }
+    else if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_WATCHED) {
         let activePlayer = activePlayers[event[YTT_STATE_EVENT_ID_KEY]];
         if (!activePlayer) {
             return;

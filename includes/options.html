@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>YTTracker settings</title>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
-    <script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="js/lib/Popper.js/popper.min.js"></script>
-    <script type="text/javascript" src="js/lib/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/popper.js/umd/popper.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/YTTUtils.js"></script>
     <script type="text/javascript" src="js/utils/dropboxUtils.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
-    <script type="text/javascript" src="js/lib/dropbox/dropbox-sdk.js" async></script>
+    <script type="text/javascript" src="lib/dropbox/Dropbox-sdk.min.js" async></script>
 </head>
 <body>
 <div class='container-fluid' style="margin-top:10px">
@@ -40,6 +40,18 @@
                 Export data to Dropbox
             </button>
             <small id="exportDropboxHelp" class="text-justify form-text text-muted">Export your data in a JSON file directly in your Dropbox. You can then import it back later (see <a target='_blank' href='https://github.com/RakSrinaNa/YTTracker/wiki/Import-Export'>the wiki</a>). Click <a href='#' id='dropboxDisconnect'>here</a> to forget the authentication.</small>
+        </div>
+        <div class='col form-group'>
+            <button type="button" class="btn btn-info btn-block" id="importDropboxButton" aria-describedby="importDropboxHelp">
+                Import data from Dropbox
+            </button>
+            <small id="importDropboxHelp" class="text-justify form-text text-muted">Import data previously exported on Dropbox. <span class='text-danger'>Be carefull, ALL data currently present will be wiped out and replaced by the data on Dropbox.</span></small>
+        </div>
+        <div class='col'>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col'>
         </div>
         <div class='col form-group'>
             <label class="btn btn-info btn-block" role='button' aria-describedby='importYoutubeFileHelp'>
