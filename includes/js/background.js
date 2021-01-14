@@ -83,11 +83,9 @@ function sendRequestsToAPI(requests) {
         $.ajax({
             url: `https://yttracker.mrcraftcod.fr/api/v2/${encodeURI(uuid)}/stats/add`,
             data: {
-                videoId: videoId,
                 type: type,
                 stat: duration.getAsMilliseconds(),
-                date: timeStr,
-                browser: YTTGetBrowser()
+                date: timeStr
             },
             method: 'POST',
             async: true,
