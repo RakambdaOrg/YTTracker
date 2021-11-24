@@ -10,6 +10,7 @@ const YTT_CONFIG_VERSION = 'YTT_Version';
 const YTT_CONFIG_IDS_WATCHED_KEY = 'YTT_IDS';
 const YTT_CONFIG_START_TIME_KEY = 'YTT_Start';
 const YTT_CONFIG_DROPBOX_ACCESS_TOKEN = 'YTT_Dropbox_Access_Token';
+const YTT_CONFIG_ACTIVE_PLAYERS = 'YTT_Active_Players';
 /**
  * @deprecated
  */
@@ -44,6 +45,8 @@ const YTT_DOM_PLAYER_INFOS = 'YTTPlayerInfos';
 const YTT_DOM_PLAYER_TIME_1 = 'YTTPlayerTime1';
 const YTT_DOM_PLAYER_TIME_2 = 'YTTPlayerTime2';
 const YTT_DOM_SPLITTER = '@';
+const YTT_MS_PER_DAY = 86400 * 1000;
+const YTT_MINIMUM_WATCH_THRESHOLD = 500; //0.5s
 
 
 /************************************* OBJECTS *************************************/
@@ -561,7 +564,7 @@ function YTTGetVersion() {
  */
 function YTTSetBadge(text) {
 	if (typeof browser === 'undefined') {
-		chrome.browserAction.setBadgeText({text: text});
+		chrome.action.setBadgeText({text: text});
 	} else {
 		browser.browserAction.setBadgeText({text: text});
 	}
@@ -601,18 +604,6 @@ function YTTSendNotification(notification) {
 		}));
 	}
 	browser.notifications.create(notification);
-}
-
-/**
- * Reset the synchronized configuration.
- *
- * @return {Promise<void>}
- */
-function YTTClearSyncConfig() {
-	if (typeof browser === 'undefined') {
-		return new Promise(resolve => chrome.storage.sync.clear(resolve));
-	}
-	return browser.storage.sync.clear();
 }
 
 /**
@@ -675,19 +666,6 @@ function YTTDownloadObject(obj, name) {
 			}
 		}));
 	});
-}
-
-/**
- * Get values from the configuration.
- *
- * @param {(string|string[])?} keys The values to get.
- * @return {Promise<{[p: string]: any}>}
- */
-function YTTGetSyncConfig(keys) {
-	if (typeof browser === 'undefined') {
-		return new Promise(resolve => chrome.storage.sync.get(keys, resolve));
-	}
-	return browser.storage.sync.get(keys);
 }
 
 /**

@@ -1,6 +1,6 @@
 {
   "name": "yttracker",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/RakSrinaNa/)",
   "description": "This extension will track your time on YouTube",
   "homepage": "https://github.com/RakSrinaNa/YTTracker/blob/master/README.md",
@@ -21,7 +21,7 @@
     "removeTempDirectory": "node deploy/removeFile.js temp",
     "createTempDirectory": "node deploy/createDirectory.js temp",
     "copyIncludes": "node deploy/copyFolder.js includes temp",
-    "copyLibraries": "node deploy/copyFolder.js node_modules/bootstrap/dist temp/lib/bootstrap && node deploy/copyFolder.js node_modules/popper.js/dist temp/lib/popper.js && node deploy/copyFolder.js node_modules/dropbox/dist temp/lib/dropbox && node deploy/copyFolder.js node_modules/jquery/dist temp/lib/jquery",
+    "copyLibraries": "node deploy/copyFolder.js node_modules/bootstrap/dist temp/lib/bootstrap && node deploy/copyFolder.js node_modules/@popperjs/core/dist/cjs/popper.js temp/lib/popper.js && node deploy/copyFolder.js node_modules/dropbox/dist temp/lib/dropbox && node deploy/copyFolder.js node_modules/jquery/dist temp/lib/jquery",
     "replaceManifestVersion": "cross-var replace-in-file !!!VERSION!!! $npm_package_version temp/manifest.json",
     "removeUselessFilesForStores": "node deploy/removeUselessFilesForStores.js",
     "chromeBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
@@ -95,6 +95,7 @@
     }
   },
   "dependencies": {
+    "@popperjs/core": "^2.10.2",
     "bootstrap": "^4.5.3",
     "dropbox": "^7.2.1",
     "jquery": "^3.5.1"

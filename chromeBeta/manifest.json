@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "YouTube Tracker Beta",
   "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
@@ -9,28 +9,35 @@
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-  "author": "MrCraftCod",
+  "author": "RakSrinaNa",
   "homepage_url": "https://github.com/RakSrinaNa/YTTracker",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgQG3/oewtkQuMHOb6RKaEYtGWgd4Iv7tYZnO/cdr8/FoBg26DpRM0tTBI1KDeF8I30yVpsKcNjWh6t86iL3P0yROKGuEyhUZIrJIitoROzxyiowscYtfAJFlzwo/dbGr4eEPMuOdzMvl5J7bNPaZGJoXAHYt5auAjJzI7ZQtSxRA+iv3PWFsR1nmNcIhRmV0wP2W43OtFAKclmXuB3YAbzCf42Mtb2oD8FjHpmLWcnHrYggMWr0CQidphB5b9xtx6kgTCSb2LaNfOv1Q9L9MVQbhWw+NPLMves4OltwK3D+0gPbI2ulizSo6CLEPLTGcpn8JE/Xuc/9cRR7q5Kf3WQIDAQAB",
   "permissions": [
-    "https://www.youtube.com/*",
-    "https://yttracker.mrcraftcod.fr/*",
     "storage",
     "downloads",
     "notifications",
     "unlimitedStorage",
     "identity"
   ],
+  "host_permissions": [
+    "https://youtube.com/*",
+    "https://www.youtube.com/*",
+    "https://yttracker.mrcraftcod.fr/*"
+  ],
   "options_page": "options.html",
-  "browser_action": {
-    "default_icon": "assets/icon128.png",
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "24": "assets/icon48.png",
+      "32": "assets/icon128.png"
+    },
     "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": [
-        "https://www.youtube.com/*",
-        "https://yttracker.mrcraftcod.fr/*"
+        "https://youtube.com/*",
+        "https://www.youtube.com/*"
       ],
       "js": [
         "lib/jquery/jquery.min.js",
@@ -42,16 +49,21 @@
     }
   ],
   "background": {
-    "scripts": [
-      "lib/jquery/jquery.min.js",
-      "js/YTTUtils.js",
-      "js/background.js"
-    ]
+    "service_worker": "service_worker.js"
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "web_accessible_resources": [
-    "js/YTTUtils.js",
-    "js/hookerUtils.js",
-    "js/hooker.js"
-  ]
+  "content_security_policy": {
+    "script-src": "self",
+    "object-src": "self"
+  },
+  "web_accessible_resources": [{
+    "resources": [
+      "js/YTTUtils.js",
+      "js/hookerUtils.js",
+      "js/hooker.js"
+    ],
+    "matches": [
+      "https://youtube.com/*",
+      "https://www.youtube.com/*"
+    ]
+  }]
 }
