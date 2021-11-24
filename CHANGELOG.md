@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.0] - 2021-11-24
+
+- Use manifest V3 for chrome
+
 ## [2.3.0] - 2020-10-24
 
 - Update dependencies
