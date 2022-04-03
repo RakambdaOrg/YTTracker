@@ -1,7 +1,7 @@
 Library used:
 
-jQuery from https://github.com/jquery/jquery/releases/tag/3.5.1
+jQuery from https://github.com/jquery/jquery/releases/tag/3.6.0
 Amcharts from https://github.com/amcharts/amcharts4/releases/tag/4.10.9
-Bootstrap from https://github.com/twbs/bootstrap/releases/tag/v4.5.3
+Bootstrap from https://github.com/twbs/bootstrap/releases/tag/v4.6.1
 Popper.js from https://github.com/popperjs/popper.js/releases/tag/v1.16.1
-DropboxSDK from https://github.com/dropbox/dropbox-sdk-js/releases/tag/v7.2.1
+DropboxSDK from https://github.com/dropbox/dropbox-sdk-js/releases/tag/v10.27.0
