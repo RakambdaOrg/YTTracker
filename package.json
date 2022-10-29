@@ -1,11 +1,11 @@
 {
   "name": "yttracker",
   "version": "3.0.1",
-  "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/RakSrinaNa/)",
+  "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/Rakambda/)",
   "description": "This extension will track your time on YouTube",
-  "homepage": "https://github.com/RakSrinaNa/YTTracker/blob/master/README.md",
-  "bugs": "https://github.com/RakSrinaNa/YTTracker/issues",
-  "repository": "github:RakSrinaNa/YTTracker",
+  "homepage": "https://github.com/Rakambda/YTTracker/blob/master/README.md",
+  "bugs": "https://github.com/Rakambda/YTTracker/issues",
+  "repository": "github:Rakambda/YTTracker",
   "license": "GNU GPLv3",
   "private": true,
   "files": [

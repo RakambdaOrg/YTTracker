@@ -14,8 +14,8 @@
       "id": "yttracker@mrcraftcod.fr"
     }
   },
-  "author": "MrCraftCod",
-  "homepage_url": "https://github.com/RakSrinaNa/YTTracker",
+  "author": "Rakambda",
+  "homepage_url": "https://github.com/Rakambda/YTTracker",
   "permissions": [
     "https://www.youtube.com/*",
     "https://yttracker.mrcraftcod.fr/*",
