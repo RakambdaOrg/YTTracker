@@ -18,7 +18,7 @@
   "homepage_url": "https://github.com/Rakambda/YTTracker",
   "permissions": [
     "https://www.youtube.com/*",
-    "https://yttracker.mrcraftcod.fr/*",
+    "https://yttracker.rakambda.fr/*",
     "storage",
     "downloads",
     "notifications",
@@ -38,7 +38,7 @@
     {
       "matches": [
         "https://www.youtube.com/*",
-        "https://yttracker.mrcraftcod.fr/*"
+        "https://yttracker.rakambda.fr/*"
       ],
       "js": [
         "lib/jquery/jquery.min.js",

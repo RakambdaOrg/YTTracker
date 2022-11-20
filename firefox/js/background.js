@@ -81,7 +81,7 @@ function sendRequestsToAPI(requests) {
         }
         const timeStr = timestampToStr(date);
         $.ajax({
-            url: `https://yttracker.mrcraftcod.fr/api/v2/${encodeURI(uuid)}/stats/add`,
+            url: `https://yttracker.rakambda.fr/api/v2/${encodeURI(uuid)}/stats/add`,
             data: {
                 type: type,
                 stat: duration.getAsMilliseconds(),

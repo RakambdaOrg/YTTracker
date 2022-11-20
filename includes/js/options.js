@@ -88,7 +88,7 @@ $(() => {
 		$('#validUsername').on('click', () => {
 			let newUsername = $('#username').val();
 			$.ajax({
-				url: `https://yttracker.mrcraftcod.fr/api/v2/${encodeURI(config[YTT_CONFIG_USERID])}/username`,
+				url: `https://yttracker.rakambda.fr/api/v2/${encodeURI(config[YTT_CONFIG_USERID])}/username`,
 				data: {
 					username: newUsername
 				},
@@ -118,7 +118,7 @@ $(() => {
 		$('#username').val(config[YTT_CONFIG_USERNAME] ? config[YTT_CONFIG_USERNAME] : '');
 
 		$.ajax({
-			url: `https://yttracker.mrcraftcod.fr/api/v2/${encodeURI(config[YTT_CONFIG_USERID])}/username`,
+			url: `https://yttracker.rakambda.fr/api/v2/${encodeURI(config[YTT_CONFIG_USERID])}/username`,
 			data: {},
 			method: 'GET',
 			success: data => {

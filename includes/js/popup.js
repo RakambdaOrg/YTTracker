@@ -10,7 +10,7 @@ $(function () {
 	});
 
 	$('#openOnlineStatsButton').on('click', function () {
-		YTTOpenTabURL({url: 'https://yttracker.mrcraftcod.fr/'});
+		YTTOpenTabURL({url: 'https://yttracker.rakambda.fr/'});
 	});
 
 	const todayKey = YTTGetDayConfigKey();

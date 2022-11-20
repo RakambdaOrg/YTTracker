@@ -34,7 +34,7 @@ function sendRequestsToAPI(requests) {
 			return true;
 		}
 		const timeStr = timestampToStr(date);
-		fetch(`https://yttracker.mrcraftcod.fr/api/v2/${encodeURI(uuid)}/stats/add`, {
+		fetch(`https://yttracker.rakambda.fr/api/v2/${encodeURI(uuid)}/stats/add`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

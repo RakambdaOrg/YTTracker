@@ -22,7 +22,7 @@
   "host_permissions": [
     "https://youtube.com/*",
     "https://www.youtube.com/*",
-    "https://yttracker.mrcraftcod.fr/*"
+    "https://yttracker.rakambda.fr/*"
   ],
   "options_page": "options.html",
   "action": {
