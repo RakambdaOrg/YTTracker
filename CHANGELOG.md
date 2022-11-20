@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.0.2] - 2022-11-20
+
+- Domain name change
 
 ## [3.0.1] - 2022-04-03
 
