@@ -652,8 +652,8 @@ function YTTDownload(options) {
  */
 function YTTDownloadObject(obj, name) {
 	const jsonStr = JSON.stringify(obj);
-	const blob = new Blob([jsonStr], {type: 'application/json'});
-	const value = URL.createObjectURL(blob);
+	const blob = btoa(jsonStr)
+	const value = 'data:application/json;base64,' + blob
 	return YTTDownload({
 		url: value,
 		filename: name,
@@ -661,7 +661,6 @@ function YTTDownloadObject(obj, name) {
 	}).then(downloadId => {
 		return new Promise(resolve => (typeof browser === 'undefined' ? chrome : browser).downloads.onChanged.addListener(download => {
 			if (download.id === downloadId && (download.state && (download.state.current === 'interrupted' || download.state.current === 'complete'))) {
-				URL.revokeObjectURL(value);
 				resolve(download);
 			}
 		}));
