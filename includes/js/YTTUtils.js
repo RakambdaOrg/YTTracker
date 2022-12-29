@@ -566,7 +566,7 @@ function YTTSetBadge(text) {
 	if (typeof browser === 'undefined') {
 		chrome.action.setBadgeText({text: text});
 	} else {
-		browser.browserAction.setBadgeText({text: text});
+		browser.action.setBadgeText({text: text});
 	}
 }
 
@@ -644,6 +644,19 @@ function YTTDownload(options) {
 }
 
 /**
+ * @param {string} json content
+ * @return {string}
+ */
+function YTTDownloadUrl(jsonStr) {
+	if (typeof browser === 'undefined') {
+		const blob = btoa(jsonStr);
+		return 'data:application/json;base64,' + blob;
+	}
+	const blob = new Blob([jsonStr], {type: 'application/json'});
+	return URL.createObjectURL(blob);
+}
+
+/**
  * Start the download of a file.
  *
  * @param {Object} obj The json of the json file.
@@ -652,8 +665,7 @@ function YTTDownload(options) {
  */
 function YTTDownloadObject(obj, name) {
 	const jsonStr = JSON.stringify(obj);
-	const blob = btoa(jsonStr)
-	const value = 'data:application/json;base64,' + blob
+	const value = YTTDownloadUrl(jsonStr);
 	return YTTDownload({
 		url: value,
 		filename: name,

@@ -11,8 +11,11 @@ function requestDropboxAccessToken() {
 		fetch
 	});
 	console.log('Requestion new Dropbox token');
-	const authUrl = client.auth.getAuthenticationUrl(YTTGetRedirectURL());
-	return YTTLaunchWebAuthFlow({url: authUrl, interactive: true})
+	const authUrl = client.auth.getAuthenticationUrl(YTTGetRedirectURL())
+		.then(authUrl => {
+			return {url: authUrl, interactive: true};
+		})
+		.then(options => YTTLaunchWebAuthFlow(options))
 		.then(urlReturned => {
 			if (urlReturned) {
 				const params = new URLSearchParams(new URL(urlReturned).hash.replace('#', ''));
@@ -69,7 +72,7 @@ function importSettingsFromDropbox() {
 		.then(client => {
 			client.filesListFolder({path: ''})
 				.then(files => files.result.entries)
-				.then(files => files.sort((a,b) => b.name.localeCompare(a.name))[0])
+				.then(files => files.sort((a, b) => b.name.localeCompare(a.name))[0])
 				.then(file => client.filesDownload({path: file.id}))
 				.then(file => file.result.fileBlob.text())
 				.then(file => YTTImportConfig(file))

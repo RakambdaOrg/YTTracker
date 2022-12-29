@@ -1,51 +1,3 @@
-const YTT_MS_PER_DAY = 86400 * 1000;
-const activePlayers = {};
-
-function setupExtension() {
-    YTTClearSyncConfig();
-    YTTGetConfig().then(conf => {
-        const newConfig = {};
-
-        if (!conf[YTT_CONFIG_USERID]) {
-            newConfig[YTT_CONFIG_USERID] = YTTGenUUID();
-        }
-
-        newConfig[YTT_CONFIG_DEBUG_KEY] = conf[YTT_CONFIG_DEBUG_KEY] || false;
-        newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
-        newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
-        newConfig[YTT_CONFIG_WEIRD_DATA_THRESHOLD] = conf[YTT_CONFIG_WEIRD_DATA_THRESHOLD] || 48 * 60 * 60 * 1000;
-
-        if (!conf[YTT_CONFIG_TOTAL_STATS_KEY] || conf[YTT_CONFIG_TOTAL_TIME_KEY] || conf[YTT_CONFIG_REAL_TIME_KEY]) {
-            const watchedDur = Object.keys(conf).filter(k => k.startsWith('day')).map(k => new YTTDay(conf[k])).map(c => c.getWatchedDuration()).reduce((acc, cv) => {
-                let t = new YTTDuration(acc);
-                t.addDuration(cv);
-                return t;
-            }, new YTTDuration(YTT_DATA_WATCHED));
-
-            const openedDur = Object.keys(conf).filter(k => k.startsWith('day')).map(k => new YTTDay(conf[k])).map(c => c.getOpenedDuration()).reduce((acc, cv) => {
-                let t = new YTTDuration(acc);
-                t.addDuration(cv);
-                return t;
-            }, new YTTDuration(YTT_DATA_OPENED));
-
-            const openedCount = Object.keys(conf).filter(k => k.startsWith('day')).map(k => new YTTDay(conf[k])).map(c => c.getCount()).reduce((acc, cv) => (acc || 0) + (cv || 0), 0);
-
-            let totalStats = new YTTDay();
-            totalStats.getOpenedDuration().addDuration(openedDur);
-            totalStats.getWatchedDuration().addDuration(watchedDur);
-            totalStats.addCount(openedCount);
-
-            newConfig[YTT_CONFIG_TOTAL_STATS_KEY] = totalStats;
-
-            YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY]);
-        }
-
-        YTTRemoveConfig(['YTTHanddrawn', 'YTTTheme']);
-
-        YTTSetConfig(newConfig);
-    });
-}
-
 /**
  * Send a request to the distant server.
  * Also retry to send again requests that previously failed.
@@ -80,28 +32,30 @@ function sendRequestsToAPI(requests) {
             return true;
         }
         const timeStr = timestampToStr(date);
-        $.ajax({
-            url: `https://yttracker.rakambda.fr/api/v2/${encodeURI(uuid)}/stats/add`,
-            data: {
+        fetch(`https://yttracker.rakambda.fr/api/v2/${encodeURI(uuid)}/stats/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
                 type: type,
                 stat: duration.getAsMilliseconds(),
                 date: timeStr
-            },
-            method: 'POST',
-            async: true,
-            error: () => {
-                notify(`Failed to send ${type} time to server`, `VideoID: ${videoId}\nDuration: ${duration.getAsString(true)}\nDate: ${timeStr}`);
-                console.error('Failed to send request to API', uuid, videoId, duration, date, type);
-                if (onFail) {
-                    onFail();
-                }
-            },
-            success: () => {
-                notify(`Sent ${type} time to server`, `VideoID: ${videoId}\nDuration: ${duration.getAsString(true)}\nDate: ${timeStr}`);
-                console.debug('Sent to API', uuid, videoId, duration, date, type);
-                if (onSuccess) {
-                    onSuccess();
-                }
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not OK');
+            }
+            notify(`Sent ${type} time to server`, `VideoID: ${videoId}\nDuration: ${duration.getAsString(true)}\nDate: ${timeStr}`);
+            console.debug('Sent to API', uuid, videoId, duration, date, type);
+            if (onSuccess) {
+                onSuccess();
+            }
+        }).catch(error => {
+            notify(`Failed to send ${type} time to server`, `VideoID: ${videoId}\nDuration: ${duration.getAsString(true)}\nDate: ${timeStr}`);
+            console.error('Failed to send request to API', uuid, videoId, duration, date, type);
+            if (onFail) {
+                onFail();
             }
         });
     }
@@ -175,33 +129,39 @@ function notify(title, text, force = false) {
 }
 
 /**
- * Called when the state of the player changed.
- * @param {Object} event The event of the change.
+ * @param {object} event The event of the change.
  */
-function playerStateChange(event) {
-    const MINIMUM_WATCH_THRESHOLD = 500; //0.5s
+function onVideoPlay(event) {
+    logDebug(`Started playing at ${event[YTT_STATE_EVENT_TIME_KEY]}s`);
+    YTTSetBadge('P');
+    YTTGetConfig([YTT_CONFIG_ACTIVE_PLAYERS]).then(config => {
+        config[YTT_CONFIG_ACTIVE_PLAYERS] = config[YTT_CONFIG_ACTIVE_PLAYERS] || {};
 
-    if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_PLAYING) {
-        logDebug(`Started playing at ${event[YTT_STATE_EVENT_TIME_KEY]}s`);
-        YTTSetBadge('P');
-        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = {
-            time: new Date(),
+        config[YTT_CONFIG_ACTIVE_PLAYERS][event[YTT_STATE_EVENT_ID_KEY]] = {
+            time: new Date().getTime(),
             vid: event[YTT_STATE_EVENT_VID_KEY],
             videoTime: event[YTT_STATE_EVENT_TIME_KEY]
         };
-    }
-    else if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_WATCHED) {
-        let activePlayer = activePlayers[event[YTT_STATE_EVENT_ID_KEY]];
+        YTTSetConfig(config);
+    });
+}
+
+/**
+ * @param {object} event The event of the change.
+ */
+function onVideoStop(event) {
+    YTTGetConfig([YTT_CONFIG_ACTIVE_PLAYERS]).then(config => {
+        let activePlayer = config[YTT_CONFIG_ACTIVE_PLAYERS][event[YTT_STATE_EVENT_ID_KEY]];
         if (!activePlayer) {
             return;
         }
-        activePlayers[event[YTT_STATE_EVENT_ID_KEY]] = null;
+        config[YTT_CONFIG_ACTIVE_PLAYERS][event[YTT_STATE_EVENT_ID_KEY]] = null;
         logDebug(`Ended playing at ${event[YTT_STATE_EVENT_TIME_KEY]}s`);
 
         const videoID = activePlayer['vid'];
         let size = 0;
-        for (const key in activePlayers) {
-            if (activePlayers.hasOwnProperty(key) && activePlayers[key] !== null) {
+        for (const key in config[YTT_CONFIG_ACTIVE_PLAYERS]) {
+            if (config[YTT_CONFIG_ACTIVE_PLAYERS].hasOwnProperty(key) && config[YTT_CONFIG_ACTIVE_PLAYERS][key] !== null) {
                 size++;
             }
         }
@@ -209,83 +169,97 @@ function playerStateChange(event) {
             YTTSetBadge('');
         }
 
-        let currentTime = new Date();
-        let watchedMilliseconds = currentTime - activePlayer['time'];
+        YTTSetConfig(config).then(() => {
+            let currentTime = new Date().getTime();
+            let watchedMilliseconds = currentTime - activePlayer['time'];
 
-        if (watchedMilliseconds > MINIMUM_WATCH_THRESHOLD) {
-            let startDayDate = new Date();
-            startDayDate.setHours(0, 0, 0, 0);
+            if (watchedMilliseconds > YTT_MINIMUM_WATCH_THRESHOLD) {
+                let startDayDate = new Date();
+                startDayDate.setHours(0, 0, 0, 0);
 
-            let msSinceThisMorning = currentTime - startDayDate;
-            let durationsInfo = {};
+                let msSinceThisMorning = currentTime - startDayDate.getTime();
+                let durationsInfo = {};
 
-            if (watchedMilliseconds > msSinceThisMorning) {
-                durationsInfo[YTTGetDayConfigKey()] = {
-                    date: currentTime.getTime(),
-                    duration: new YTTDuration(YTT_DATA_WATCHED, msSinceThisMorning)
-                };
-                watchedMilliseconds -= msSinceThisMorning;
-                let currentDay = startDayDate;
-                currentDay.setHours(23, 59, 59, 0);
-                while (watchedMilliseconds > 0) {
-                    currentDay.setTime(currentDay.getTime() - YTT_MS_PER_DAY);
-                    let dayKey = YTTGetDayConfigKey(currentDay);
-                    let watchedThisDay = Math.min(YTT_MS_PER_DAY, watchedMilliseconds);
-                    durationsInfo[dayKey] = {
-                        date: currentDay.getTime(),
-                        duration: new YTTDuration(YTT_DATA_WATCHED, watchedThisDay)
+                if (watchedMilliseconds > msSinceThisMorning) {
+                    durationsInfo[YTTGetDayConfigKey()] = {
+                        date: currentTime,
+                        duration: new YTTDuration(YTT_DATA_WATCHED, msSinceThisMorning)
                     };
-                    watchedMilliseconds -= watchedThisDay;
-                }
-            } else {
-                durationsInfo[YTTGetDayConfigKey()] = {
-                    date: currentTime.getTime(),
-                    duration: new YTTDuration(YTT_DATA_WATCHED, watchedMilliseconds)
-                };
-            }
-
-            YTTGetConfig([YTT_CONFIG_TOTAL_STATS_KEY, YTT_CONFIG_SHARE_ONLINE].concat(Object.keys(durationsInfo).filter(k => durationsInfo.hasOwnProperty(k)))).then(config => {
-                if (!config[YTT_CONFIG_TOTAL_STATS_KEY]) {
-                    config[YTT_CONFIG_TOTAL_STATS_KEY] = new YTTDay();
+                    watchedMilliseconds -= msSinceThisMorning;
+                    let currentDay = startDayDate;
+                    currentDay.setHours(23, 59, 59, 0);
+                    while (watchedMilliseconds > 0) {
+                        currentDay.setTime(currentDay.getTime() - YTT_MS_PER_DAY);
+                        let dayKey = YTTGetDayConfigKey(currentDay);
+                        let watchedThisDay = Math.min(YTT_MS_PER_DAY, watchedMilliseconds);
+                        durationsInfo[dayKey] = {
+                            date: currentDay.getTime(),
+                            duration: new YTTDuration(YTT_DATA_WATCHED, watchedThisDay)
+                        };
+                        watchedMilliseconds -= watchedThisDay;
+                    }
                 } else {
-                    config[YTT_CONFIG_TOTAL_STATS_KEY] = new YTTDay(config[YTT_CONFIG_TOTAL_STATS_KEY]);
+                    durationsInfo[YTTGetDayConfigKey()] = {
+                        date: currentTime,
+                        duration: new YTTDuration(YTT_DATA_WATCHED, watchedMilliseconds)
+                    };
                 }
 
-                Object.keys(durationsInfo).filter(k => durationsInfo.hasOwnProperty(k)).forEach(dayKey => {
-                    const durationInfo = durationsInfo[dayKey];
-                    const duration = durationInfo['duration'];
-                    const timestamp = durationInfo['date'];
-
-                    if (!config[dayKey]) {
-                        config[dayKey] = new YTTDay();
+                YTTGetConfig([YTT_CONFIG_TOTAL_STATS_KEY, YTT_CONFIG_SHARE_ONLINE].concat(Object.keys(durationsInfo).filter(k => durationsInfo.hasOwnProperty(k)))).then(config => {
+                    if (!config[YTT_CONFIG_TOTAL_STATS_KEY]) {
+                        config[YTT_CONFIG_TOTAL_STATS_KEY] = new YTTDay();
                     } else {
-                        config[dayKey] = new YTTDay(config[dayKey]);
+                        config[YTT_CONFIG_TOTAL_STATS_KEY] = new YTTDay(config[YTT_CONFIG_TOTAL_STATS_KEY]);
                     }
 
-                    config[YTT_CONFIG_TOTAL_STATS_KEY].getWatchedDuration().addDuration(duration);
-                    config[dayKey].getWatchedDuration().addDuration(duration);
+                    Object.keys(durationsInfo).filter(k => durationsInfo.hasOwnProperty(k)).forEach(dayKey => {
+                        const durationInfo = durationsInfo[dayKey];
+                        const duration = durationInfo['duration'];
+                        const timestamp = durationInfo['date'];
 
-                    logDebug(`Added real time: ${duration.getAsString(true)} for day ${new Date(timestamp)}`);
+                        if (!config[dayKey]) {
+                            config[dayKey] = new YTTDay();
+                        } else {
+                            config[dayKey] = new YTTDay(config[dayKey]);
+                        }
+
+                        config[YTT_CONFIG_TOTAL_STATS_KEY].getWatchedDuration().addDuration(duration);
+                        config[dayKey].getWatchedDuration().addDuration(duration);
+
+                        logDebug(`Added real time: ${duration.getAsString(true)} for day ${new Date(timestamp)}`);
+                    });
+
+                    YTTSetConfig(config).then(() => {
+                        if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
+                            sendRequestsToAPI(Object.keys(durationsInfo).filter(k => durationsInfo.hasOwnProperty(k)).map(dayKey => {
+                                const durationInfo = durationsInfo[dayKey];
+                                const duration = durationInfo['duration'];
+                                const timestamp = durationInfo['date'];
+
+                                return {
+                                    date: timestamp,
+                                    videoID: videoID,
+                                    type: 'watched',
+                                    duration: duration
+                                };
+                            }));
+                        }
+                    });
                 });
+            }
+        });
+    });
+}
 
-                YTTSetConfig(config).then(() => {
-                    if (config[YTT_CONFIG_SHARE_ONLINE] === true) {
-                        sendRequestsToAPI(Object.keys(durationsInfo).filter(k => durationsInfo.hasOwnProperty(k)).map(dayKey => {
-                            const durationInfo = durationsInfo[dayKey];
-                            const duration = durationInfo['duration'];
-                            const timestamp = durationInfo['date'];
-
-                            return {
-                                date: timestamp,
-                                videoID: videoID,
-                                type: 'watched',
-                                duration: duration
-                            };
-                        }));
-                    }
-                });
-            });
-        }
+/**
+ * Called when the state of the player changed.
+ * @param {object} event The event of the change.
+ */
+function onVideoEvent(event) {
+    if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_PLAYING) {
+        onVideoPlay(event);
+    } else if (event[YTT_STATE_EVENT_STATE_KEY] === YTT_STATE_EVENT_STATE_KEY_WATCHED) {
+        onVideoStop(event);
     }
 }
 
@@ -293,7 +267,7 @@ function playerStateChange(event) {
  * Called when a video is opened.
  * @param {Object} event The event of the opened video.
  */
-function setVideoDuration(event) {
+function onVideoOpened(event) {
     const TODAY_KEY = YTTGetDayConfigKey();
     YTTGetConfig([YTT_CONFIG_IDS_WATCHED_KEY, YTT_CONFIG_START_TIME_KEY, YTT_CONFIG_TOTAL_STATS_KEY, TODAY_KEY, YTT_CONFIG_SHARE_ONLINE]).then(config => {
         let key;
@@ -348,33 +322,78 @@ function setVideoDuration(event) {
 }
 
 /**
- * Init config.
+ * @param {any} request
+ * @param {MessageSender} sender
+ * @return {boolean | undefined}
  */
-YTTGetSyncConfig(null).then(config => {
-    if (config[YTT_CONFIG_USERID]) {
-        YTTSetConfig(config).then(setupExtension);
-    } else {
-        setupExtension();
-    }
-});
+function messageListener(request, sender) {
+    let requestType = request[YTT_MESSAGE_TYPE_KEY];
 
-const messageListener = (request, sender) => {
-    if (request[YTT_MESSAGE_TYPE_KEY] === YTT_LOG_EVENT) {
+    if (requestType === YTT_LOG_EVENT) {
         logDebug(request[YTT_MESSAGE_VALUE_KEY] || 'undefined');
-    } else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DOWNLOAD_EVENT) {
+    } else if (requestType === YTT_DOWNLOAD_EVENT) {
         const payload = request[YTT_MESSAGE_VALUE_KEY];
         YTTDownloadObject(payload[YTT_DOWNLOAD_EVENT_DATA_KEY], payload[YTT_DOWNLOAD_EVENT_NAME_KEY]).then(payload[YTT_DOWNLOAD_EVENT_CALLBACK_KEY]);
-    } else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_STATE_EVENT) {
+    } else if (requestType === YTT_STATE_EVENT) {
         request[YTT_MESSAGE_VALUE_KEY][YTT_STATE_EVENT_ID_KEY] = sender.tab.id;
-        playerStateChange(request[YTT_MESSAGE_VALUE_KEY]);
-    } else if (request[YTT_MESSAGE_TYPE_KEY] === YTT_DURATION_EVENT) {
+        onVideoEvent(request[YTT_MESSAGE_VALUE_KEY]);
+    } else if (requestType === YTT_DURATION_EVENT) {
         request[YTT_MESSAGE_VALUE_KEY][YTT_DURATION_EVENT_TABID_KEY] = sender.tab.id;
-        setVideoDuration(request[YTT_MESSAGE_VALUE_KEY]);
+        onVideoOpened(request[YTT_MESSAGE_VALUE_KEY]);
     }
-};
+}
 
 if (typeof browser === 'undefined') {
     chrome.runtime.onMessage.addListener(messageListener);
 } else {
     browser.runtime.onMessage.addListener(messageListener);
+    browser.runtime.onMessageExternal.addListener(messageListener);
 }
+
+function setupExtension() {
+    YTTGetConfig().then(conf => {
+        const newConfig = {};
+
+        if (!conf[YTT_CONFIG_USERID]) {
+            newConfig[YTT_CONFIG_USERID] = YTTGenUUID();
+        }
+
+        newConfig[YTT_CONFIG_ACTIVE_PLAYERS] = {};
+
+        newConfig[YTT_CONFIG_DEBUG_KEY] = conf[YTT_CONFIG_DEBUG_KEY] || false;
+        newConfig[YTT_CONFIG_FAILED_SHARE] = conf[YTT_CONFIG_FAILED_SHARE] || [];
+        newConfig[YTT_CONFIG_VERSION] = YTTGetVersion();
+        newConfig[YTT_CONFIG_WEIRD_DATA_THRESHOLD] = conf[YTT_CONFIG_WEIRD_DATA_THRESHOLD] || 48 * 60 * 60 * 1000;
+
+        if (!conf[YTT_CONFIG_TOTAL_STATS_KEY] || conf[YTT_CONFIG_TOTAL_TIME_KEY] || conf[YTT_CONFIG_REAL_TIME_KEY]) {
+            const watchedDur = Object.keys(conf).filter(k => k.startsWith('day')).map(k => new YTTDay(conf[k])).map(c => c.getWatchedDuration()).reduce((acc, cv) => {
+                let t = new YTTDuration(acc);
+                t.addDuration(cv);
+                return t;
+            }, new YTTDuration(YTT_DATA_WATCHED));
+
+            const openedDur = Object.keys(conf).filter(k => k.startsWith('day')).map(k => new YTTDay(conf[k])).map(c => c.getOpenedDuration()).reduce((acc, cv) => {
+                let t = new YTTDuration(acc);
+                t.addDuration(cv);
+                return t;
+            }, new YTTDuration(YTT_DATA_OPENED));
+
+            const openedCount = Object.keys(conf).filter(k => k.startsWith('day')).map(k => new YTTDay(conf[k])).map(c => c.getCount()).reduce((acc, cv) => (acc || 0) + (cv || 0), 0);
+
+            let totalStats = new YTTDay();
+            totalStats.getOpenedDuration().addDuration(openedDur);
+            totalStats.getWatchedDuration().addDuration(watchedDur);
+            totalStats.addCount(openedCount);
+
+            newConfig[YTT_CONFIG_TOTAL_STATS_KEY] = totalStats;
+
+            YTTRemoveConfig([YTT_CONFIG_TOTAL_TIME_KEY, YTT_CONFIG_REAL_TIME_KEY]);
+        }
+
+        YTTRemoveConfig(['YTTHanddrawn', 'YTTTheme']);
+
+        YTTSetConfig(newConfig);
+    });
+}
+
+setupExtension();

@@ -31,7 +31,7 @@ try {
   mapChart.geodata = am4geodata_continentsLow;
 }
 catch (e) {
-  mapChart.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest amcharts4 geodata and extract its contents into the same directory as your amCharts files."));
+  mapChart.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest amcharts geodata and extract its contents into the same directory as your amCharts files."));
 }
 
 mapChart.fontSize = 11;

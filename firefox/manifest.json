@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "YouTube Tracker",
   "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
@@ -9,30 +9,34 @@
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-  "applications": {
-    "gecko": {
-      "id": "yttracker@mrcraftcod.fr"
-    }
-  },
   "author": "Rakambda",
   "homepage_url": "https://github.com/Rakambda/YTTracker",
   "permissions": [
-    "https://www.youtube.com/*",
-    "https://yttracker.rakambda.fr/*",
     "storage",
-    "downloads",
-    "notifications",
     "unlimitedStorage",
     "identity"
+  ],
+  "optional_permissions": [
+    "notifications",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://youtube.com/*",
+    "https://www.youtube.com/*",
+    "https://yttracker.rakambda.fr/*"
   ],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
-  "browser_action": {
-    "default_icon": "assets/icon128.png",
-    "default_title": "YoutubeTracker",
-    "default_popup": "popup.html"
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "24": "assets/icon48.png",
+      "32": "assets/icon128.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "YoutubeTracker"
   },
   "content_scripts": [
     {
@@ -56,10 +60,22 @@
       "js/background.js"
     ]
   },
-  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "web_accessible_resources": [
-    "js/YTTUtils.js",
-    "js/hookerUtils.js",
-    "js/hooker.js"
+    {
+      "resources": [
+        "js/YTTUtils.js",
+        "js/hookerUtils.js",
+        "js/hooker.js"
+      ],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "extension_ids": [
+        "yttracker@mrcraftcod.fr"
+      ]
+    }
   ]
 }
