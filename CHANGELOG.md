@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.3] - 2022-12-29
+
+- Fix chrome export to file
+
 ## [3.0.2] - 2022-11-20
 
 - Domain name change
