@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.1.0] - 2022-12-29
+
+- Firefox manifest V3
+
 ## [3.0.3] - 2022-12-29
 
 - Fix chrome export to file

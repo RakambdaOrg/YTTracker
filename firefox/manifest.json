@@ -11,6 +11,12 @@
   },
   "author": "Rakambda",
   "homepage_url": "https://github.com/Rakambda/YTTracker",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "yttracker@mrcraftcod.fr",
+      "strict_min_version": "109.0"
+    }
+  },
   "permissions": [
     "storage",
     "unlimitedStorage",
@@ -57,7 +63,7 @@
     "scripts": [
       "lib/jquery/jquery.min.js",
       "js/YTTUtils.js",
-      "js/background.js"
+      "js/service_worker.js"
     ]
   },
   "content_security_policy": {
