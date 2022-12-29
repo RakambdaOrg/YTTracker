@@ -50,7 +50,7 @@ try {
   continentsSeries.geodata = am4geodata_continentsLow;
 }
 catch (e) {
-  continentsSeries.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest amcharts4 geodata and extract its contents into the same directory as your amCharts files."));
+  continentsSeries.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest amcharts geodata and extract its contents into the same directory as your amCharts files."));
 }
 
 continentsSeries.useGeodata = true;
@@ -106,7 +106,7 @@ try {
   countriesSeries.geodata = am4geodata_worldLow;
 }
 catch (e) {
-  countriesSeries.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest amcharts4 geodata and extract its contents into the same directory as your amCharts files."));
+  countriesSeries.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest amcharts geodata and extract its contents into the same directory as your amCharts files."));
 }
 
 countriesSeries.useGeodata = true;

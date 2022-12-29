@@ -5,6 +5,288 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 Please note, that this project, while following numbering syntax, it DOES NOT
 adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
+## [4.10.32] - 2022-12-14
+
+### Fixed
+- Image export was broken in some cases since 4.10.31.
+
+
+## [4.10.31] - 2022-12-13
+
+### Fixed
+- When exporting chart with external elements (e.g. external legend), export would leave some stray canvas elements in the DOM.
+- `PieSeries`'s labels were arranged incorrectly in some cases, if `maxWidth` and `wrap` was set on the label template.
+
+
+## [4.10.30] - 2022-11-14
+
+### Changed
+- Upgraded `xlsx` package to version 0.18.5.
+
+### Fixed
+- Stacked series were not being displayed correctly if it was hidden during data update.
+
+
+## [4.10.29] - 2022-10-11
+
+### Changed
+- Panning an `XYChart` with a `CategoryAxis` using mouse wheel will snap to categories so that after the pan full axis cell at the beginning and end of the axis will be visible.
+
+
+## [4.10.28] - 2022-09-19
+
+### Added
+- `"p"` number formatting modifier added. Works the same way as `"%"` except it treats numbers as absolute values and does not multiply them by 100.
+
+### Changed
+- `"%"` number formatting modifier will now consider locale when choosing whether percent sign goes before or after the number. At this moment only `tr_TR` (Turkish) locale is placing percent sign before number.
+
+### Fixed
+- Pressing ENTER while `PieSeries` was focused would not toggle it.
+- `SankeyLink` middle line was not drawn in it was a straight line.
+- Legend's scrollbar was not adjusting thumb size if the div of a chart changed its height.
+
+
+## [4.10.27] - 2022-08-18
+
+### Added
+- Slovak locale/translation.
+
+### Changed
+- All D3 libraries are updated to the latest version.
+
+### Fixed
+- Fixed degrading performance with updating data on data-heavy charts with Responsive enabled.
+- "Week of year" was not being calculated properly for the tunr-of-the-year week in some cases.
+- Vertical `ValueAxis` was not respecting `maxZoomFactor`.
+- Changes to `strokeOpacity` on `PercentSeries` elements were not propagating to legend marker.
+
+
+## [4.10.26] - 2022-07-09
+
+### Fixed
+- Setting `html` on a `Label`, then resetting it, was leaving the old content.
+- Updating HTML label's `fill` was not updating the color of the actual label right away.
+- `SliceGroper` plugin will now handle negative values correctly.
+
+
+## [4.10.25] - 2022-04-19
+
+### Added
+- `baseValue` added to `ForceDirectedSeries` (default: `0`). Used for calculating node radius.
+
+### Fixed
+- `focusFilter` property was not being cloned.
+- Setting `tabindex` to a negative value was not working properly.
+
+
+## [4.10.24] - 2022-02-14
+
+### Changed
+- When auto-wrapping labels, text will no longer break on dots to prevent fractional numbers from wrapping.
+
+### Fixed
+- Multiple square bracket and apostrophe escaping was not working properly.
+
+
+## [4.10.23] - 2021-11-25
+
+### Added
+- New `NumberFormatter` setting: `forceLTR`. If set to `true` will force all numbers to be formatted as LTR, even if RTL is enabled.
+
+### Changed
+- Using minified version of `xlsx` library for XLSX exports.
+
+### Fixed
+- If chart queuing was enabled and chart was disposed quickly before it had a chance to initialize, it was resulting in a critical error.
+- In some cases (after programmatic hover) tapping on a touch device could produce an error in `MapChart`.
+- JSON config: in some cases items in `children` were not being created.
+- Mouse wheel zooming was not working properly in recent versions of Firefox.
+- Fixing security vulnerability ([`CVE-2021-3807`](https://nvd.nist.gov/vuln/detail/CVE-2021-3807)) with `venn.js` dependency.
+- Tweaking hover styles for `ExportMenu` CSS so they do not get invoked unless hovered on chart's container.
+- Reader labels were not being updated on Scrollbar elements when data in chart was updated.
+- `Annotation` plugin will now not go into edit mode after `data` is set.
+- In some cases wrapped and center-aligned axis labels could get a bit offset.
+- In some cases toggling series on and off was not updating related value axis scale on lazy-loaded charts.
+
+
+## [4.10.22] - 2021-08-20
+
+### Changed
+- `package.json` for ES2015 package was properly updated with new version dependencies.
+
+### Fixed
+- Another issue with label text with a lot of in-line formatting not wrapping properly fixed.
+- ForceDirectedTree was not updating label `maxWidth` on zoom.
+- Legend's `position = "absolute"` was not working.
+
+
+## [4.10.21] - 2021-08-08
+
+### Added
+- Export: new setting in CSV options: `addBOM` (default `true`).
+
+### Changed
+- `userClassName` now supports multiple class names separated by space.
+- Exporting CSV will now have add BOM code to exported file.
+- Upgrading to `pdfmake 0.2.2` to work around security issues in older version.
+- Upgrading to `xlsx 0.17.0` to work around security issues in older version.
+
+### Fixed
+- In some cases axis labels could be hidden across multiple data updates.
+- Fixed issue with stacked/clustered negative values.
+- `MapChart` now respects `home*` zoom/position with externally loaded geodata.
+- Sizing/positioning of 3D charts with titles fixed.
+- RangeSelector plugin: fixed zoom range resetting issues.
+- Issue with inverted radial axis fixed.
+- Axis with `snapToSeries` set was snapping to hidden series.
+- Using timezone was causing `DateAxis` tooltips to show incorrect time in some cases.
+- Issue with label text with a lot of in-line formatting not wrapping properly fixed.
+
+
+## [4.10.20] - 2021-06-17
+
+### Fixed
+- In-line formatting of labels was triggering errors on pages with strict CSP rules.
+
+
+## [4.10.19] - 2021-06-08
+
+### Fixed
+- Export: dynamic CSS `<style>` added by `Export` was not applying global `nonce` option.
+- `RangeSelector` plugin: some pre-set period buttons were behaving incorrectly when there was no animated theme enabled.
+- In some cases labels for `ValueAxis` were prone to a floating-point issue.
+- `OverlapBuster` plugin. Was not always working properly without animated theme.
+- Minor tweak to multiple series tooltip arrangements.
+- JSON config: sometimes items pushed to `children` were not being created.
+- Truncation of Legend's labels sometimes were being knocked off by the `XYCursor` activities.
+
+
+## [4.10.18] - 2021-04-21
+
+### Fixed
+- `SliceGrouper` was not working when chart was a child of another `Container`.
+- `SliceGrouper` was not updating properly when `am4core.options.queue = true` was set.
+- `DateAxis` labels were showing zeros instead of proper milliseconds in IE.
+- In some cases hidden link in `SankeyDiagram` could cause rollover tooltip to appear.
+- Stroke of the slices in a `FunnelChart` was not being drawn complete.
+- JSON config: value list of the `List` element was not being properly truncated to supplied lenght.
+- JSON config: event list as array was not working properly.
+- Using `timezone` setting in some timezones could offset Series' bullets.
+- Absolute pixel `width` in `RadarColumn` was being ignored.
+
+
+## [4.10.17] - 2021-03-19
+
+### Added
+- New setting for `Export`: `webFontFilter`. Allows it to set to a regular expression. If set only those external fonts that their URL match regular exporession will be loaded.
+- New setting for `ForceDirectedSeries`: `showOnTick` (default `10`). Render series hidden until Xth tick.
+- New setting for `XYCursor`: `snapOnPan` (default `true`). Indicates whether to "snap" zoom selection to equal periods when panning by cursor ends.
+
+### Fixed
+- Zooming of chart with multiple vertical axes of which one was inverted was incorrect.
+- `minZoomCount` was not being taken into account when zooming with mouse wheel.
+- JSON config: `exporting.dataFields` setting was being ignored.
+- Creating chart before its container is ready, was resulting in extra element in DOM in some cases.
+
+
+## [4.10.16] - 2021-03-03
+
+### Fixed
+- In some rare cases an critical error could happen on hoverable objects on touch-only displays.
+- Zooming and drag-rotating a resized `MapChart` could throw off the map position.
+- It was possible to continue zooming the chart using mouse wheel even when max zoom was reached.
+- Zooming "inverted" horizontal axis was incorrect.
+- Updating data on `SankeyDiagram` in some cases could result in an SO.
+- `TreeMap` was showing incorrectly sized nodes with empty children array.
+- Sometimes wrapping long strings were causing punctuation at the end of the word to wrap into the next line.
+- Dynamically switching `logarithmic` setting for a `ValueAxis` was not updating its scale properly in some cases.
+- `SliceGrouper` plugin was not updating properly when manipulating data and/or series.
+
+
+## [4.10.15] - 2021-02-03
+
+### Fixed
+- Fixed issue with toggling multiple `ColumnSeries3D` (introduced in last version).
+
+
+## [4.10.14] - 2021-02-02
+
+### Added
+- Exporting: all adapters related to XLSX export, will now have `xslx` property holding reference to processor, that needs to be used in order to modify actual workbooks for export.
+
+### Fixed
+- `StepLineSeries` might get "stuck" during zoom/data updates in some cases.
+- `ColumnSeries3D` was not staying hidden across data updates.
+- Columns on `DateAxis` were not being positioned properly when changing `firstDayOfWeek`.
+- RangeSelector plugin: YTD was not working properly when data was being grouped to years.
+- Disposing chart on a click of a custom `ExportMenu` item was resulting in JS errors.
+- In some setups "ghost paper" (invisible div) was influencing document layout.
+- In charts where Series had very small amplitude of values, related `ValueAxis` could get end up in a dead loop.
+- HTML tooltips were not being sized properly in some cases.
+
+
+## [4.10.13] - 2020-12-18
+
+### Added
+- Export: PDF export options now support `scale`, `minWidth`, `minHeight`, `maxWidth`, and `maxHeight` options.
+
+### Changed
+- Setting `ignoreZeroValues = true` on `PieSeries`/`PyramidSeries` will now hide `null`-value slices, too.
+
+### Fixed
+- Inserting a new bullet into an initialized Series will now invalidate it cause the new bullet to appear immediately.
+- Using `timezone` might shift axis label values by one day in some cases.
+- `"i"` input date format was not properly parsing formats with no milliseconds and with timezone offset, e.g. (`"...+10:30"`).
+- Export: `normalizeSVG()` method was producing wrong SVG width/height in output if scale parameter was not being passed in.
+- RangeSelector plugin: "YTD" pre-defined period was not working properly with some data-grouping setups.
+
+
+## [4.10.12] - 2020-11-26
+
+### Changed
+- `DateAxis` setting `timezone` is being deprecated. Please consider setting `timezone` on chart or axis `dateFormatter`. `DateAxis` will now properly place grid in time zones that use non-whole hour fractions, e.g. ("Australia/Adelaide").
+- Accessibility: Roles and tabindexes in `ExportMenu` elements has been altered to better comply with ARIA standards.
+
+### Fixed
+- Scrollbar could act funky when repeatedly clicking on its grips.
+- A minor conflict with Google Charts lib on IE fixed.
+- Improved performance of `ValueAxis` scale calculation.
+- Setting `min` and `max` on a `DateAxis` could result in excessive overzoom and an empty grid in some cases.
+- Overzooming `DateAxis` coul dresult in some extra space shown on it.
+- Legend was dynamically adding items on a Treemap chart when drilling-down.
+- When Legend's labels' `width` were set in percent, they were not being properly sized.
+
+
+## [4.10.11] - 2020-11-13
+
+### Added
+- New setting `reverseGeodata` (default: `false`) on `MapChart` and `MapSeries`. amCharts requires polygon coordinates to be in clockwise order. Some map data have them in counter-clockwise. If your custom map appears garbled, try setting this to `true`.
+- New global option: `am4core.options.pixelPerfectPrecision` (default: `0`). Precision (number of decimal points) to be used when rounding point x/y for elements that have `pixelPerfect = true` set.
+
+### Fixed
+- `XYChartScrollbar` was not inheriting `inputDateFormat` from the chart properly.
+- Clicking on a chart on mobile devices could sometimes make them document scroll a bit.
+- Accessibility: pressing ENTER while there is a focused element with `showTooltipOn = "hit"` will not display its tooltip.
+- RangeSelector (plugin) was not properly removing its elements after `dispose()` it will now auto-dispose when related axis is disposed.
+- In some cases a console error could be displayed when using `XYCursor` over chart when data was being updated.
+- Very long labels with `wrap = true` may have been wrapping incorrectly in some cases.
+- JSON config: `rgb(...)` and `rgba(...)` syntax was not recongnised in `ColorSet`'s `baseColor`.
+
+
+## [4.10.10] - 2020-11-03
+
+### Changed
+- License check for `MapChart` was not working. If you are using commercial `MapChart`, make sure you use `addLicense()` for both Charts and Maps products.
+
+### Fixed
+- Better dispose check for delayed `"out"` event.
+- Applying accessibility to some labels with only numeric information was resulting in error.
+- Chart could result in an SO in some rare cases.
+- Using `strictMinMax` with `includeRangesInMinMax` sometimes could caulse wrong zooms.
+- In some cases Legend's item labels were being truncated when cahrt container was shrinking, but were not being restored to their full width once it was enlarged back.
+
+
 ## [4.10.9] - 2020-10-23
 
 ### Changed

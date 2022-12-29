@@ -18,7 +18,7 @@ try {
     chart.geodata = am4geodata_continentsLow;
 }
 catch (e) {
-    chart.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest <a href=\"https://www.amcharts4.com/download/download-v4/\">amcharts4 geodata</a> and extract its contents into the same directory as your amCharts files."));
+    chart.raiseCriticalError(new Error("Map geodata could not be loaded. Please download the latest <a href=\"https://www.amcharts.com/download/download-v4/\">amcharts geodata</a> and extract its contents into the same directory as your amCharts files."));
 }
 
 

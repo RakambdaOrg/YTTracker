@@ -349,6 +349,7 @@ if (typeof browser === 'undefined') {
 	chrome.runtime.onMessage.addListener(messageListener);
 } else {
 	browser.runtime.onMessage.addListener(messageListener);
+	browser.runtime.onMessageExternal.addListener(messageListener);
 }
 
 function setupExtension() {

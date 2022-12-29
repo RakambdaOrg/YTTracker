@@ -14,10 +14,12 @@
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArlHZIpWVXeiGgvlg/O1XIOvR4wJfm4UVgjlq2YjMQZjPsH/ETsy18topZnnYjrszs7cdKdNP3Nx9t+n50lmQMHsw+BYfWJ4w4ydCQCxC6YD+ce//kOOQF3JFHyfNwka0/AGGa0MUkDXEAvG0qkFFe0ahfZ8UCTssXU8suPKN6PFQcGeOQ0JTCyd/J/a+uCybBagusBnpKloEMCdSFMNpvul5iv2Jo374e0KNFnxehS0BdKf6R2QVyVlg1ju10I5Pcmgrq9Y1qhBGa5Fs/DUs51tjiQF7ThUTZLeU1kL2Silo1I9DTHX820zhwLm+XGlstZIUS2gUMKeGUNb9Fca+hQIDAQAB",
   "permissions": [
     "storage",
-    "downloads",
-    "notifications",
     "unlimitedStorage",
     "identity"
+  ],
+  "optional_permissions": [
+    "notifications",
+    "downloads"
   ],
   "host_permissions": [
     "https://youtube.com/*",

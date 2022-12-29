@@ -9,27 +9,27 @@
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-  "applications": {
-    "gecko": {
-      "id": "yttracker@mrcraftcod.fr"
-    }
-  },
   "author": "Rakambda",
   "homepage_url": "https://github.com/Rakambda/YTTracker",
   "permissions": [
     "storage",
-    "downloads",
-    "notifications",
     "unlimitedStorage",
     "identity"
+  ],
+  "optional_permissions": [
+    "notifications",
+    "downloads"
   ],
   "host_permissions": [
     "https://youtube.com/*",
     "https://www.youtube.com/*",
     "https://yttracker.rakambda.fr/*"
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "action": {
-    "browser_style": true,
     "default_icon": {
       "16": "assets/icon16.png",
       "24": "assets/icon48.png",
@@ -37,10 +37,6 @@
     },
     "default_popup": "popup.html",
     "default_title": "YoutubeTracker"
-  },
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": true
   },
   "content_scripts": [
     {
@@ -58,7 +54,6 @@
     }
   ],
   "background": {
-    "persistent": false,
     "scripts": [
       "lib/jquery/jquery.min.js",
       "js/YTTUtils.js",
@@ -69,8 +64,18 @@
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "web_accessible_resources": [
-    "js/YTTUtils.js",
-    "js/hookerUtils.js",
-    "js/hooker.js"
+    {
+      "resources": [
+        "js/YTTUtils.js",
+        "js/hookerUtils.js",
+        "js/hooker.js"
+      ],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "extension_ids": [
+        "yttracker@mrcraftcod.fr"
+      ]
+    }
   ]
 }
