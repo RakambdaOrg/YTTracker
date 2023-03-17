@@ -20,11 +20,11 @@
   "permissions": [
     "storage",
     "unlimitedStorage",
-    "identity"
+    "identity",
+    "downloads"
   ],
   "optional_permissions": [
-    "notifications",
-    "downloads"
+    "notifications"
   ],
   "host_permissions": [
     "https://youtube.com/*",
