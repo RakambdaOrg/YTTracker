@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.1.0] - 2022-12-29
+## [3.1.0] - Unreleased
 
 - Firefox manifest V3
 
