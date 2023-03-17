@@ -31,6 +31,15 @@
     "https://www.youtube.com/*",
     "https://yttracker.rakambda.fr/*"
   ],
+  "optional_permissions": [
+    "notifications",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://youtube.com/*",
+    "https://www.youtube.com/*",
+    "https://yttracker.rakambda.fr/*"
+  ],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true

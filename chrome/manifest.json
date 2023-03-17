@@ -21,6 +21,10 @@
   "optional_permissions": [
     "notifications"
   ],
+  "optional_permissions": [
+    "notifications",
+    "downloads"
+  ],
   "host_permissions": [
     "https://youtube.com/*",
     "https://www.youtube.com/*",

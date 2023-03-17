@@ -544,7 +544,7 @@ function YTTDownload(options) {
 }
 
 /**
- * @param {string} jsonStr content
+ * @param {string} json content
  * @return {string}
  */
 function YTTDownloadUrl(jsonStr) {
