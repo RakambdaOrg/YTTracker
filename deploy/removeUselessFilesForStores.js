@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 const fs = require('fs-extra');
-const glob = require("glob");
+const globSync = require('glob');
 
-glob("temp/**/*.map", function (er, files) {
-	for(let fileIndex in files){
-		if(files.hasOwnProperty(fileIndex)){
-			fs.removeSync(files[fileIndex]);
-			console.log('Deleting ' + files[fileIndex])
-		}
+const files = globSync('temp/**/*.map');
+for (let fileIndex in files) {
+	if (files.hasOwnProperty(fileIndex)) {
+		fs.removeSync(files[fileIndex]);
+		console.log('Deleting ' + files[fileIndex]);
 	}
-});
+}
 
 fs.removeSync('temp/lib/bootstrap/css/bootstrap.css');
 fs.removeSync('temp/lib/bootstrap/css/bootstrap-grid.css');

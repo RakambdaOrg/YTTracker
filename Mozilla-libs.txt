@@ -3,5 +3,5 @@ Library used:
 jQuery from https://github.com/jquery/jquery/releases/tag/3.6.4
 Amcharts from https://github.com/amcharts/amcharts4/releases/tag/4.10.32
 Bootstrap from https://github.com/twbs/bootstrap/releases/tag/v4.6.2
-Popper.js from https://github.com/popperjs/popper.js/releases/tag/v1.16.1
+Popper.js from https://github.com/popperjs/popper.js/releases/tag/v2.11.6
 DropboxSDK from https://github.com/dropbox/dropbox-sdk-js/releases/tag/v10.34.0
