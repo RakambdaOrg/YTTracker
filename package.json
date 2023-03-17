@@ -44,7 +44,7 @@
     "fs-extra": "^10.0.1",
     "glob": "latest",
     "replace-in-file": "^6.3.2",
-    "xo": "^0.48.0"
+    "xo": "^0.53.1"
   },
   "xo": {
     "envs": [
