@@ -261,72 +261,6 @@ function YTTGenUUID() {
 }
 
 /**
- * Compare two versions.
- *
- * @param {string} v1 Base version.
- * @param {string} v2 The version to compare with.
- * @return {int} 1 if v1 is greater, -1 if lower, 0 if equals.
- */
-function YTTCompareVersion(v1, v2) {
-	if (v2 === undefined) {
-		return 1;
-	}
-	const v1parts = v1.split(/[.-]/);
-	const v2parts = v2.split(/[.-]/);
-
-	function compareParts(v1parts, v2parts) {
-		for (let i = 0; i < v1parts.length; ++i) {
-			if (v2parts.length === i) {
-				return 1;
-			}
-
-			let v1part = parseInt(v1parts[i]);
-			let v2part = parseInt(v2parts[i]);
-			const v1part_is_string = !(v1part === v1part);
-			const v2part_is_string = !(v2part === v2part);
-			v1part = v1part_is_string ? v1parts[i] : v1part;
-			v2part = v2part_is_string ? v2parts[i] : v2part;
-
-			if (v1part_is_string === v2part_is_string) {
-				if (v1part_is_string === false) {
-					if (v1part > v2part) {
-						return 1;
-					} else if (v1part < v2part) {
-						return -1;
-					}
-				} else {
-					const v1subparts = v1part.match(/[a-zA-Z]+|[0-9]+/g);
-					const v2subparts = v2part.match(/[a-zA-Z]+|[0-9]+/g);
-					if ((v1subparts.length === 1) && (v2subparts.length === 1)) {
-						v1part = v1subparts[0];
-						v2part = v2subparts[0];
-						if (v1part === v2part) {
-							continue;
-						} else if (v1part > v2part) {
-							return 1;
-						} else {
-							return -1;
-						}
-					}
-					const result = compareParts(v1subparts, v2subparts);
-					if (result !== 0) {
-						return result;
-					}
-				}
-			} else {
-				return v2part_is_string ? 1 : -1;
-			}
-		}
-		if (v1parts.length !== v2parts.length) {
-			return -1;
-		}
-		return 0;
-	}
-
-	return compareParts(v1parts, v2parts);
-}
-
-/**
  * Get the config key for a date.
  *
  * @param {Date} now The date to get the key for.
@@ -463,18 +397,6 @@ function YTTGetRedirectURL(path) {
 }
 
 /**
- * Opens a new window.
- * @param {chrome.windows.CreateData} data The data of the window to open.
- * @return {Promise<chrome.windows.Window|browser.windows.Window|undefined>}
- */
-function YTTOpenWindowURL(data) {
-	if (typeof browser === 'undefined') {
-		return new Promise(resolve => chrome.windows.create(data, resolve));
-	}
-	return browser.windows.create(data);
-}
-
-/**
  * Set the configuration.
  *
  * @param {Object} config The configuration to set.
@@ -511,15 +433,6 @@ function YTTOpenOptionsPage() {
 }
 
 /**
- * Get the browser's name.
- *
- * @return {string}
- */
-function YTTGetBrowser() {
-	return typeof browser === 'undefined' ? 'Chrome' : 'Firefox';
-}
-
-/**
  * Get the runtime url of a relative file.
  *
  * @param {string} path
@@ -530,19 +443,6 @@ function YTTGetRuntimeURL(path) {
 		return chrome.runtime.getURL(path);
 	}
 	return browser.runtime.getURL(path);
-}
-
-/**
- * Get the url of a relative file.
- *
- * @param {string} path
- * @return {string}
- */
-function YTTGetURL(path) {
-	if (typeof browser === 'undefined') {
-		return chrome.extension.getURL(path);
-	}
-	return browser.extension.getURL(path);
 }
 
 /**
