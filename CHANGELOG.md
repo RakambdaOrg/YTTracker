@@ -1,6 +1,10 @@
 # Changelog
 
-## [3.1.0] - Unreleased
+## [3.1.1] - 2023-08-10
+
+- Fix chrome untrusted html
+
+## [3.1.0] - 2022-12-29
 
 - Firefox manifest V3
 
