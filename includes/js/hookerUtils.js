@@ -1,4 +1,12 @@
 let YTTPlayer;
+let YTTPolicy;
+
+function getWithPolicy(content){
+	if(YTTPolicy){
+		return YTTPolicy.createHTML(content);
+	}
+	return content;
+}
 
 /**
  * Update the player state in the DOM.
@@ -6,11 +14,11 @@ let YTTPlayer;
  */
 function changeDOMTime(playerState) {
 	if (playerState === 1) {
-		document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = YTT_STATE_EVENT_STATE_KEY_PLAYING + YTT_DOM_SPLITTER + YTTGetPlayer().getCurrentTime();
+		document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = getWithPolicy(YTT_STATE_EVENT_STATE_KEY_PLAYING + YTT_DOM_SPLITTER + YTTGetPlayer().getCurrentTime());
 	} else if (playerState === 2 || playerState === 0 || playerState === -5 || playerState === 3) {
-		document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = YTT_STATE_EVENT_STATE_KEY_WATCHED + YTT_DOM_SPLITTER + document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML;
+		document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = getWithPolicy(YTT_STATE_EVENT_STATE_KEY_WATCHED + YTT_DOM_SPLITTER + document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML);
 	} else {
-		document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = 'unknown(' + playerState + ')' + YTT_DOM_SPLITTER + document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML;
+		document.getElementById(YTT_DOM_PLAYER_STATE).innerHTML = getWithPolicy('unknown(' + playerState + ')' + YTT_DOM_SPLITTER + document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML);
 	}
 }
 
@@ -18,7 +26,7 @@ function changeDOMTime(playerState) {
  * Update the video infos in the DOM.
  */
 function changeDOMInfos() {
-	document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML = YTTPlayer.getVideoData()['video_id'] + YTT_DOM_SPLITTER + YTTPlayer.getDuration();
+	document.getElementById(YTT_DOM_PLAYER_INFOS).innerHTML = getWithPolicy(YTTPlayer.getVideoData()['video_id'] + YTT_DOM_SPLITTER + YTTPlayer.getDuration());
 }
 
 /**
@@ -44,14 +52,16 @@ function YTTGetPlayer() {
  * @param {Player} player The player to hook.
  * @returns {boolean} True if successfull, false otherwise.
  */
-function hookYTTPlayer(player) {
+function hookYTTPlayer(player, policy) {
 	if (typeof player !== 'object' || !(player.getCurrentTime || player.getVideoData || player.getDuration || player.getPlayerState)) {
 		return false;
 	}
+
 	console.log('Player hooked');
 	YTTPlayer = player;
-	document.getElementById(YTT_DOM_PLAYER_TIME_1).innerHTML = YTTPlayer.getCurrentTime();
-	document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML = YTTPlayer.getCurrentTime();
+	YTTPolicy = policy;
+	document.getElementById(YTT_DOM_PLAYER_TIME_1).innerHTML = getWithPolicy(YTTPlayer.getCurrentTime());
+	document.getElementById(YTT_DOM_PLAYER_TIME_2).innerHTML = getWithPolicy(YTTPlayer.getCurrentTime());
 	changeDOMInfos();
 	changeDOMTime(YTTPlayer.getPlayerState());
 	YTTPlayer.removeEventListener('onStateChange', changeDOMTime);
