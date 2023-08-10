@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Tracker Beta",
+  "name": "YouTube Tracker",
   "short_name": "YTTracker",
   "description": "This extension will track your time on YouTube",
   "version": "!!!VERSION!!!",
@@ -11,7 +11,7 @@
   },
   "author": "Rakambda",
   "homepage_url": "https://github.com/Rakambda/YTTracker",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgQG3/oewtkQuMHOb6RKaEYtGWgd4Iv7tYZnO/cdr8/FoBg26DpRM0tTBI1KDeF8I30yVpsKcNjWh6t86iL3P0yROKGuEyhUZIrJIitoROzxyiowscYtfAJFlzwo/dbGr4eEPMuOdzMvl5J7bNPaZGJoXAHYt5auAjJzI7ZQtSxRA+iv3PWFsR1nmNcIhRmV0wP2W43OtFAKclmXuB3YAbzCf42Mtb2oD8FjHpmLWcnHrYggMWr0CQidphB5b9xtx6kgTCSb2LaNfOv1Q9L9MVQbhWw+NPLMves4OltwK3D+0gPbI2ulizSo6CLEPLTGcpn8JE/Xuc/9cRR7q5Kf3WQIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArlHZIpWVXeiGgvlg/O1XIOvR4wJfm4UVgjlq2YjMQZjPsH/ETsy18topZnnYjrszs7cdKdNP3Nx9t+n50lmQMHsw+BYfWJ4w4ydCQCxC6YD+ce//kOOQF3JFHyfNwka0/AGGa0MUkDXEAvG0qkFFe0ahfZ8UCTssXU8suPKN6PFQcGeOQ0JTCyd/J/a+uCybBagusBnpKloEMCdSFMNpvul5iv2Jo374e0KNFnxehS0BdKf6R2QVyVlg1ju10I5Pcmgrq9Y1qhBGa5Fs/DUs51tjiQF7ThUTZLeU1kL2Silo1I9DTHX820zhwLm+XGlstZIUS2gUMKeGUNb9Fca+hQIDAQAB",
   "permissions": [
     "storage",
     "unlimitedStorage",
@@ -33,7 +33,8 @@
       "24": "assets/icon48.png",
       "32": "assets/icon128.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "YoutubeTracker"
   },
   "content_scripts": [
     {
@@ -42,16 +43,14 @@
         "https://www.youtube.com/*"
       ],
       "js": [
-        "lib/jquery/jquery.min.js",
-        "js/YTTUtils.js",
-        "js/content.js"
+        "Content.js"
       ],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
   "background": {
-    "service_worker": "service_worker.js"
+    "service_worker": "ServiceWorker.js"
   },
   "content_security_policy": {
     "script-src": "self",
@@ -59,9 +58,7 @@
   },
   "web_accessible_resources": [{
     "resources": [
-      "js/YTTUtils.js",
-      "js/hookerUtils.js",
-      "js/hooker.js"
+      "Hooker.js"
     ],
     "matches": [
       "https://youtube.com/*",

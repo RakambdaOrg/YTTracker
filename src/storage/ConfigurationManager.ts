@@ -1,5 +1,4 @@
-import browser from 'webextension-polyfill';
-import {ConfigurationKeys} from "./ConfigurationKeys";
+import "webextension-polyfill-global";
 
 export class ConfigurationManager {
     public async getValues(keys: string | Array<string> | null): Promise<Record<string, any>> {

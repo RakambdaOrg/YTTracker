@@ -1,4 +1,4 @@
-import * as browser from 'webextension-polyfill';
+import "webextension-polyfill-global";
 import {ConfigurationManager} from "./storage/ConfigurationManager";
 import {ConfigurationKeys} from "./storage/ConfigurationKeys";
 

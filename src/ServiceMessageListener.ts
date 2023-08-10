@@ -1,4 +1,4 @@
-import * as browser from 'webextension-polyfill';
+import "webextension-polyfill-global";
 import {LogMessage} from './messages/LogMessage';
 import {LogManager} from "./LogManager";
 import {DownloadMessage} from "./messages/DownloadMessage";
@@ -7,6 +7,8 @@ import {VideoManager} from "./video/VideoManager";
 import {VideoStoppedMessage} from "./messages/VideoStoppedMessage";
 import {VideoStartedMessage} from "./messages/VideoStartedMessage";
 import {DownloadManager} from "./DownloadManager";
+import {Runtime} from "webextension-polyfill";
+import MessageSender = Runtime.MessageSender;
 
 export class ServiceMessageListener {
     private readonly logManager: LogManager;
@@ -19,7 +21,7 @@ export class ServiceMessageListener {
         this.downloadManager = downloadManager;
     }
 
-    public async onMessage(message: any, sender: browser.Runtime.MessageSender): Promise<void> {
+    public async onMessage(message: any, sender: MessageSender): Promise<void> {
         const tabId = sender.tab?.id;
 
         if (message.type === 'LOG') {

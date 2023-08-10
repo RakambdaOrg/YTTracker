@@ -1,4 +1,4 @@
-import * as browser from 'webextension-polyfill';
+import "webextension-polyfill-global";
 import {DownloadMessage} from "./messages/DownloadMessage";
 
 export class DownloadManager{

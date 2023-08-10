@@ -1,12 +1,30 @@
 const webpack = require('webpack');
 
+const fs = require('fs');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+
+let version = null;
+fs.readFile('package.json', (err, data) => {
+	if (err) {
+		throw err;
+	}
+	const packageData = JSON.parse(data);
+	version = packageData.version;
+});
+
+function replace(/*Buffer*/ data, /*string*/ pattern, /*string*/ replace) {
+	let str = data.toString();
+	return Buffer.from(str.replace(pattern, replace));
+}
+
 module.exports = {
 	mode: 'production',
 	entry: {
-		serviceworker: path.resolve(__dirname, '..', 'src', 'ServiceWorker.ts'),
-		settings: path.resolve(__dirname, '..', 'src', 'Chart.ts'),
+		ContentScript: path.resolve(__dirname, '..', 'src', 'ContentScript.ts'),
+		Heeker: path.resolve(__dirname, '..', 'src', 'Hooker.ts'),
+		ServiceWorker: path.resolve(__dirname, '..', 'src', 'ServiceWorker.ts'),
+		Settings: path.resolve(__dirname, '..', 'src', 'Chart.ts'),
 	},
 	output: {
 		path: path.join(__dirname, '../dist'),
@@ -26,12 +44,31 @@ module.exports = {
 	},
 	plugins: [
 		new CopyPlugin({
-			patterns: [{from: '.', to: '.', context: 'public'}]
+			patterns: [
+				{
+					from: '.',
+					to: '.',
+					context: 'public'
+				}
+			]
+		}),
+		new CopyPlugin({
+			patterns: [
+				{
+					from: '.',
+					to: '.',
+					context: 'manifest',
+					transform: {
+						transformer: function (content, _) {
+							return replace(content, '!!!VERSION!!!', version);
+						}
+					}
+				}
+			]
 		}),
 		new webpack.ProvidePlugin({
 			$: 'jquery',
-			jQuery: 'jquery',
-			browser: "webextension-polyfill"
+			jQuery: 'jquery'
 		})
 	],
 };

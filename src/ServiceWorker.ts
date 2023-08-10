@@ -1,4 +1,4 @@
-import browser from "webextension-polyfill";
+import "webextension-polyfill-global";
 import {ServiceMessageListener} from './ServiceMessageListener'
 import {LogManager} from "./LogManager";
 import {VideoManager} from "./video/VideoManager";

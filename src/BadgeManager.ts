@@ -1,4 +1,4 @@
-import * as browser from 'webextension-polyfill';
+import "webextension-polyfill-global";
 
 export class BadgeManager {
     public async set(text: string): Promise<void> {

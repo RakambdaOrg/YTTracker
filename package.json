@@ -11,12 +11,14 @@
   "keywords": [],
   "main": "index.js",
   "devDependencies": {
-    "@types/chrome": "^0.0.239",
+    "@types/chrome": "^0.0.243",
     "@types/jquery": "^3.5.16",
+    "@types/trusted-types": "^2.0.3",
+    "@types/webextension-polyfill": "^0.10.1",
     "copy-webpack-plugin": "^11.0.0",
     "ts-loader": "^9.4.4",
-    "typescript": "^5.1.5",
-    "webpack": "^5.88.1",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
@@ -24,9 +26,9 @@
     "build-dev": "webpack --config webpack/webpack.dev.config.js"
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.10.36",
-    "@types/webextension-polyfill": "^0.10.0",
+    "@amcharts/amcharts4": "^4.10.37",
     "bootstrap": "4.6.2",
-    "jquery": "3.6.4"
+    "jquery": "3.6.4",
+    "webextension-polyfill-global": "0.10.1-1"
   }
 }
