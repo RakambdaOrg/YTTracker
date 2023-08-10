@@ -11,12 +11,7 @@
   },
   "author": "Rakambda",
   "homepage_url": "https://github.com/Rakambda/YTTracker",
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "yttracker@mrcraftcod.fr",
-      "strict_min_version": "109.0"
-    }
-  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArlHZIpWVXeiGgvlg/O1XIOvR4wJfm4UVgjlq2YjMQZjPsH/ETsy18topZnnYjrszs7cdKdNP3Nx9t+n50lmQMHsw+BYfWJ4w4ydCQCxC6YD+ce//kOOQF3JFHyfNwka0/AGGa0MUkDXEAvG0qkFFe0ahfZ8UCTssXU8suPKN6PFQcGeOQ0JTCyd/J/a+uCybBagusBnpKloEMCdSFMNpvul5iv2Jo374e0KNFnxehS0BdKf6R2QVyVlg1ju10I5Pcmgrq9Y1qhBGa5Fs/DUs51tjiQF7ThUTZLeU1kL2Silo1I9DTHX820zhwLm+XGlstZIUS2gUMKeGUNb9Fca+hQIDAQAB",
   "permissions": [
     "storage",
     "unlimitedStorage",
@@ -31,10 +26,7 @@
     "https://www.youtube.com/*",
     "https://yttracker.rakambda.fr/*"
   ],
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": true
-  },
+  "options_page": "options.html",
   "action": {
     "default_icon": {
       "16": "assets/icon16.png",
@@ -47,8 +39,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.youtube.com/*",
-        "https://yttracker.rakambda.fr/*"
+        "https://youtube.com/*",
+        "https://www.youtube.com/*"
       ],
       "js": [
         "lib/jquery/jquery.min.js",
@@ -60,28 +52,21 @@
     }
   ],
   "background": {
-    "scripts": [
-      "lib/jquery/jquery.min.js",
-      "js/YTTUtils.js",
-      "js/service_worker.js"
-    ]
+    "service_worker": "ServiceWorker.js"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "script-src": "self",
+    "object-src": "self"
   },
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "js/YTTUtils.js",
-        "js/hookerUtils.js",
-        "js/hooker.js"
-      ],
-      "matches": [
-        "https://www.youtube.com/*"
-      ],
-      "extension_ids": [
-        "yttracker@mrcraftcod.fr"
-      ]
-    }
-  ]
+  "web_accessible_resources": [{
+    "resources": [
+      "js/YTTUtils.js",
+      "js/hookerUtils.js",
+      "js/hooker.js"
+    ],
+    "matches": [
+      "https://youtube.com/*",
+      "https://www.youtube.com/*"
+    ]
+  }]
 }
