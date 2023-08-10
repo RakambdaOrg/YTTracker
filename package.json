@@ -1,0 +1,32 @@
+{
+  "name": "yttracker",
+  "version": "3.1.0",
+  "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/Rakambda/)",
+  "description": "This extension will track your time on YouTube",
+  "homepage": "https://github.com/Rakambda/YTTracker/blob/master/README.md",
+  "bugs": "https://github.com/Rakambda/YTTracker/issues",
+  "repository": "github:Rakambda/YTTracker",
+  "license": "GNU GPLv3",
+  "private": true,
+  "keywords": [],
+  "main": "index.js",
+  "devDependencies": {
+    "@types/chrome": "^0.0.239",
+    "@types/jquery": "^3.5.16",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.5",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "build": "webpack --config webpack/webpack.config.js",
+    "build-dev": "webpack --config webpack/webpack.dev.config.js"
+  },
+  "dependencies": {
+    "@amcharts/amcharts4": "^4.10.36",
+    "@types/webextension-polyfill": "^0.10.0",
+    "bootstrap": "4.6.2",
+    "jquery": "3.6.4"
+  }
+}
