@@ -1,3 +1,4 @@
+import "webextension-polyfill-global";
 import $ from "jquery";
 import {ContentScriptConstants} from "./hook/ContentScriptConstants";
 import {VideoStoppedMessage} from "./messages/VideoStoppedMessage";
@@ -88,22 +89,12 @@ export class ContentScript {
 
         $(window).on('beforeunload', this.onUnload);
 
-        const yttUtilsInj = document.createElement('script');
-        const hookerUtilsInj = document.createElement('script');
         const hookerInj = document.createElement('script');
         const docFrag = document.createDocumentFragment();
 
-        yttUtilsInj.type = 'text/javascript';
-        yttUtilsInj.src = browser.runtime.getURL('inject/YTTUtils.js');
-
-        hookerUtilsInj.type = 'text/javascript';
-        hookerUtilsInj.src = browser.runtime.getURL('inject/hookerUtils.js');
-
         hookerInj.type = 'text/javascript';
-        hookerInj.src = browser.runtime.getURL('inject/hooker.js');
+        hookerInj.src = browser.runtime.getURL('Hooker.js');
 
-        docFrag.appendChild(yttUtilsInj);
-        docFrag.appendChild(hookerUtilsInj);
         docFrag.appendChild(hookerInj);
         (document.head || document.documentElement).appendChild(docFrag);
 

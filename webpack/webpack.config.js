@@ -22,7 +22,7 @@ module.exports = {
 	mode: 'production',
 	entry: {
 		ContentScript: path.resolve(__dirname, '..', 'src', 'ContentScript.ts'),
-		Heeker: path.resolve(__dirname, '..', 'src', 'Hooker.ts'),
+		Hooker: path.resolve(__dirname, '..', 'src', 'Hooker.ts'),
 		ServiceWorker: path.resolve(__dirname, '..', 'src', 'ServiceWorker.ts'),
 		Settings: path.resolve(__dirname, '..', 'src', 'Chart.ts'),
 	},

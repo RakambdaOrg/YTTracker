@@ -1,22 +1,19 @@
 import {YttPlayer} from "./hook/YttPlayer";
 import {ContentScriptConstants} from "./hook/ContentScriptConstants";
-import {TrustedHTML} from "trusted-types/lib";
 
 export class Hooker {
     private RETRY_DELAY = 250;
     private MAX_ATTEMPT = 500;
 
-    private policy: { createHTML: (to_escape: string) => string | TrustedHTML };
+    private policy: { createHTML: (to_escape: string) => string };
     private player?: YttPlayer;
 
     public constructor() {
         const policyOptions = {createHTML: (to_escape: string) => to_escape};
 
-        if (window.trustedTypes) {
-            this.policy = policyOptions;
-        } else {
-            this.policy = window.trustedTypes.createPolicy('ytTrackerPolicy', policyOptions);
-        }
+        this.policy = 'trustedTypes' in window ?
+                (window as any).trustedTypes.createPolicy('ytTrackerPolicy', policyOptions) :
+                policyOptions;
     }
 
     public hook(attempt: number): void {
@@ -118,7 +115,7 @@ export class Hooker {
         } else if (playerStateValue === 2 || playerStateValue === 0 || playerStateValue === -5 || playerStateValue === 3) {
             value = ContentScriptConstants.STATE_KEY_WATCHED + ContentScriptConstants.SPLITTER + player2.innerHTML;
         } else {
-            value = 'unknown(' + playerState + ')' + ContentScriptConstants.SPLITTER + player2.innerHTML;
+            value = 'unknown(' + playerStateValue + ')' + ContentScriptConstants.SPLITTER + player2.innerHTML;
         }
 
         playerState.innerHTML = this.policy.createHTML(value);
