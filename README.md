@@ -46,3 +46,4 @@ Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmoll
 
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/RakSrinaNa/YTTracker/issues).
+
