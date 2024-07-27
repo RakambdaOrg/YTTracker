@@ -16,7 +16,8 @@
     "pip_requirements",
     "github-actions",
     "gradle",
-    "gradle-wrapper"
+    "gradle-wrapper",
+    "cargo"
   ],
   "dependencyDashboard" : false,
   "excludeCommitPaths" : [
@@ -68,6 +69,26 @@
         "^com\.google\.api-client:",
         "^com\.google\.oauth-client:",
         "^com\.google\.apis:"
+      ]
+    },
+    {
+      "matchManagers" : [
+        "github-actions"
+      ],
+      "groupName" : "Actions artifacts",
+      "matchPackagePatterns" : [
+        "actions/download-artifact",
+        "actions/upload-artifact"
+      ]
+    },
+    {
+      "matchManagers" : [
+        "github-actions"
+      ],
+      "groupName" : "Actions artifacts",
+      "matchPackagePatterns" : [
+        "actions/download-artifact",
+        "actions/upload-artifact"
       ]
     }
   ]
