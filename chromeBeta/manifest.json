@@ -24,6 +24,8 @@
   "host_permissions": [
     "https://youtube.com/*",
     "https://www.youtube.com/*",
+    "https://youtube-nocookie.com/*",
+    "https://www.youtube-nocookie.com/*",
     "https://yttracker.rakambda.fr/*"
   ],
   "options_page": "options.html",
@@ -39,7 +41,9 @@
     {
       "matches": [
         "https://youtube.com/*",
-        "https://www.youtube.com/*"
+        "https://www.youtube.com/*",
+        "https://youtube-nocookie.com/*",
+        "https://www.youtube-nocookie.com/*"
       ],
       "js": [
         "lib/jquery/jquery.min.js",
@@ -65,7 +69,9 @@
     ],
     "matches": [
       "https://youtube.com/*",
-      "https://www.youtube.com/*"
+      "https://www.youtube.com/*",
+      "https://youtube-nocookie.com/*",
+      "https://www.youtube-nocookie.com/*"
     ]
   }]
 }
