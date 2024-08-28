@@ -13,7 +13,7 @@ This application will track your time spent on YouTube. Those datas can be viewe
 The datas tracked are:
 * Two kind of time are recorded:
   * The total time of opened videos. This time is counted when the video page have been loaded.
-  * The time time of playing videos. This time is counted when a video is playing.
+  * The total time of playing videos. This time is counted when a video is playing.
 * The number of videos opened.
 
 The count and time of videos opened are counted only one time per each hour maximum. This is to avoid having unintended reloads of the page bringing up the statistics.
