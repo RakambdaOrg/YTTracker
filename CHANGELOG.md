@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.1.2] - 2024-08-28
+
+- Add support for youtube-nocookie
+
 ## [3.1.1] - 2023-08-10
 
 - Fix chrome untrusted html
