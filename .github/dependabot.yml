@@ -10,3 +10,13 @@ updates:
       timezone: Europe/Paris
     pull-request-branch-name:
       separator: '-'
+    groups:
+      eslint:
+        patterns:
+          - eslint
+          - '@eslint/*'
+          - '@stylistic/eslint-plugin-ts'
+          - '@typescript-eslint/*'
+      octokit:
+        patterns:
+          - '@octokit/*'
