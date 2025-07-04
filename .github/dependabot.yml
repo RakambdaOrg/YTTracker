@@ -10,6 +10,13 @@ updates:
       timezone: Europe/Paris
     pull-request-branch-name:
       separator: '-'
+    cooldown:
+      default-days: 3
+      include:
+        - eslint
+        - '@eslint/*'
+        - '@stylistic/eslint-plugin-ts'
+        - '@typescript-eslint/*'
     groups:
       eslint:
         patterns:
