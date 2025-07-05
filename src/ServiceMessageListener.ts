@@ -32,17 +32,9 @@ export class ServiceMessageListener {
         } else if (message.type === 'NEW_VIDEO_OPENED') {
             await this.videoManager.onVideoOpened(message as VideoOpenedMessage);
         } else if (message.type === 'VIDEO_STARTED') {
-            if (!tabId) {
-                await this.logManager.logDebug("Received video started event with no tab");
-                return;
-            }
-            await this.videoManager.onVideoStarted(message as VideoStartedMessage, tabId);
+            await this.videoManager.onVideoStarted(message as VideoStartedMessage);
         } else if (message.type === 'VIDEO_STOPPED') {
-            if (!tabId) {
-                await this.logManager.logDebug("Received video started event with no tab");
-                return;
-            }
-            await this.videoManager.onVideoStopped(message as VideoStoppedMessage, tabId);
+            await this.videoManager.onVideoStopped(message as VideoStoppedMessage);
         }
     }
 }

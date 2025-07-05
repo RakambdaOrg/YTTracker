@@ -10,6 +10,10 @@
     "noEmitOnError" : true,
     "typeRoots" : [
       "node_modules/@types"
-    ]
+    ],
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+    "noUncheckedIndexedAccess": true
   }
 }

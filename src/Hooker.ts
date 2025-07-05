@@ -79,7 +79,7 @@ export class Hooker {
         }, 75);
     }
 
-    private onApiChange() {
+    private onApiChange = () => {
         const videoData = this.player?.getVideoData();
         const playerInfo = document.getElementById(ContentScriptConstants.PLAYER_INFO);
         if (!videoData || !playerInfo) {
@@ -102,13 +102,13 @@ export class Hooker {
         playerInfo.innerHTML = this.policy.createHTML(this.player.getVideoData()['video_id'] + ContentScriptConstants.SPLITTER + this.player.getDuration());
     }
 
-    private setTimeInfo(playerStateValue: number) {
+    private setTimeInfo = (playerStateValue: number) => {
         const playerState = document.getElementById(ContentScriptConstants.PLAYER_STATE);
         const player2 = document.getElementById(ContentScriptConstants.PLAYER_TIME_2);
         if (!this.player || !playerState || !player2) {
             return;
-
         }
+        
         let value: string;
         if (playerStateValue === 1) {
             value = ContentScriptConstants.STATE_KEY_PLAYING + ContentScriptConstants.SPLITTER + this.player.getCurrentTime();

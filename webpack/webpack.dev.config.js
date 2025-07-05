@@ -42,6 +42,10 @@ module.exports = {
 			},
 		],
 	},
+	devtool: 'source-map',
+	optimization: {
+		minimize: false
+	},
 	plugins: [
 		new CopyPlugin({
 			patterns: [
@@ -60,7 +64,7 @@ module.exports = {
 					context: 'manifest-dev',
 					transform: {
 						transformer: function (content, _) {
-							return replace(content,'!!!VERSION!!!', version);
+							return replace(content, '!!!VERSION!!!', version);
 						}
 					}
 				}

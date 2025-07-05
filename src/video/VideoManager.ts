@@ -81,12 +81,12 @@ export class VideoManager {
         }
     }
 
-    public async onVideoStarted(message: VideoStartedMessage, tabId: number) {
+    public async onVideoStarted(message: VideoStartedMessage) {
         await this.logManager.logDebug(`Started playing at ${message.durationSeconds}s`);
         await this.badgeManager.set('P');
 
         let activePlayers = await this.configurationManager.getValue(ConfigurationKeys.ACTIVE_PLAYERS) || {};
-        activePlayers[tabId] = {
+        activePlayers[message.playerId] = {
             time: new Date().getTime(),
             vid: message.videoId,
             videoTime: message.durationSeconds
@@ -94,16 +94,16 @@ export class VideoManager {
         await this.configurationManager.setValue(ConfigurationKeys.ACTIVE_PLAYERS, activePlayers)
     }
 
-    public async onVideoStopped(message: VideoStoppedMessage, tabId: number) {
+    public async onVideoStopped(message: VideoStoppedMessage) {
         let activePlayers = await this.configurationManager.getValue(ConfigurationKeys.ACTIVE_PLAYERS) || {};
 
-        const activePlayer = activePlayers[tabId];
+        const activePlayer = activePlayers[message.playerId];
         if (!activePlayer) {
             return;
         }
         await this.logManager.logDebug(`Ended playing at ${message.durationSeconds}s`);
 
-        delete activePlayer[tabId];
+        delete activePlayer[message.playerId];
         await this.configurationManager.setValue(ConfigurationKeys.ACTIVE_PLAYERS, activePlayers);
 
         if (activePlayers.length < 1) {
@@ -161,6 +161,9 @@ export class VideoManager {
 
         for (const dayKey in durationsInfo) {
             const durationInfo = durationsInfo[dayKey];
+            if (!durationInfo){
+                continue;
+            }
 
             let dayStats = new YttDay();
             if (config[dayKey]) {
@@ -180,6 +183,10 @@ export class VideoManager {
             let requests = [];
             for (const dayKey in durationsInfo) {
                 const durationInfo = durationsInfo[dayKey];
+                if (!durationInfo){
+                    continue;
+                }
+                
                 requests.push({videoID: message.videoId, duration: durationInfo.duration, date: durationInfo.date});
             }
             await this.apiManager.sendWatchedRequest(requests);
@@ -191,7 +198,7 @@ export class VideoManager {
 
         const now = new Date().getTime();
         for (const key in config) {
-            if (now - config[key] > this.ONE_HOUR_MILLISECONDS) {
+            if (now - (config[key] ?? now) > this.ONE_HOUR_MILLISECONDS) {
                 keysToRemove.push(key);
             }
         }

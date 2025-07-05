@@ -5,31 +5,43 @@ import {VideoStoppedMessage} from "./messages/VideoStoppedMessage";
 import {VideoOpenedMessage} from "./messages/VideoOpenedMessage";
 import {LogMessage} from "./messages/LogMessage";
 import {VideoStartedMessage} from "./messages/VideoStartedMessage";
+import {StringUtils} from "./api/StringUtils";
 
 export class ContentScript {
+    private readonly playerId: string;
+
+    constructor() {
+        this.playerId = StringUtils.generateUuid();
+    }
+
     private onStateChanged(mutation: MutationRecord): void {
         const textContent = mutation.target.textContent;
-        if(!textContent){
+        if (!textContent) {
             return;
         }
 
         const values = textContent.split(ContentScriptConstants.SPLITTER);
         const videoId = $(`#${ContentScriptConstants.PLAYER_INFO}`).text().split(ContentScriptConstants.SPLITTER)[0];
-        const duration = parseInt(values[1]);
+        const duration = parseInt(values[1] ?? "-1");
         const changeType = values[0];
+        if (!videoId || duration < 0) {
+            return;
+        }
 
         if (changeType === ContentScriptConstants.STATE_KEY_PLAYING) {
             const event: VideoStartedMessage = {
                 type: "VIDEO_STARTED",
                 durationSeconds: duration,
-                videoId: videoId
+                videoId: videoId,
+                playerId: this.playerId
             };
             browser.runtime.sendMessage(event);
         } else if (changeType === ContentScriptConstants.STATE_KEY_WATCHED) {
             const event: VideoStoppedMessage = {
                 type: "VIDEO_STOPPED",
                 durationSeconds: duration,
-                videoId: videoId
+                videoId: videoId,
+                playerId: this.playerId
             };
             browser.runtime.sendMessage(event);
         }
@@ -37,15 +49,22 @@ export class ContentScript {
 
     private onInfoChanged(mutation: MutationRecord): void {
         const textContent = mutation.target.textContent;
-        if(!textContent){
+        if (!textContent) {
             return;
         }
 
         const values = textContent.split(ContentScriptConstants.SPLITTER);
+
+        const videoId = values[0];
+        const durationSeconds = parseInt(values[1] ?? "-1");
+        if (!videoId || durationSeconds < 0) {
+            return;
+        }
+
         const event: VideoOpenedMessage = {
             type: "NEW_VIDEO_OPENED",
-            durationSeconds: parseInt(values[1]),
-            videoId: values[0]
+            durationSeconds: durationSeconds,
+            videoId: videoId
         };
         browser.runtime.sendMessage(event);
     }
@@ -53,10 +72,15 @@ export class ContentScript {
     private onUnload(): void {
         const videoId = $(`#${ContentScriptConstants.PLAYER_INFO}`).text().split(ContentScriptConstants.SPLITTER)[0];
         const duration = $(`#${ContentScriptConstants.PLAYER_TIME_2}`).text();
+        if (!videoId) {
+            return;
+        }
+
         const event: VideoStoppedMessage = {
             type: "VIDEO_STOPPED",
             durationSeconds: parseInt(duration),
-            videoId: videoId
+            videoId: videoId,
+            playerId: this.playerId
         };
         browser.runtime.sendMessage(event);
     }
