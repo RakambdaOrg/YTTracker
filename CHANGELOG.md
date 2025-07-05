@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.1.3] - 2025-07-05
+
+- Add support for youtube music
+- 
 ## [3.1.2] - 2024-08-28
 
 - Add support for youtube-nocookie

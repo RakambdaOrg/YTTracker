@@ -24,6 +24,7 @@
   "host_permissions": [
     "https://youtube.com/*",
     "https://www.youtube.com/*",
+    "https://music.youtube.com/*",
     "https://youtube-nocookie.com/*",
     "https://www.youtube-nocookie.com/*",
     "https://yttracker.rakambda.fr/*"
@@ -43,6 +44,7 @@
       "matches": [
         "https://youtube.com/*",
         "https://www.youtube.com/*",
+        "https://music.youtube.com/*",
         "https://youtube-nocookie.com/*",
         "https://www.youtube-nocookie.com/*"
       ],
@@ -71,6 +73,7 @@
     "matches": [
       "https://youtube.com/*",
       "https://www.youtube.com/*",
+      "https://music.youtube.com/*",
       "https://youtube-nocookie.com/*",
       "https://www.youtube-nocookie.com/*"
     ]
