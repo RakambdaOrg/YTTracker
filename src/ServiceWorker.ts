@@ -20,6 +20,6 @@ const downloadManager = new DownloadManager();
 const serviceMessageListener = new ServiceMessageListener(logManager, videoManager, downloadManager);
 
 browser.runtime.onMessage.addListener(async (message: any, sender: Runtime.MessageSender) => serviceMessageListener.onMessage(message, sender));
-//browser.runtime.onMessageExternal.addListener(async (message: any, sender: Runtime.MessageSender) => serviceMessageListener.onMessage(message, sender));
 
 configurationManager.setValue(ConfigurationKeys.VERSION, browser.runtime.getManifest().version);
+configurationManager.setValue(ConfigurationKeys.ACTIVE_PLAYERS, null);

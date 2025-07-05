@@ -103,10 +103,10 @@ export class VideoManager {
         }
         await this.logManager.logDebug(`Ended playing at ${message.durationSeconds}s`);
 
-        delete activePlayer[message.playerId];
+        delete activePlayers[message.playerId];
         await this.configurationManager.setValue(ConfigurationKeys.ACTIVE_PLAYERS, activePlayers);
 
-        if (activePlayers.length < 1) {
+        if (Object.keys(activePlayers).length < 1) {
             await this.badgeManager.reset();
         }
 

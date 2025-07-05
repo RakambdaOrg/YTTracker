@@ -111,7 +111,7 @@ export class ContentScript {
         body.append(this.getInjectDiv(ContentScriptConstants.PLAYER_TIME_1, '0'));
         body.append(this.getInjectDiv(ContentScriptConstants.PLAYER_TIME_2, '0'));
 
-        $(window).on('beforeunload', this.onUnload);
+        $(window).on('beforeunload', () => this.onUnload());
 
         const hookerInj = document.createElement('script');
         const docFrag = document.createDocumentFragment();
@@ -122,8 +122,8 @@ export class ContentScript {
         docFrag.appendChild(hookerInj);
         (document.head || document.documentElement).appendChild(docFrag);
 
-        this.observeElement(ContentScriptConstants.PLAYER_STATE, this.onStateChanged);
-        this.observeElement(ContentScriptConstants.PLAYER_INFO, this.onInfoChanged);
+        this.observeElement(ContentScriptConstants.PLAYER_STATE, (mutation) => this.onStateChanged(mutation));
+        this.observeElement(ContentScriptConstants.PLAYER_INFO, (mutation) => this.onInfoChanged(mutation));
 
         const logMessage: LogMessage = {
             type: "LOG",
