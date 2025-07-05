@@ -21,8 +21,10 @@ function replace(/*Buffer*/ data, /*string*/ pattern, /*string*/ replace) {
 module.exports = {
 	mode: 'development',
 	entry: {
+		ContentScript: path.resolve(__dirname, '..', 'src', 'ContentScript.ts'),
+		Hooker: path.resolve(__dirname, '..', 'src', 'Hooker.ts'),
 		ServiceWorker: path.resolve(__dirname, '..', 'src', 'ServiceWorker.ts'),
-		settings: path.resolve(__dirname, '..', 'src', 'Chart.ts'),
+		Settings: path.resolve(__dirname, '..', 'src', 'Chart.ts'),
 	},
 	output: {
 		path: path.join(__dirname, '../dist'),

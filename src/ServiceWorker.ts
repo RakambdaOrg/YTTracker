@@ -8,6 +8,7 @@ import {NotificationManager} from "./NotificationManager";
 import {BadgeManager} from "./BadgeManager";
 import {ConfigurationKeys} from "./storage/ConfigurationKeys";
 import {DownloadManager} from "./DownloadManager";
+import {Runtime} from "webextension-polyfill";
 
 const configurationManager = new ConfigurationManager();
 const logManager = new LogManager(configurationManager);
@@ -18,7 +19,7 @@ const videoManager = new VideoManager(configurationManager, logManager, apiManag
 const downloadManager = new DownloadManager();
 const serviceMessageListener = new ServiceMessageListener(logManager, videoManager, downloadManager);
 
-browser.runtime.onMessage.addListener(async (message, sender) => serviceMessageListener.onMessage(message, sender));
-browser.runtime.onMessageExternal.addListener(async (message, sender) => serviceMessageListener.onMessage(message, sender));
+browser.runtime.onMessage.addListener(async (message: any, sender: Runtime.MessageSender) => serviceMessageListener.onMessage(message, sender));
+browser.runtime.onMessageExternal.addListener(async (message: any, sender: Runtime.MessageSender) => serviceMessageListener.onMessage(message, sender));
 
 configurationManager.setValue(ConfigurationKeys.VERSION, browser.runtime.getManifest().version);
