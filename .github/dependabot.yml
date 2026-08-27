@@ -12,6 +12,9 @@ updates:
       separator: '-'
       word-separator: '-'
       branch-name-case: lowercase
+    minimum-age:
+      minimum-age: 3
+      minimum-age-unit: days
     cooldown:
       default-days: 3
       include:
