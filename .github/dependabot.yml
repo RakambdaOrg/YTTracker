@@ -13,10 +13,10 @@ updates:
       word-separator: '-'
       branch-name-case: lowercase
     minimum-age:
-      minimum-age: 3
+      minimum-age: 4
       minimum-age-unit: days
     cooldown:
-      default-days: 3
+      default-days: 4
       include:
         - eslint
         - '@eslint/*'
