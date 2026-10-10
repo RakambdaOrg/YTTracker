@@ -14,11 +14,6 @@ updates:
       branch-name-case: lowercase
     cooldown:
       default-days: 4
-      include:
-        - eslint
-        - '@eslint/*'
-        - '@stylistic/eslint-plugin-ts'
-        - '@typescript-eslint/*'
     groups:
       eslint:
         patterns:
