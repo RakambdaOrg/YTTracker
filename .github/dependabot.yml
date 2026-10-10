@@ -32,3 +32,6 @@ updates:
       octokit:
         patterns:
           - '@octokit/*'
+      actions:
+        patterns:
+          - actions/*
