@@ -21,7 +21,9 @@ Done: step 3 (hook, relay, background, tracker + tests) and step 7 (`api.ts` onl
 
 Done: step 4 (popup, edit page; shared `src/assets/common.css` with dark mode, `src/lib/dom.ts`).
 
-Now: step 5 (chart page).
+Done: step 5 (chart page with Chart.js and a period selector).
+
+Now: step 6 (options page).
 
 ## Decisions
 

@@ -9,6 +9,9 @@
 	--accent-text: #ffffff;
 	--warn-bg: #fff4d6;
 	--radius: 8px;
+	--series-watched: #2e8540;
+	--series-opened: #c4302b;
+	--series-count: #2f6fdb;
 	font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 	font-size: 15px;
 }
@@ -22,6 +25,9 @@
 		--border: #343a41;
 		--accent: #e5534b;
 		--warn-bg: #3a3118;
+		--series-watched: #4fbf67;
+		--series-opened: #f06a63;
+		--series-count: #6c9ef8;
 	}
 }
 
@@ -54,10 +60,6 @@ nav {
 
 nav img {
 	width: 32px;
-}
-
-nav .spacer {
-	flex: 1;
 }
 
 a {
@@ -151,3 +153,13 @@ select {
 	gap: 8px;
 }
 input.short { width: 5.5em; }
+
+.spacer {
+	flex: 1;
+}
+
+.chart {
+	position: relative;
+	height: 420px;
+	margin-top: 12px;
+}

@@ -71,3 +71,20 @@ export function registerOpened(ids: Record<string, number>, videoId: string, now
 	}
 	return {ids: {...kept, [videoId]: now}, isNew: true};
 }
+
+export interface Summary extends DayStats {
+	days: number;
+	avgWatchedMs: number;
+	avgOpenedMs: number;
+	avgCount: number;
+	/** Mean over days of watched / max(watched, opened). */
+	avgRatio: number;
+}
+
+/** Totals and per-day averages over the given days (only days with data, like the old chart). */
+export function summarize(days: DayStats[]): Summary {
+	const total = days.reduce(addStats, emptyDay());
+	const ratio = days.reduce((sum, d) => sum + d.watchedMs / Math.max(1, d.watchedMs, d.openedMs), 0);
+	const n = Math.max(1, days.length);
+	return {...total, days: days.length, avgWatchedMs: total.watchedMs / n, avgOpenedMs: total.openedMs / n, avgCount: total.count / n, avgRatio: ratio / n};
+}

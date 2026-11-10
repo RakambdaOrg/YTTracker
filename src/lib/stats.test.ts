@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {dayKey, registerOpened, splitByDay} from './stats';
+import {dayKey, registerOpened, splitByDay, summarize} from './stats';
 
 const at = (iso: string) => new Date(iso).getTime();
 
@@ -53,5 +53,14 @@ describe('registerOpened', () => {
 	it('counts again after an hour and prunes old IDs', () => {
 		const result = registerOpened({abc: now - 61 * 60_000, old: now - 2 * 3_600_000}, 'abc', now);
 		expect(result).toEqual({ids: {abc: now}, isNew: true});
+	});
+});
+
+describe('summarize', () => {
+	it('computes totals and averages', () => {
+		expect(summarize([{count: 2, watchedMs: 50, openedMs: 100}, {count: 4, watchedMs: 300, openedMs: 100}])).toEqual({
+			count: 6, watchedMs: 350, openedMs: 200, days: 2, avgWatchedMs: 175, avgOpenedMs: 100, avgCount: 3, avgRatio: 0.75,
+		});
+		expect(summarize([]).avgRatio).toBe(0);
 	});
 });
