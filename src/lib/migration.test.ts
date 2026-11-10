@@ -72,14 +72,15 @@ describe('storage migration', () => {
 		expect(all.schemaVersion).toBe(2);
 	});
 
-	it('finishes an interrupted migration without converting twice', async () => {
+	it('reruns an interrupted migration without counting twice', async () => {
 		await browser.storage.local.set(legacy);
 		await migrateStorage();
 		const migrated = await browser.storage.local.get(null);
-		// Simulate a crash after set() and before remove(), then new data recorded.
-		await browser.storage.local.set({...legacy, total: {count: 11, watchedMs: 1, openedMs: 1}});
+		// Simulate a crash after the new keys were written and before the old ones were removed.
+		fakeBrowser.reset();
+		await browser.storage.local.set({...legacy, ...fromLegacy(legacy)});
 		await migrateStorage();
-		expect(await browser.storage.local.get(null)).toEqual({...migrated, total: {count: 11, watchedMs: 1, openedMs: 1}});
+		expect(await browser.storage.local.get(null)).toEqual(migrated);
 	});
 
 	it('marks a fresh install as current', async () => {

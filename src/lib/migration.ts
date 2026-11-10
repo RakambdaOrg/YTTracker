@@ -166,17 +166,20 @@ export async function applyImport(entries: Raw): Promise<void> {
 }
 
 /**
- * Moves v1 storage to v2. New keys and the schema version are written in one
- * set() before the old keys are removed, so an interrupted run never loses
- * data, and a rerun only finishes the cleanup.
+ * Moves v1 storage to v2. Runs on every background start, so the current case
+ * is one small read. The schema version is written last: an interrupted run
+ * converts again from the old keys, which overwrites rather than adds.
  */
 export async function migrateStorage(): Promise<void> {
+	const {schemaVersion} = await browser.storage.local.get('schemaVersion');
+	if (num(schemaVersion) >= SCHEMA_VERSION) {
+		return;
+	}
 	const all = await browser.storage.local.get(null);
 	const legacyKeys = Object.keys(all).filter(isLegacyKey);
-	if (num(all.schemaVersion) < SCHEMA_VERSION) {
-		await browser.storage.local.set({...(legacyKeys.length > 0 ? fromLegacy(all) : {}), schemaVersion: SCHEMA_VERSION});
-	}
 	if (legacyKeys.length > 0) {
+		await browser.storage.local.set(fromLegacy(all));
 		await browser.storage.local.remove(legacyKeys);
 	}
+	await browser.storage.local.set({schemaVersion: SCHEMA_VERSION});
 }

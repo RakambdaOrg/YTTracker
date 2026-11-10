@@ -17,7 +17,9 @@ Done: step 1 (scaffold builds chrome-mv3, chrome-mv3-beta, firefox-mv3; old `inc
 
 Done: step 2 (`src/lib/stats.ts`, `storage.ts`, `migration.ts`, `format.ts` + tests, `pnpm check` green).
 
-Now: step 3 (hook, content relay, background).
+Done: step 3 (hook, relay, background, tracker + tests) and step 7 (`api.ts` online sharing; username calls ready for the options page).
+
+Now: step 4 (popup and edit page).
 
 ## Decisions
 
@@ -43,3 +45,9 @@ Now: step 3 (hook, content relay, background).
 - Unused icons `barIcon.png` and `icon128mask.png` deleted.
 - Check at release: AMO may require `browser_specific_settings.gecko.data_collection_permissions` (online sharing is optional data collection). Ask the user.
 - Old chart zoom (amCharts scrollbar, default last 7 days) becomes a period selector (7d/30d/1y/all) that drives the "selected period" card.
+- Hook changes vs old code, to check in the manual test:
+  - It keeps polling for `#movie_player` (the old code gave up after about 2 minutes).
+  - "Opened" is sent once the duration is known, or when the video plays (live streams).
+  - `ad-showing` play events count as a stop, and video changes during ads are ignored.
+- Background: storage updates go through a serial queue. Active players are keyed `tabId:frameId` in `storage.session`. `tabs.onRemoved` finishes the players of a closed tab.
+- Notifications (debug) need the optional permission: request it when debug is enabled in options (step 6).
