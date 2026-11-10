@@ -42,7 +42,6 @@ describe('legacy conversion', () => {
 			startTime: 1_700_000_000_000,
 			weirdThreshold: 172_800_000,
 			username: 'bob',
-			dropboxToken: 'secret',
 			shareOnline: true,
 			debug: false,
 			openedIds: {vid1: 1_700_000_000_000},
@@ -66,7 +65,7 @@ describe('storage migration', () => {
 		await migrateStorage();
 		const all = await browser.storage.local.get(null);
 		expect(Object.keys(all).sort()).toEqual([
-			'day:2026-01-01', 'day:2026-11-10', 'debug', 'dropboxToken', 'failedShare', 'openedIds',
+			'day:2026-01-01', 'day:2026-11-10', 'debug', 'failedShare', 'openedIds',
 			'schemaVersion', 'shareOnline', 'startTime', 'total', 'userId', 'username', 'weirdThreshold',
 		]);
 		expect(all.schemaVersion).toBe(2);
@@ -94,11 +93,12 @@ describe('import and export', () => {
 		fakeBrowser.reset();
 	});
 
-	it('round-trips an export, without the Dropbox token', async () => {
+	it('round-trips an export, without the Dropbox login', async () => {
 		await browser.storage.local.set(legacy);
 		await migrateStorage();
+		await browser.storage.local.set({dropboxRefreshToken: 'secret'});
 		const exported = await buildExport();
-		expect(exported.data).not.toHaveProperty('dropboxToken');
+		expect(exported.data).not.toHaveProperty('dropboxRefreshToken');
 		expect(exported.data).not.toHaveProperty('schemaVersion');
 
 		await browser.storage.local.clear();

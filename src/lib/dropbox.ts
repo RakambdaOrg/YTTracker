@@ -2,19 +2,84 @@ import {browser} from 'wxt/browser';
 import {items} from './storage';
 
 const CLIENT_ID = '7zgfd8x5bpf8g7p';
+const TOKEN_URL = 'https://api.dropboxapi.com/oauth2/token';
+// Refresh a bit before the real expiry, so a call never starts with a dying token.
+const EXPIRY_MARGIN_MS = 60_000;
 
 class DropboxAuthError extends Error {}
 
-async function authenticate(): Promise<string> {
-	const url = new URL('https://www.dropbox.com/oauth2/authorize');
-	url.search = new URLSearchParams({client_id: CLIENT_ID, response_type: 'token', redirect_uri: browser.identity.getRedirectURL()}).toString();
-	const redirect = await browser.identity.launchWebAuthFlow({url: url.toString(), interactive: true});
-	const token = redirect ? new URLSearchParams(new URL(redirect).hash.slice(1)).get('access_token') : null;
-	if (!token) {
-		throw new Error('Dropbox authentication was cancelled');
+interface TokenResponse {
+	access_token: string;
+	expires_in: number;
+	refresh_token?: string;
+}
+
+const base64Url = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+/** PKCE verifier (43+ chars of [A-Za-z0-9-_]) and its S256 challenge. */
+export async function createPkce(): Promise<{verifier: string; challenge: string}> {
+	const verifier = base64Url(crypto.getRandomValues(new Uint8Array(32)));
+	const challenge = base64Url(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))));
+	return {verifier, challenge};
+}
+
+async function requestToken(params: Record<string, string>): Promise<TokenResponse> {
+	const response = await fetch(TOKEN_URL, {method: 'POST', body: new URLSearchParams({client_id: CLIENT_ID, ...params})});
+	if (!response.ok) {
+		throw new DropboxAuthError(`Dropbox token error ${response.status}`);
 	}
-	await items.dropboxToken.setValue(token);
-	return token;
+	return (await response.json()) as TokenResponse;
+}
+
+async function saveToken(token: TokenResponse): Promise<string> {
+	if (token.refresh_token) {
+		await items.dropboxRefreshToken.setValue(token.refresh_token);
+	}
+	await items.dropboxAccess.setValue({token: token.access_token, expiresAt: Date.now() + token.expires_in * 1000 - EXPIRY_MARGIN_MS});
+	return token.access_token;
+}
+
+/** Authorization code flow with PKCE; offline access gives a refresh token, so the login is asked once. */
+async function login(): Promise<string> {
+	const {verifier, challenge} = await createPkce();
+	const state = base64Url(crypto.getRandomValues(new Uint8Array(16)));
+	const redirectUri = browser.identity.getRedirectURL();
+	const url = new URL('https://www.dropbox.com/oauth2/authorize');
+	url.search = new URLSearchParams({
+		client_id: CLIENT_ID,
+		response_type: 'code',
+		redirect_uri: redirectUri,
+		code_challenge: challenge,
+		code_challenge_method: 'S256',
+		token_access_type: 'offline',
+		state,
+	}).toString();
+	const redirect = await browser.identity.launchWebAuthFlow({url: url.toString(), interactive: true});
+	const params = redirect ? new URL(redirect).searchParams : null;
+	const code = params?.get('code');
+	if (!code || params?.get('state') !== state) {
+		throw new Error('Dropbox login was cancelled');
+	}
+	return saveToken(await requestToken({grant_type: 'authorization_code', code, code_verifier: verifier, redirect_uri: redirectUri}));
+}
+
+async function accessToken(forceRefresh = false): Promise<string> {
+	const cached = await items.dropboxAccess.getValue();
+	if (!forceRefresh && cached && cached.expiresAt > Date.now()) {
+		return cached.token;
+	}
+	const refreshToken = await items.dropboxRefreshToken.getValue();
+	if (refreshToken) {
+		try {
+			return await saveToken(await requestToken({grant_type: 'refresh_token', refresh_token: refreshToken}));
+		} catch (error) {
+			if (!(error instanceof DropboxAuthError)) {
+				throw error;
+			}
+			// The refresh token was revoked: log in again.
+		}
+	}
+	return login();
 }
 
 async function call(url: string, init: RequestInit, token: string): Promise<Response> {
@@ -30,16 +95,15 @@ async function call(url: string, init: RequestInit, token: string): Promise<Resp
 	return response;
 }
 
-/** Runs a call with the saved token; on an expired token, authenticates again once. */
+/** Runs a call; on a rejected token, gets a new one once. */
 async function withToken(run: (token: string) => Promise<Response>): Promise<Response> {
-	const saved = await items.dropboxToken.getValue();
 	try {
-		return await run(saved ?? (await authenticate()));
+		return await run(await accessToken());
 	} catch (error) {
 		if (!(error instanceof DropboxAuthError)) {
 			throw error;
 		}
-		return run(await authenticate());
+		return run(await accessToken(true));
 	}
 }
 
@@ -71,6 +135,12 @@ export async function downloadLatestExport(): Promise<string | null> {
 	return file.text();
 }
 
+/** Revokes the login at Dropbox (best effort) and forgets it locally. */
 export async function disconnect(): Promise<void> {
-	await items.dropboxToken.setValue(null);
+	const cached = await items.dropboxAccess.getValue();
+	if (cached) {
+		await fetch('https://api.dropboxapi.com/2/auth/token/revoke', {method: 'POST', headers: {Authorization: `Bearer ${cached.token}`}}).catch(() => undefined);
+	}
+	await items.dropboxRefreshToken.setValue(null);
+	await items.dropboxAccess.setValue(null);
 }

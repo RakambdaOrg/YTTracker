@@ -1,5 +1,5 @@
 import {browser} from 'wxt/browser';
-import {share} from './api';
+import {canShare, share} from './api';
 import {formatDuration} from './format';
 import {logDebug} from './log';
 import type {Message} from './messages';
@@ -41,7 +41,7 @@ async function onOpened(videoId: string, durationSec: number, now: number): Prom
 		await items.startTime.setValue(now);
 	}
 	await logDebug('New total opened time:', formatDuration(total.openedMs, true));
-	if (await items.shareOnline.getValue()) {
+	if (await canShare()) {
 		void share([{type: 'opened', videoId, ms: added.openedMs, date: now}]);
 	}
 }
@@ -73,7 +73,7 @@ async function onStop(player: string, now: number): Promise<void> {
 	}
 	await setDays(days);
 	await items.total.setValue(total);
-	if (await items.shareOnline.getValue()) {
+	if (await canShare()) {
 		void share(slices.map(s => ({type: 'watched', videoId: active.videoId, ms: s.ms, date: s.date})));
 	}
 }

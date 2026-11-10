@@ -31,9 +31,8 @@ Now: waiting for the user's manual test in Chrome and Firefox (see PLAN.md, Veri
 
 ## Open questions for the user
 
-- AMO: add `gecko.data_collection_permissions` (online sharing is optional data collection)?
-- Chrome Web Store API v1.1 (client ID/secret/refresh token) is deprecated. `submit:chrome` still uses it; v2 needs a service account.
-- Dropbox: the redirect URI is unchanged (`identity.getRedirectURL()`), but the implicit flow is legacy at Dropbox. Test that it still works.
+- Done (2026-11-10): Firefox `data_collection_permissions` (optional `websiteActivity`, consent asked when sharing is turned on), Chrome upload switched to API v2 with a service account (README "Technical notes"), Dropbox switched to PKCE + refresh token.
+- The user must set up the Chrome service account before the next release, and test the Dropbox login.
 - An old export file to test the migration against real data.
 
 ## Decisions

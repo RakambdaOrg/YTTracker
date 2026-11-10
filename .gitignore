@@ -11,3 +11,4 @@ dist/
 .output/
 .wxt/
 stats.html
+.env.submit

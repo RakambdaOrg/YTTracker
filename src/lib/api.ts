@@ -1,9 +1,29 @@
+import {browser} from 'wxt/browser';
 import {formatDuration} from './format';
 import {logDebug, notifyDebug} from './log';
 import {items, type PendingShare} from './storage';
 import {createSerialQueue} from './serial';
 
 const API = 'https://yttracker.rakambda.fr/api/v2';
+
+/** Firefox 140+ data consent category declared in wxt.config.ts for online sharing. */
+export const DATA_COLLECTION = 'websiteActivity';
+
+/** Firefox 140+ lists consented data under data_collection; other browsers don't have the key. */
+type Permissions = Awaited<ReturnType<typeof browser.permissions.getAll>> & {data_collection?: string[]};
+
+export async function hasBuiltInConsent(): Promise<boolean> {
+	return 'data_collection' in (await browser.permissions.getAll());
+}
+
+/** Sharing is on, and on Firefox 140+ the user did not withdraw consent in about:addons. */
+export async function canShare(): Promise<boolean> {
+	if (!(await items.shareOnline.getValue())) {
+		return false;
+	}
+	const {data_collection: consent} = (await browser.permissions.getAll()) as Permissions;
+	return consent === undefined || consent.includes(DATA_COLLECTION);
+}
 const serial = createSerialQueue();
 
 const userUrl = async (path: string) => `${API}/${encodeURIComponent(await items.userId.getValue())}/${path}`;

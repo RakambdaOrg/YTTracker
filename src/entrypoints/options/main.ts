@@ -1,6 +1,6 @@
 import '@/assets/common.css';
 import {browser} from 'wxt/browser';
-import {fetchUsername, setUsername} from '@/lib/api';
+import {canShare, DATA_COLLECTION, fetchUsername, hasBuiltInConsent, setUsername} from '@/lib/api';
 import {byId} from '@/lib/dom';
 import * as dropbox from '@/lib/dropbox';
 import {applyImport, buildExport, parseImport} from '@/lib/migration';
@@ -112,8 +112,18 @@ action('reset', async () => {
 });
 
 const share = input('shareOnline');
-share.checked = await items.shareOnline.getValue();
-action('shareOnline', () => items.shareOnline.setValue(share.checked), 'change');
+share.checked = await canShare();
+const askConsent = await hasBuiltInConsent();
+share.addEventListener('change', () => {
+	// Firefox 140+ asks its own data consent; the request must happen right in the user gesture, before any await.
+	const consent = share.checked && askConsent
+		? browser.permissions.request({data_collection: [DATA_COLLECTION]} as Parameters<typeof browser.permissions.request>[0]).catch(() => false)
+		: Promise.resolve(true);
+	void consent.then(async granted => {
+		share.checked &&= granted;
+		await items.shareOnline.setValue(share.checked);
+	});
+});
 
 const debug = input('debug');
 debug.checked = await items.debug.getValue();

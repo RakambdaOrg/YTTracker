@@ -45,3 +45,31 @@ Chart.js - [https://www.chartjs.org](https://www.chartjs.org)
 
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/RakambdaOrg/YTTracker/issues).
+
+## Technical notes
+
+### Publishing to the Chrome Web Store
+
+`pnpm release:chrome` runs the checks, builds the zip and uploads it with the Chrome Web Store API v2, which authenticates with a Google Cloud service account. The older OAuth client ID, client secret and refresh token are only accepted by the deprecated v1.1 API. One-time setup:
+
+1. In the [Google Cloud console](https://console.cloud.google.com/), create or pick a project, then search for **Chrome Web Store API** and enable it.
+2. Under **IAM & Admin > Service accounts**, create a service account. It needs no roles. Open it, go to **Keys > Add key > Create new key > JSON**, and keep the downloaded file safe.
+3. In the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole/), open **Account**, and add the service account's email address. A publisher can have only one service account.
+4. Still in the dashboard, copy your publisher ID from **Publisher > Settings**.
+5. Give the credentials to the upload, either as environment variables or in a `.env.submit` file at the repository root (git-ignored):
+
+   ```
+   CHROME_PUBLISHER_ID=<publisher ID>
+   CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL=<"client_email" from the JSON key>
+   CHROME_SERVICE_ACCOUNT_PRIVATE_KEY="<"private_key" from the JSON key, with its \n line breaks>"
+   ```
+
+`pnpm zip:beta` builds the beta listing's zip, which is uploaded by hand.
+
+### Publishing to Firefox
+
+`pnpm zip:firefox` builds the extension zip and the sources zip that addons.mozilla.org asks for. Upload both by hand, with `Mozilla-libs.txt` as the note to reviewers. The manifest declares online sharing as optional data collection (`websiteActivity`). On Firefox 140 and newer, turning on sharing in the options page shows Firefox's own consent prompt.
+
+### Dropbox
+
+Dropbox export and import use the OAuth authorization code flow with PKCE and offline access, so the user logs in once and the extension refreshes its token. The Dropbox app (client ID in `src/lib/dropbox.ts`) must keep **Allow public clients** on, and must list the redirect URIs given by `browser.identity.getRedirectURL()`: `https://<extension-id>.chromiumapp.org/` for Chrome, and `https://<hash>.extensions.allizom.org/` for Firefox.

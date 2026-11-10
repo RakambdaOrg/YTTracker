@@ -43,8 +43,8 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 - `storage.local`:
   - `day:YYYY-MM-DD`: one day's `DayStats` `{count, watchedMs, openedMs}`, in plain milliseconds.
   - `total`: an all-time `DayStats`. It is kept up to date separately from the days, not computed from them.
-  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `weirdThreshold` (default 48h), `username`, `dropboxToken`.
-- `storage.session`: `activePlayers`.
+  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `weirdThreshold` (default 48h), `username`, `dropboxRefreshToken`.
+- `storage.session`: `activePlayers`, `dropboxAccess` (the short-lived Dropbox access token).
 - **Migration** (`src/lib/migration.ts`): `migrateStorage()` runs on every background start. When the schema is current, it costs one small read. It converts the v1 format (`day<dayOfYear><YYYY>` keys, `YTTDuration` objects, `YTT_*` keys) and writes `schemaVersion` last, so an interrupted run simply starts over. Any future change to a key or a stored shape needs a new schema version and a step there.
 - **Export/import**: an export is `{version: 2, data}`, without the Dropbox token. Import takes v2 files and old v1 files (`parseImport`), validates every value, and replaces all data while keeping the current `userId` when the file has none.
 
@@ -59,11 +59,11 @@ Pages are vanilla TypeScript, without a framework. Use `el()`/`byId()` from `src
 
 ## Online sharing (opt-in)
 
-When `shareOnline` is on, each opened or watched duration is POSTed to `https://yttracker.rakambda.fr/api/v2/<uuid>/stats/add` as `{type, stat: ms, date: "Y-M-D H:m:s"}` (`src/lib/api.ts`). Failed requests are queued in `failedShare` and retried on the next send. The username is read and written through `/api/v2/<uuid>/username`.
+When `shareOnline` is on (and, on Firefox 140+, the `websiteActivity` data consent is granted: see `canShare()`), each opened or watched duration is POSTed to `https://yttracker.rakambda.fr/api/v2/<uuid>/stats/add` as `{type, stat: ms, date: "Y-M-D H:m:s"}` (`src/lib/api.ts`). Failed requests are queued in `failedShare` and retried on the next send. The username is read and written through `/api/v2/<uuid>/username`.
 
 ## Dropbox
 
-`src/lib/dropbox.ts` calls the Dropbox HTTP API directly, without the SDK. It uses the implicit OAuth flow through `identity.launchWebAuthFlow`. The redirect URI (`identity.getRedirectURL()`) must be registered in the Dropbox app. A 401 response triggers one new login. Exports are named `YTTracker.<timestamp>.json`, and import takes the newest one.
+`src/lib/dropbox.ts` calls the Dropbox HTTP API directly, without the SDK. It logs in with the OAuth authorization code flow with PKCE and `token_access_type=offline`, through `identity.launchWebAuthFlow`. The refresh token is kept in `storage.local`, so the user logs in once. The redirect URI (`identity.getRedirectURL()`) must be registered in the Dropbox app. A 401 response triggers one token refresh, then a new login if the refresh token was revoked. The old v1 access token is not migrated. Exports are named `YTTracker.<timestamp>.json`, and import takes the newest one.
 
 ## Layout
 
@@ -81,7 +81,7 @@ pnpm dev / dev:firefox      # run in a browser with hot reload (needs a desktop 
 pnpm check                  # tsc, ESLint (strict type-checked) and Vitest
 pnpm build / build:firefox / build:beta   # unpacked builds in .output/
 pnpm zip / zip:firefox / zip:beta         # store zips (Firefox also gets a sources zip for AMO)
-pnpm release:chrome         # check + zip + upload to the Chrome Web Store (needs CLIENT_ID/CLIENT_SECRET/REFRESH_TOKEN)
+pnpm release:chrome         # check + zip + upload to the Chrome Web Store (service account, see README "Technical notes")
 ```
 
 - Tests use WXT's fake browser and run in the `Europe/Paris` time zone (set in `vitest.config.ts`), so that DST cases are tested.

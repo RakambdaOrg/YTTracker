@@ -28,7 +28,8 @@ export const items = {
 	debug: storage.defineItem<boolean>('local:debug', {fallback: false}),
 	weirdThreshold: storage.defineItem<number>('local:weirdThreshold', {fallback: DEFAULT_WEIRD_THRESHOLD_MS}),
 	username: storage.defineItem<string>('local:username', {fallback: ''}),
-	dropboxToken: storage.defineItem<string | null>('local:dropboxToken', {fallback: null}),
+	dropboxRefreshToken: storage.defineItem<string | null>('local:dropboxRefreshToken', {fallback: null}),
+	dropboxAccess: storage.defineItem<{token: string; expiresAt: number} | null>('session:dropboxAccess', {fallback: null}),
 	// Session storage survives service-worker restarts and is cleared with the browser.
 	activePlayers: storage.defineItem<Record<string, ActivePlayer>>('session:activePlayers', {fallback: {}}),
 };

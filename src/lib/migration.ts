@@ -66,7 +66,10 @@ function cleanIds(value: unknown): Record<string, number> {
 	return isObject(value) ? Object.fromEntries(Object.entries(value).map(([id, time]) => [id, num(time)])) : {};
 }
 
-/** Converts a whole v1 storage dump (or v1 export file) to v2 storage entries. */
+/**
+ * Converts a whole v1 storage dump (or v1 export file) to v2 storage entries.
+ * The old Dropbox token is dropped: the new login flow needs a refresh token.
+ */
 export function fromLegacy(old: Raw): Raw {
 	const result: Raw = {};
 	let daysTotal = emptyDay();
@@ -94,9 +97,6 @@ export function fromLegacy(old: Raw): Raw {
 	}
 	if (typeof old.YTT_Username === 'string') {
 		result.username = old.YTT_Username;
-	}
-	if (typeof old.YTT_Dropbox_Access_Token === 'string') {
-		result.dropboxToken = old.YTT_Dropbox_Access_Token;
 	}
 	result.shareOnline = old.YTT_Share_Stats === true;
 	result.debug = old.YTT_Debug === true;

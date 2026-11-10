@@ -26,7 +26,16 @@ export default defineConfig({
 			optional_permissions: ['notifications'],
 			host_permissions: ['https://yttracker.rakambda.fr/*'],
 			...(browser === 'firefox'
-				? {browser_specific_settings: {gecko: {id: 'yttracker@mrcraftcod.fr', strict_min_version: '128.0'}}}
+				? {
+					browser_specific_settings: {
+						gecko: {
+							id: 'yttracker@mrcraftcod.fr',
+							strict_min_version: '128.0',
+							// Online sharing is off by default; the options page asks for this consent when it is turned on.
+							data_collection_permissions: {required: ['none'], optional: ['websiteActivity']},
+						},
+					},
+				}
 				: {key: beta ? CHROME_BETA_KEY : CHROME_KEY}),
 		};
 	},
