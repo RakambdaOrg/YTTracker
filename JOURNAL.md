@@ -15,7 +15,9 @@ Done: `AGENTS.md` written and reviewed with the user (not committed yet).
 
 Done: step 1 (scaffold builds chrome-mv3, chrome-mv3-beta, firefox-mv3; old `includes/` etc. kept as reference until step 8).
 
-Now: step 2 (stats, storage, migration + tests).
+Done: step 2 (`src/lib/stats.ts`, `storage.ts`, `migration.ts`, `format.ts` + tests, `pnpm check` green).
+
+Now: step 3 (hook, content relay, background).
 
 ## Decisions
 
