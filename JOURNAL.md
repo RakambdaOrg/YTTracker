@@ -23,7 +23,9 @@ Done: step 4 (popup, edit page; shared `src/assets/common.css` with dark mode, `
 
 Done: step 5 (chart page with Chart.js and a period selector).
 
-Now: step 6 (options page).
+Done: step 6 (options page, `dropbox.ts` without SDK, `takeout.ts`).
+
+Now: step 8 (delete old code, docs, release scripts).
 
 ## Decisions
 

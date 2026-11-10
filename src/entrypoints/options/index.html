@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="manifest.open_in_tab" content="true">
+	<title>Options - YouTube Tracker</title>
+</head>
+<body>
+<nav>
+	<img src="/assets/icon128.png" alt="">
+	<a href="/chart.html">Back to chart</a>
+</nav>
+<main class="options">
+	<section class="card">
+		<h2>Backup</h2>
+		<p class="muted">See <a href="https://github.com/RakambdaOrg/YTTracker/wiki/Import-Export" target="_blank">the wiki</a>. Importing <strong>replaces all your current data</strong> with the file's data. Files from older versions of the extension work too.</p>
+		<div class="row">
+			<button type="button" class="primary" id="exportFile">Export to file</button>
+			<label class="button">Import from file<input type="file" accept=".json,application/json" id="importFile" hidden></label>
+		</div>
+		<div class="row">
+			<button type="button" class="primary" id="exportDropbox">Export to Dropbox</button>
+			<button type="button" id="importDropbox">Import from Dropbox</button>
+			<button type="button" id="dropboxDisconnect">Forget Dropbox login</button>
+		</div>
+	</section>
+	<section class="card">
+		<h2>YouTube history</h2>
+		<p class="muted">Import the video count from a Google Takeout export of your YouTube history, <code>watch-history.json</code> (see <a href="https://github.com/RakambdaOrg/YTTracker/wiki/Import-YouTube-history" target="_blank">the wiki</a>). Only days with no data are imported, since Takeout only gives the number of videos opened.</p>
+		<label class="button">Import YouTube history<input type="file" accept=".json,application/json" id="importTakeout" hidden></label>
+	</section>
+	<section class="card">
+		<h2>Online sharing</h2>
+		<p class="muted">Other users will only see your watched time, opened time and opened count (more information <a href="https://github.com/RakambdaOrg/YTTracker/wiki/Online-Sharing" target="_blank">here</a>). Leave the username blank to be shown as Anonymous.</p>
+		<label class="row"><input type="checkbox" id="shareOnline"> Send stats online</label>
+		<form class="row" id="usernameForm">
+			<input type="text" id="username" placeholder="Username" aria-label="Username">
+			<button type="submit">Save username</button>
+		</form>
+	</section>
+	<section class="card">
+		<h2>Danger zone</h2>
+		<p class="muted">Deletes all the data saved by this extension. This cannot be undone.</p>
+		<button type="button" id="reset">Reset all data</button>
+	</section>
+	<footer class="row muted">
+		<span>UUID: <span id="userId"></span></span>
+		<span class="spacer"></span>
+		<label class="row"><input type="checkbox" id="debug"> Debug mode (logs and notifications)</label>
+		<span>Version <span id="version"></span></span>
+	</footer>
+</main>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>
