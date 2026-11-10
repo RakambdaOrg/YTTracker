@@ -8,6 +8,8 @@ export default defineConfig({
 	imports: false,
 	manifestVersion: 3,
 	targetBrowsers: ['chrome', 'firefox'],
+	// The AMO sources zip only needs what builds the extension.
+	zip: {excludeSources: ['extras/**', 'JOURNAL.md', 'PLAN.md']},
 	manifest: ({browser, mode}) => {
 		const beta = mode === 'beta';
 		return {

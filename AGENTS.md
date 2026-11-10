@@ -1,6 +1,6 @@
 # AGENTS.md
 
-YouTube Tracker (YTTracker) is a Manifest V3 browser extension for Chrome and Firefox that tracks time spent watching YouTube. It is old code: plain ES6 scripts loaded through `<script>` tags, global functions, jQuery, and no bundler, modules or tests. Don't copy its patterns into new code without checking first.
+YouTube Tracker (YTTracker) is a Manifest V3 browser extension for Chrome and Firefox that tracks time spent watching YouTube. It is written in TypeScript and built with [WXT](https://wxt.dev) (Vite). One codebase builds every browser. Browser differences live only in `wxt.config.ts`.
 
 If `JOURNAL.md` exists, read it first: it tracks the work in progress.
 
@@ -8,78 +8,84 @@ If `JOURNAL.md` exists, read it first: it tracks the work in progress.
 
 Data is stored per local day, plus a running total:
 
-| Stat | Storage field | How it is counted |
-|------|---------------|-------------------|
-| Opened time | `total` | The video's full duration, counted once when the video loads, whether or not it is watched. |
-| Watched time | `real` | Wall-clock time between a "playing" event and the next "stopped" event. Speed is ignored, so 1h of video watched at 2x counts as 30 min. |
+| Stat | Field | How it is counted |
+|------|-------|-------------------|
+| Opened time | `openedMs` | The video's full duration, counted once when the video loads, whether or not it is watched. |
+| Watched time | `watchedMs` | Wall-clock time between a "play" event and the next "stop" event. Speed is ignored, so 1h of video watched at 2x counts as 30 min. |
 | Video count | `count` | +1 per opened video. |
 
-- An opened video is counted at most once per hour per video ID (`YTT_IDS` holds the timestamp of each video ID's last count). This keeps page reloads from inflating the stats.
-- A watched interval that crosses midnight is split across days, going backwards from the stop time (`onVideoStop`).
-- Intervals of 500 ms or less are dropped (`YTT_MINIMUM_WATCH_THRESHOLD`).
-- Stopped means paused (2), ended (0), buffering (3), a video change (-5, synthetic) or the page unloading (`beforeunload`).
-- Intended scope: embedded players (other sites, youtube-nocookie) are tracked. Ads and homepage hover previews must not count. Only `#movie_player` is hooked. How ads are kept out of the count has not been checked.
+- An opened video is counted at most once per hour per video ID (`openedIds` holds the time of each ID's last count). This keeps reloads from inflating the stats.
+- A watched interval that crosses midnight is split on real local midnights, so DST is handled (`splitByDay`).
+- Intervals of 500 ms or less are dropped.
+- "Stop" means: paused, ended or buffering; a video change in the same player; an ad starting; the page being hidden (`pagehide`); or the tab closing.
+- Ads don't count: while `#movie_player` has the `ad-showing` class, play events count as a stop, and video changes are ignored.
+- Embedded players (other sites, youtube-nocookie) and music.youtube.com are tracked. Only `#movie_player` is hooked, so homepage hover previews should not count.
 
 ## How data flows
 
 ```
-YouTube page (page context)            content script (isolated)          background
-hooker.js + hookerUtils.js  --DOM-->   content.js  --runtime.sendMessage-->  service_worker.js --> storage.local
-  hooks #movie_player API               watches hidden divs with                                --> yttracker.rakambda.fr (opt-in)
-  writes into hidden divs               MutationObserver
+YouTube page (MAIN world)              content script (isolated)         background
+youtube-hook.content.ts  --postMessage-->  youtube.content.ts  --runtime.sendMessage-->  background.ts -> lib/tracker.ts
+  polls for #movie_player                  validates (toMessage)                          storage.local / storage.session
+  listens to onStateChange/onApiChange     sends "stop" on pagehide                       yttracker.rakambda.fr (opt-in)
 ```
 
-1. `content.js` runs at `document_start` in every frame on youtube.com, music.youtube.com and youtube-nocookie.com. It appends four hidden divs to `<body>` (`YTTPlayerState`, `YTTPlayerInfos`, `YTTPlayerTime1/2`). It then injects `YTTUtils.js`, `hookerUtils.js` and `hooker.js` as page scripts (web-accessible resources), because the player API is only reachable from the page context.
-2. `hooker.js` polls for `#movie_player`, every 250 ms for up to 500 attempts. Once found, it registers `onStateChange` and `onApiChange` listeners. It also writes `getCurrentTime()` into the time divs every 75 ms. `TIME_2` holds the previous tick and is used as the time at stop. Writes go through a Trusted Types policy (`ytTrackerPolicy`) when available.
-3. Data goes into the divs as strings separated by `@` (`YTT_DOM_SPLITTER`): `state@time` and `videoId@duration`.
-4. `content.js` turns DOM mutations into messages:
-   - `playerStateChange` carries state `opened` (it means *playing*, despite the name) or `watched` (it means *stopped*).
-   - `playerDuration` fires when a video loads.
-5. The background script (`onVideoPlay`, `onVideoStop`, `onVideoOpened`) keeps the start time of each tab that is playing in `YTT_Active_Players`, keyed by tab ID. It updates the day and total records and sets the badge to `P` while something plays.
+1. Both content scripts run at `document_start` in every frame of the YouTube domains (`src/lib/youtube.ts`).
+2. The hook runs in the page's main world, because the player API is only reachable there. It polls for `#movie_player` every 250 ms until it appears, then posts `HookEvent`s (`opened`, `play`, `stop`) with `window.postMessage`. "Opened" is sent once per video, as soon as its duration is known, or when it plays (live streams).
+3. The isolated script checks each event with `toMessage()` (`src/lib/messages.ts`), because the page can forge them, then forwards it to the background.
+4. The background identifies the player as `tabId:frameId` and runs each message through `lib/tracker.ts`. All storage updates go through one serial queue (`lib/serial.ts`), so concurrent events never overwrite each other.
+5. The start time of each playing player is kept in `storage.session` (`activePlayers`). It survives Chrome service-worker restarts and is cleared with the browser. The badge shows `P` while something plays.
 
-## Storage (`storage.local`)
+## Storage
 
-- `day<dayOfYear><YYYY>` (e.g. `day3142026`): one day's record, a serialized `YTTDay` `{count, real, total}`. `real` and `total` are serialized `YTTDuration` objects `{milliseconds, seconds, minutes, hours, days, type}`, not plain numbers. Keys are parsed by taking the last 4 characters as the year.
-- `YTT_Total`: an all-time `YTTDay`. It is kept up to date separately from the day records, not computed from them.
-- Other keys: `YTT_User_ID` (a random UUID), `YTT_Start`, `YTT_IDS`, `YTT_Active_Players`, `YTT_Share_Stats`, `YTT_Failed_Share` (the retry queue), `YTT_Debug`, `YTT_Weird_Data_Threshold` (default 48h), `YTT_Username`, `YTT_Dropbox_Access_Token`, `YTT_Version`.
-- `setupExtension()` runs every time the background script starts, including each time Chrome wakes the service worker. It clears `YTT_Active_Players`. In Chrome this happens on every wake-up, and wake-ups happen while a video is playing. A stop that wakes the worker still gets its start time only because the `get` in `onVideoStop` resolves before the reset's `set` runs. Keep that ordering in mind when touching either function. `setupExtension()` also rebuilds `YTT_Total` from the legacy `YTT_TotalTime`/`YTT_RealTime` keys if they exist, and removes keys that are no longer used.
-- Renaming any key or changing any stored shape breaks existing users' data and exported files. Any such change needs a migration in `setupExtension()`.
+Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
+
+- `storage.local`:
+  - `day:YYYY-MM-DD`: one day's `DayStats` `{count, watchedMs, openedMs}`, in plain milliseconds.
+  - `total`: an all-time `DayStats`. It is kept up to date separately from the days, not computed from them.
+  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `weirdThreshold` (default 48h), `username`, `dropboxToken`.
+- `storage.session`: `activePlayers`.
+- **Migration** (`src/lib/migration.ts`): `migrateStorage()` runs on every background start. When the schema is current, it costs one small read. It converts the v1 format (`day<dayOfYear><YYYY>` keys, `YTTDuration` objects, `YTT_*` keys) and writes `schemaVersion` last, so an interrupted run simply starts over. Any future change to a key or a stored shape needs a new schema version and a step there.
+- **Export/import**: an export is `{version: 2, data}`, without the Dropbox token. Import takes v2 files and old v1 files (`parseImport`), validates every value, and replaces all data while keeping the current `userId` when the file has none.
 
 ## Pages
 
-- `popup.html`: today's stats, the totals and the start date.
-- `chart.html`: an amCharts 4 chart of every day, with totals and averages. It flags days above the weird-data threshold.
-- `editHighValues.html`: manual correction of days above that threshold.
-- `options.html`: export and import as JSON (file or Dropbox), import of a Google Takeout watch history (counts only), a reset, the share-online toggle, the username shown on the server, and the debug toggle (logs and notifications).
+Pages are vanilla TypeScript, without a framework. Use `el()`/`byId()` from `src/lib/dom.ts` and never `innerHTML` (ESLint `no-unsanitized` enforces this). The shared styles are in `src/assets/common.css`, with light and dark themes through CSS variables.
+
+- `popup`: today's stats, the totals and the start date.
+- `chart` (unlisted): a Chart.js chart, with totals, averages, a period selector, and an alert for days above `weirdThreshold`.
+- `edit` (unlisted): lowers days above the threshold and adjusts `total` by the same amount.
+- `options`: export and import (file or Dropbox), the Google Takeout import (counts only, and only for days with no data), a reset that keeps `userId`, the share toggle and username, and debug mode (console logs, plus notifications if the optional permission is granted).
 
 ## Online sharing (opt-in)
 
-When `YTT_Share_Stats` is on, each opened or watched duration is POSTed to `https://yttracker.rakambda.fr/api/v2/<uuid>/stats/add`. Requests that fail are queued in `YTT_Failed_Share` and retried on the next send. The username is read and written through `/api/v2/<uuid>/username`.
+When `shareOnline` is on, each opened or watched duration is POSTed to `https://yttracker.rakambda.fr/api/v2/<uuid>/stats/add` as `{type, stat: ms, date: "Y-M-D H:m:s"}` (`src/lib/api.ts`). Failed requests are queued in `failedShare` and retried on the next send. The username is read and written through `/api/v2/<uuid>/username`.
+
+## Dropbox
+
+`src/lib/dropbox.ts` calls the Dropbox HTTP API directly, without the SDK. It uses the implicit OAuth flow through `identity.launchWebAuthFlow`. The redirect URI (`identity.getRedirectURL()`) must be registered in the Dropbox app. A 401 response triggers one new login. Exports are named `YTTracker.<timestamp>.json`, and import takes the newest one.
 
 ## Layout
 
-- `includes/`: code shared by both browsers. `js/YTTUtils.js` holds the constants, the `YTTDay`/`YTTDuration` classes and the `chrome.*`/`browser.*` wrappers. It is loaded everywhere, including the page context.
-- `includes/service_worker.js`: the Chrome background service worker (`importScripts('js/YTTUtils.js')`).
-- `firefox/js/service_worker.js`: the Firefox background script. Firefox loads it through `background.scripts`, not as a service worker. It is a copy of the Chrome file without the `importScripts` line. **Any change to one must be made in the other.**
-- `chrome/`, `chromeBeta/`, `firefox/`: one manifest per target. The build copies them over `includes/`. The manifests differ, for example in content-script matches and CSP syntax. `chromeBeta/` is a separate Chrome listing the owner uses for testing.
-- Firefox-only leftovers whose purpose is unknown: the content script also runs on `yttracker.rakambda.fr`, and the background script listens to `runtime.onMessageExternal`. Ask before removing them.
-- `includes/lib/amcharts4/`: amCharts, committed to the repo. jQuery, Bootstrap 4, Popper and the Dropbox SDK come from `node_modules` and are copied into `temp/lib/` at build time.
-- `deploy/`: small Node helper scripts used by the npm scripts.
-- `extras/`: design source files (PSD/EPS), not shipped.
+- `wxt.config.ts`: the manifest for every target. Chrome gets its store `key`, and `--mode beta` switches to the beta listing's key and name. Firefox gets its gecko ID and `strict_min_version` 128, the first version that supports MAIN-world content scripts.
+- `src/entrypoints/`: the background, the two content scripts and the four pages.
+- `src/lib/`: everything else, with a `*.test.ts` next to each file that has logic.
+- `public/assets/`: the icons.
+- `extras/`: design source files and screenshots, not shipped.
 
 ## Build and checks
 
 ```
-npm ci
-npm test                 # ESLint only (ES6, tabs, single quotes, semicolons). No unit tests.
-npm run chromeBuild      # unpacked build in temp/ (load it via chrome://extensions)
-npm run firefoxBuild     # unpacked build in temp/ (load it via about:debugging)
-npm run chromePackage    # chromeExtension.zip
-npm run firefoxPackage   # firefoxExtension.xpi
-npm run chromeRelease    # package + upload to the Chrome Web Store (needs CLIENT_ID/CLIENT_SECRET/REFRESH_TOKEN)
+pnpm install
+pnpm dev / dev:firefox      # run in a browser with hot reload (needs a desktop browser)
+pnpm check                  # tsc, ESLint (strict type-checked) and Vitest
+pnpm build / build:firefox / build:beta   # unpacked builds in .output/
+pnpm zip / zip:firefox / zip:beta         # store zips (Firefox also gets a sources zip for AMO)
+pnpm release:chrome         # check + zip + upload to the Chrome Web Store (needs CLIENT_ID/CLIENT_SECRET/REFRESH_TOKEN)
 ```
 
-- Firefox releases are uploaded by hand to addons.mozilla.org.
-- At build time, `!!!VERSION!!!` in the manifest is replaced with the `version` from `package.json`.
+- Tests use WXT's fake browser and run in the `Europe/Paris` time zone (set in `vitest.config.ts`), so that DST cases are tested.
+- TypeScript is pinned to 6.0 because typescript-eslint does not support TypeScript 7 yet.
+- Firefox releases are uploaded by hand to addons.mozilla.org, with `Mozilla-libs.txt` as the reviewer note.
+- The version comes from `package.json`. Each release needs a matching `CHANGELOG.md` entry.
 - There is no CI workflow. The `.github/` files are synced from `RakambdaOrg/rakambda-github-files` and should not be edited here.
-- Each release needs a matching `CHANGELOG.md` entry.

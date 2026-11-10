@@ -18,6 +18,8 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "zip:beta": "wxt zip --mode beta",
+    "submit:chrome": "wxt submit --chrome-api-version v1.1 --chrome-zip .output/*-chrome.zip --chrome-extension-id knnlnielflnfhdohmihofhdelgahgjdb --chrome-client-id \"$CLIENT_ID\" --chrome-client-secret \"$CLIENT_SECRET\" --chrome-refresh-token \"$REFRESH_TOKEN\"",
+    "release:chrome": "pnpm check && pnpm zip && pnpm submit:chrome",
     "compile": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",

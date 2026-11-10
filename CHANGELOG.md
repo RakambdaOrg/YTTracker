@@ -1,9 +1,23 @@
 # Changelog
 
+## [4.0.0] - Unreleased
+
+- Rewrite in TypeScript with WXT: one codebase for Chrome and Firefox
+- Stored data moves to a simpler format; it is migrated automatically and old export files can still be imported
+- Fix the start date shown one day late
+- Fix "Forget Dropbox login" and expired Dropbox logins
+- Fix editing high values: the total now follows the edit
+- Fix watch time that could be lost when the Chrome background restarts, or when several embedded players play in one tab
+- Ads no longer count as watched time
+- The player is found even when a video is opened long after the page loaded
+- Chart page uses Chart.js, with a period selector; pages follow the system dark mode
+- Firefox 128 or newer is required
+- The downloads permission is no longer needed
+
 ## [3.1.3] - 2025-07-05
 
 - Add support for youtube music
-- 
+
 ## [3.1.2] - 2024-08-28
 
 - Add support for youtube-nocookie

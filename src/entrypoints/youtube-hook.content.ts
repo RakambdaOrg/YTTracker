@@ -23,7 +23,8 @@ function isPlayer(element: HTMLElement | null): element is YouTubePlayer {
 }
 
 const post = (event: HookEvent) => {
-	window.postMessage({source: HOOK_SOURCE, event}, window.location.origin);
+	// Posted to this same window only; '*' also works in sandboxed embeds, whose origin is "null".
+	window.postMessage({source: HOOK_SOURCE, event}, '*');
 };
 
 function hook(player: YouTubePlayer): void {

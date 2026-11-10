@@ -25,7 +25,16 @@ Done: step 5 (chart page with Chart.js and a period selector).
 
 Done: step 6 (options page, `dropbox.ts` without SDK, `takeout.ts`).
 
-Now: step 8 (delete old code, docs, release scripts).
+Done: step 8 (old code deleted; AGENTS.md, README, CHANGELOG 4.0.0, Mozilla-libs.txt, release scripts updated). `pnpm check`, `pnpm zip`, `pnpm zip:firefox` OK.
+
+Now: waiting for the user's manual test in Chrome and Firefox (see PLAN.md, Verification). Once it passes and the questions below are answered, delete PLAN.md and this file.
+
+## Open questions for the user
+
+- AMO: add `gecko.data_collection_permissions` (online sharing is optional data collection)?
+- Chrome Web Store API v1.1 (client ID/secret/refresh token) is deprecated. `submit:chrome` still uses it; v2 needs a service account.
+- Dropbox: the redirect URI is unchanged (`identity.getRedirectURL()`), but the implicit flow is legacy at Dropbox. Test that it still works.
+- An old export file to test the migration against real data.
 
 ## Decisions
 
