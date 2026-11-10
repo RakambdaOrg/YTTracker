@@ -13,7 +13,9 @@ Full rewrite in TypeScript with WXT. The approved plan is in `PLAN.md`; follow i
 
 Done: `AGENTS.md` written and reviewed with the user (not committed yet).
 
-Now: step 1 (WXT scaffold).
+Done: step 1 (scaffold builds chrome-mv3, chrome-mv3-beta, firefox-mv3; old `includes/` etc. kept as reference until step 8).
+
+Now: step 2 (stats, storage, migration + tests).
 
 ## Decisions
 
@@ -32,3 +34,10 @@ Now: step 1 (WXT scaffold).
 - Chrome manifests: the CSP uses `script-src`/`object-src` keys instead of MV3's `extension_pages`.
 - `xo` devDependency unused.
 - Chrome MV3: `setupExtension()` resets `YTT_Active_Players` on each service-worker wake. It only works because of async ordering.
+
+## Notes for later steps
+
+- Export uses `<a download>` + Blob, so the `downloads` permission is dropped.
+- Unused icons `barIcon.png` and `icon128mask.png` deleted.
+- Check at release: AMO may require `browser_specific_settings.gecko.data_collection_permissions` (online sharing is optional data collection). Ask the user.
+- Old chart zoom (amCharts scrollbar, default last 7 days) becomes a period selector (7d/30d/1y/all) that drives the "selected period" card.

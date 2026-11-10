@@ -8,3 +8,6 @@ dist/
 *.iws
 *.pem
 *.xpi
+.output/
+.wxt/
+stats.html

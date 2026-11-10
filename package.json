@@ -1,103 +1,39 @@
 {
   "name": "yttracker",
-  "version": "3.1.3",
+  "version": "4.0.0",
   "author": "Thomas Couchoud <zerderr@gmail.com> (https://github.com/Rakambda/)",
   "description": "This extension will track your time on YouTube",
-  "homepage": "https://github.com/Rakambda/YTTracker/blob/master/README.md",
-  "bugs": "https://github.com/Rakambda/YTTracker/issues",
-  "repository": "github:Rakambda/YTTracker",
-  "license": "GNU GPLv3",
+  "homepage": "https://github.com/RakambdaOrg/YTTracker/blob/main/README.md",
+  "bugs": "https://github.com/RakambdaOrg/YTTracker/issues",
+  "repository": "github:RakambdaOrg/YTTracker",
+  "license": "GPL-3.0-only",
   "private": true,
-  "files": [
-    "/chrome",
-    "/chromeBeta",
-    "/firefox",
-    "/includes"
-  ],
+  "type": "module",
   "scripts": {
-    "eslint": "eslint . --ext .json --ext .js",
-    "test": "npm run eslint",
-    "clean": "npm run removeTempDirectory && node deploy/removeFile.js chromeExtension.zip && node deploy/removeFile.js firefoxExtension.xpi",
-    "removeTempDirectory": "node deploy/removeFile.js temp",
-    "createTempDirectory": "node deploy/createDirectory.js temp",
-    "copyIncludes": "node deploy/copyFolder.js includes temp",
-    "copyLibraries": "node deploy/copyFolder.js node_modules/bootstrap/dist temp/lib/bootstrap && node deploy/copyFolder.js node_modules/@popperjs/core/dist/cjs/popper.js temp/lib/popper.js && node deploy/copyFolder.js node_modules/dropbox/dist temp/lib/dropbox && node deploy/copyFolder.js node_modules/jquery/dist temp/lib/jquery",
-    "replaceManifestVersion": "cross-var replace-in-file !!!VERSION!!! $npm_package_version temp/manifest.json",
-    "removeUselessFilesForStores": "node deploy/removeUselessFilesForStores.js",
-    "chromeBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js chrome temp && npm run replaceManifestVersion",
-    "chromeBuildBeta": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js chrome temp && node deploy/copyFolder.js chromeBeta temp && npm run replaceManifestVersion",
-    "chromePackage": "npm run chromeBuild && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtension.zip temp && npm run removeTempDirectory",
-    "chromePackageBeta": "npm run chromeBuildBeta && npm run removeUselessFilesForStores && node deploy/zipFolder.js chromeExtensionBeta.zip temp && npm run removeTempDirectory",
-    "chromeRelease": "npm run chromePackage && npm run chromeSend && node deploy/removeFile.js chromeExtension.zip",
-    "chromeSend": "chrome-webstore-upload upload --file chromeExtension.zip --source chromeExtension.zip --extension-id knnlnielflnfhdohmihofhdelgahgjdb --client-id ${CLIENT_ID} --client-secret ${CLIENT_SECRET} --refresh-token ${REFRESH_TOKEN} --auto-publish",
-    "firefoxBuild": "npm run removeTempDirectory && npm run createTempDirectory && npm run copyLibraries && npm run copyIncludes && node deploy/copyFolder.js firefox temp && npm run replaceManifestVersion",
-    "firefoxPackage": "npm run firefoxBuild && npm run removeUselessFilesForStores && node deploy/zipFolder.js firefoxExtension.xpi temp && npm run removeTempDirectory",
-    "firefoxClear": "rm firefoxExtension.xpi"
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "build:beta": "wxt build --mode beta",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "zip:beta": "wxt zip --mode beta",
+    "compile": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "check": "pnpm compile && pnpm lint && pnpm test",
+    "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "archiver": "^5.3.0",
-    "chrome-webstore-upload-cli": "^2.0.1",
-    "cross-var": "^1.1.0",
-    "eslint": "^8.12.0",
-    "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-no-unsanitized": "^4.0.2",
-    "fs-extra": "^11.0.0",
-    "glob": "latest",
-    "replace-in-file": "^6.3.2",
-    "xo": "^0.54.0"
-  },
-  "xo": {
-    "envs": [
-      "browser"
-    ]
-  },
-  "eslintConfig": {
-    "plugins": [
-      "no-unsanitized",
-      "json"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 6
-    },
-    "env": {
-      "browser": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
-      "indent": [
-        "error",
-        "tab",
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "semi": [
-        "error",
-        "always"
-      ],
-      "no-console": "off",
-      "no-undef": "off",
-      "no-unused-vars": "off",
-      "no-empty": [
-        "error",
-        {
-          "allowEmptyCatch": true
-        }
-      ]
-    }
+    "@types/node": "24.19.2",
+    "eslint": "10.14.0",
+    "eslint-plugin-no-unsanitized": "4.1.5",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2",
+    "vitest": "5.1.0",
+    "wxt": "0.21.5"
   },
   "dependencies": {
-    "@popperjs/core": "^2.11.6",
-    "bootstrap": "^4.6.1",
-    "dropbox": "^10.34.0",
-    "jquery": "^3.6.4"
+    "chart.js": "4.6.1"
   }
 }
