@@ -72,4 +72,17 @@ If you have any problems with the extension, you can describe the issue [here](h
 
 ### Dropbox
 
-Dropbox export and import use the OAuth authorization code flow with PKCE and offline access, so the user logs in once and the extension refreshes its token. The Dropbox app (client ID in `src/lib/dropbox.ts`) must keep **Allow public clients** on, and must list the redirect URIs given by `browser.identity.getRedirectURL()`: `https://<extension-id>.chromiumapp.org/` for Chrome, and `https://<hash>.extensions.allizom.org/` for Firefox.
+Dropbox export and import use the OAuth authorization code flow with PKCE and offline access. The user logs in once, and the extension refreshes its token by itself. No app secret is needed or stored. To set up the Dropbox app, in the [Dropbox App Console](https://www.dropbox.com/developers/apps):
+
+1. Create an app (or open the existing one) with **Scoped access** and **App folder** access. Exports are written to and read from the root of that folder.
+2. On the **Permissions** tab, enable `files.metadata.read` (to list the exports), `files.content.read` and `files.content.write`, then click **Submit**. A user who logged in before a permission was added must log in again to get it.
+3. On the **Settings** tab:
+   - Copy the **App key** into `CLIENT_ID` in `src/lib/dropbox.ts`.
+   - Set **Allow public clients (Implicit Grant & PKCE)** to **Allow**.
+   - Under **OAuth 2 > Redirect URIs**, add one URI per extension. Each URI is what `browser.identity.getRedirectURL()` returns, and it must match exactly, including the trailing `/`:
+     - Chrome: `https://knnlnielflnfhdohmihofhdelgahgjdb.chromiumapp.org/`
+     - Chrome beta: `https://moboafdnejnjnppicfiadaalobjeemec.chromiumapp.org/`
+     - Firefox: `https://<hash>.extensions.allizom.org/`. The hash comes from the add-on ID. To get it, load the extension, open its console from `about:debugging`, and run `browser.identity.getRedirectURL()`.
+4. An app in **Development** status accepts at most 500 users. Above that, use **Apply for production** on the Settings tab.
+
+The Chrome IDs come from the `key` values in `wxt.config.ts`, so unpacked builds get the same IDs as the store versions.
