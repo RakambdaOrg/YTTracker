@@ -76,4 +76,4 @@ Changes to this policy are published in this file, with its full history visible
 
 ## Contact
 
-For questions, or to have your shared data deleted: zerderr@gmail.com
+For questions, or to have your shared data deleted: rakambda@rakambda.fr
