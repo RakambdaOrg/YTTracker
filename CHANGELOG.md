@@ -7,6 +7,7 @@
 - Fix the start date shown one day late
 - Fix "Forget Dropbox login" and expired Dropbox logins: Dropbox now uses a login that refreshes itself (you will need to log in to Dropbox once again)
 - Firefox: online sharing uses Firefox's data consent prompt (Firefox 140+)
+- Privacy: the options page no longer contacts the server when online sharing is off; the privacy policy is rewritten
 - Fix editing high values: the total now follows the edit
 - Fix watch time that could be lost when the Chrome background restarts, or when several embedded players play in one tab
 - Ads no longer count as watched time

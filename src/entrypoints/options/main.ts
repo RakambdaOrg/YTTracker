@@ -137,6 +137,10 @@ const username = input('username');
 username.value = await items.username.getValue();
 byId('usernameForm').addEventListener('submit', event => {
 	event.preventDefault();
+	if (!share.checked) {
+		alert('Turn on "Send stats online" first: the username is only sent to the server when sharing is on.');
+		return;
+	}
 	setUsername(username.value)
 		.then(() => items.username.setValue(username.value))
 		.then(() => {
@@ -150,14 +154,16 @@ byId('usernameForm').addEventListener('submit', event => {
 byId('userId').textContent = (await items.userId.getValue()) || 'Unknown';
 byId('version').textContent = browser.runtime.getManifest().version;
 
-// The server is the source of truth for the username, when it answers.
-fetchUsername()
-	.then(async name => {
-		if (name !== null) {
-			username.value = name;
-			await items.username.setValue(name);
-		}
-	})
-	.catch(() => {
-		console.warn('Could not fetch the online username');
-	});
+// The server is the source of truth for the username. Only asked when sharing is on: nothing is sent otherwise.
+if (share.checked) {
+	fetchUsername()
+		.then(async name => {
+			if (name !== null) {
+				username.value = name;
+				await items.username.setValue(name);
+			}
+		})
+		.catch(() => {
+			console.warn('Could not fetch the online username');
+		});
+}
