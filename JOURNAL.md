@@ -19,7 +19,9 @@ Done: step 2 (`src/lib/stats.ts`, `storage.ts`, `migration.ts`, `format.ts` + te
 
 Done: step 3 (hook, relay, background, tracker + tests) and step 7 (`api.ts` online sharing; username calls ready for the options page).
 
-Now: step 4 (popup and edit page).
+Done: step 4 (popup, edit page; shared `src/assets/common.css` with dark mode, `src/lib/dom.ts`).
+
+Now: step 5 (chart page).
 
 ## Decisions
 

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>YouTube Tracker</title>
+</head>
+<body>
+<main class="popup">
+	<section class="card">
+		<h2>Today</h2>
+		<dl class="stats">
+			<div><dt>Watched</dt><dd id="todayWatched">…</dd></div>
+			<div><dt>Opened</dt><dd id="todayOpened">…</dd></div>
+			<div><dt>Count</dt><dd id="todayCount">…</dd></div>
+		</dl>
+	</section>
+	<section class="card">
+		<h2>All data since <span id="startDate"></span></h2>
+		<dl class="stats">
+			<div><dt>Watched</dt><dd id="totalWatched">…</dd></div>
+			<div><dt>Opened</dt><dd id="totalOpened">…</dd></div>
+			<div><dt>Count</dt><dd id="totalCount">…</dd></div>
+		</dl>
+	</section>
+	<div class="row actions">
+		<a class="button primary" href="/chart.html" target="_blank" title="Open the chart page, which has more information">Open chart</a>
+		<a class="button" href="https://yttracker.rakambda.fr/" target="_blank" title="Stats of all users who share their data">Online stats</a>
+		<button type="button" id="openOptions">Options</button>
+	</div>
+</main>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

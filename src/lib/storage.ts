@@ -33,8 +33,13 @@ export const items = {
 	activePlayers: storage.defineItem<Record<string, ActivePlayer>>('session:activePlayers', {fallback: {}}),
 };
 
+/** A stored day, or null when nothing was recorded that day. */
+export function findDay(day: string): Promise<DayStats | null> {
+	return storage.getItem<DayStats>(`local:${DAY_PREFIX}${day}`);
+}
+
 export async function getDay(day: string): Promise<DayStats> {
-	return (await storage.getItem<DayStats>(`local:${DAY_PREFIX}${day}`)) ?? emptyDay();
+	return (await findDay(day)) ?? emptyDay();
 }
 
 export async function getDays(days: string[]): Promise<Record<string, DayStats>> {

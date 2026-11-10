@@ -1,0 +1,13 @@
+body {
+	width: 420px;
+}
+
+.popup {
+	padding: 12px;
+}
+
+.actions > * {
+	flex: 1;
+	text-align: center;
+	white-space: nowrap;
+}
