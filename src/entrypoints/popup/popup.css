@@ -1,0 +1,29 @@
+body {
+	width: 420px;
+}
+
+.popup {
+	padding: 12px;
+}
+
+.actions > * {
+	flex: 1;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.playing {
+	display: grid;
+	gap: 4px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.playing button {
+	width: 100%;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

@@ -1,0 +1,136 @@
+name: Release
+
+# Publishing a GitHub release releases that version: its tag (like 4.0.0 or v4.0.0) sets the extension version,
+# and its notes (generated from the merged pull requests, see .github/release.yml) become the AMO release notes.
+# Each store has its own job, so a failed upload can be re-run without uploading to the other store again.
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and attach the zips to the release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup PNPM
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.18.0
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: pnpm
+      - name: Set the version from the tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version="${TAG#v}"
+          # Browsers only accept 1 to 4 dot-separated integers, without a pre-release suffix.
+          if [[ ! "$version" =~ ^[0-9]+(\.[0-9]+){0,3}$ ]]; then
+            echo "::error::Tag $TAG is not a valid extension version (like 4.0.0)"
+            exit 1
+          fi
+          npm pkg set version="$version"
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Type check, lint and test
+        run: pnpm check
+      - name: Build Chrome and Firefox zips
+        run: |
+          pnpm zip
+          pnpm zip:firefox
+      - name: Write the AMO metadata (reviewer notes and release notes)
+        env:
+          # Passed through the environment, never pasted into the script: the notes are free text.
+          NOTES: ${{ github.event.release.body }}
+          URL: ${{ github.event.release.html_url }}
+        run: |
+          # GitHub adds an HTML comment at the top of generated notes; AMO would show it as text.
+          { printf '%s\n' "$NOTES" | grep -v '^<!--'; printf '\nChangelog on GitHub: %s\n' "$URL"; } | sed '/./,$!d' > release-notes.txt
+          jq -n --rawfile approval Mozilla-libs.txt --rawfile release release-notes.txt \
+            '{version: {approval_notes: $approval, release_notes: {"en-US": $release}}}' > amo-metadata.json
+      - name: Keep the build for the store jobs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release
+          path: |
+            .output/*.zip
+            amo-metadata.json
+          if-no-files-found: error
+          # .output is a hidden folder, skipped by default.
+          include-hidden-files: true
+      - name: Attach the zips to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" .output/*.zip --clobber
+
+  chrome:
+    name: Submit to the Chrome Web Store
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup PNPM
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.18.0
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Get the build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+      - name: Upload and submit for review
+        run: pnpm submit:chrome
+        env:
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+
+  firefox:
+    name: Submit to addons.mozilla.org
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup PNPM
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.18.0
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Get the build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+      - name: Upload and submit for review
+        run: pnpm submit:firefox
+        env:
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_AMO_METADATA_FILE: amo-metadata.json

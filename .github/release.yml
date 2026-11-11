@@ -1,0 +1,17 @@
+# Categories of the release notes GitHub generates from merged pull requests, by label.
+changelog:
+  exclude:
+    labels:
+      - dependencies
+      - "type: 📚 dependencies"
+      - sync
+  categories:
+    - title: 🚀 Features
+      labels:
+        - Enhancement
+    - title: 🐛 Fixes
+      labels:
+        - Bug
+    - title: Other Changes
+      labels:
+        - "*"

@@ -1,9 +1,28 @@
 # Changelog
 
+From 4.0.0 on, release notes are on [GitHub Releases](https://github.com/RakambdaOrg/YTTracker/releases), generated from the merged pull requests.
+
+## [4.0.0]
+
+- Rewrite in TypeScript with WXT: one codebase for Chrome and Firefox
+- Stored data moves to a simpler format; it is migrated automatically and old export files can still be imported
+- Fix the start date shown one day late
+- Fix "Forget Dropbox login" and expired Dropbox logins: Dropbox now uses a login that refreshes itself (you will need to log in to Dropbox once again)
+- Firefox: online sharing uses Firefox's data consent prompt (Firefox 140+)
+- Privacy: the options page no longer contacts the server when online sharing is off; the privacy policy is rewritten
+- Fix editing high values: the total now follows the edit
+- Fix watch time that could be lost when the Chrome background restarts, or when several embedded players play in one tab
+- Ads no longer count as watched time
+- The popup lists the videos playing right now; click one to switch to its tab
+- The player is found even when a video is opened long after the page loaded
+- Chart page uses Chart.js, with a period selector; pages follow the system dark mode
+- Firefox 128 or newer is required
+- The downloads permission is no longer needed
+
 ## [3.1.3] - 2025-07-05
 
 - Add support for youtube music
-- 
+
 ## [3.1.2] - 2024-08-28
 
 - Add support for youtube-nocookie

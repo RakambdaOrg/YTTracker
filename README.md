@@ -8,9 +8,9 @@ An extension to track time on YouTube
 ![Mozilla Add-on](https://img.shields.io/amo/users/youtube-tracker?label=Firefox%20users&color=green)](https://addons.mozilla.org/en-US/firefox/addon/youtube-tracker/)
 
 ## Description
-This application will track your time spent on YouTube. Those datas can be viewed rapidly in the popup icon or in a chart.
+This application will track your time spent on YouTube. This data can be viewed rapidly in the popup icon or in a chart.
 
-The datas tracked are:
+The data tracked is:
 * Two kind of time are recorded:
   * The total time of opened videos. This time is counted when the video page have been loaded.
   * The total time of playing videos. This time is counted when a video is playing.
@@ -30,19 +30,78 @@ You can also choose to send those data to a server to be able to compare yoursel
     <hr style="width:85%"/>
 </div>
 
+## Development
+Built with [WXT](https://wxt.dev) and TypeScript. See [AGENTS.md](AGENTS.md) for how the code works.
+
+```
+pnpm install
+pnpm dev            # Chrome with hot reload (pnpm dev:firefox for Firefox)
+pnpm check          # type check, lint and tests
+pnpm zip            # store zip in .output/ (pnpm zip:firefox, pnpm zip:beta)
+```
+
 ## Libraries
-Amcharts - [https://www.amcharts.com](https://www.amcharts.com)
-
-Bootstrap - [https://getbootstrap.com/](https://getbootstrap.com/)
-
-JQuery - [https://github.com/jquery/jquery](https://github.com/jquery/jquery)
-
-Dropbox SDK - [https://www.dropbox.com/developers/documentation/javascript](https://www.dropbox.com/developers/documentation/javascript)
-
-## Other
-Compare versions function from [em92's gist](https://gist.github.com/em92/d58944f21c68b69433cefb6c49e0defd).
-
-Deploy config from [paulmolluzzo/test-deploy-chrome](https://github.com/paulmolluzzo/test-deploy-chrome).
+Chart.js - [https://www.chartjs.org](https://www.chartjs.org)
 
 ## Help
 If you have any problems with the extension, you can describe the issue [here](https://github.com/RakambdaOrg/YTTracker/issues).
+
+## Technical notes
+
+### Publishing to the Chrome Web Store
+
+Releases are made by GitHub Actions (`.github/workflows/release.yml`), when a GitHub release is published:
+
+1. On GitHub, open **Releases > Draft a new release**, type a new tag such as `4.0.0` (or `v4.0.0`) on `main`, and click **Generate release notes**. The notes list the pull requests merged since the last release, grouped by label (`Enhancement`, `Bug`, others; see `.github/release.yml`). Edit them if needed.
+2. Click **Publish release**. The tag sets the extension version, overriding `package.json`, and must be 1 to 4 dot-separated numbers.
+
+The workflow then runs the checks, builds the zips, attaches them to the release, and uploads them to both stores, each submitted for review.
+
+The upload uses the Chrome Web Store API v2, which authenticates with a Google Cloud service account. The older OAuth client ID, client secret and refresh token are only accepted by the deprecated v1.1 API. One-time setup:
+
+1. In the [Google Cloud console](https://console.cloud.google.com/), create or pick a project, then search for **Chrome Web Store API** and enable it.
+2. Under **IAM & Admin > Service accounts**, create a service account. It needs no roles. Open it, go to **Keys > Add key > Create new key > JSON**, and keep the downloaded file safe.
+3. In the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole/), open **Account**, and add the service account's email address. A publisher can have only one service account.
+4. Still in the dashboard, copy your publisher ID from **Publisher > Settings**.
+5. In the GitHub repository, open **Settings > Secrets and variables > Actions** and add three repository secrets:
+   - `CHROME_PUBLISHER_ID`: the publisher ID.
+   - `CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL`: `client_email` from the JSON key.
+   - `CHROME_SERVICE_ACCOUNT_PRIVATE_KEY`: the key itself, with real line breaks, as printed by `jq -r .private_key key.json`.
+
+   Then delete the JSON key file, or keep it in a password manager.
+
+To upload from your own machine instead (`pnpm zip && pnpm submit:chrome`), put the credentials in a `.env.submit` file at the repository root (git-ignored):
+
+   ```
+   CHROME_PUBLISHER_ID=<publisher ID>
+   CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL=<"client_email" from the JSON key>
+   CHROME_SERVICE_ACCOUNT_PRIVATE_KEY="<"private_key" from the JSON key, with its \n line breaks>"
+   ```
+
+`pnpm zip:beta` builds the beta listing's zip, which is uploaded by hand.
+
+### Publishing to Firefox
+
+The release workflow also uploads the Firefox zip and the sources zip (which reviewers need, since the code is bundled) to addons.mozilla.org and submits them for review. `Mozilla-libs.txt` is sent as the note to reviewers, and the GitHub release notes as the public release notes. One-time setup:
+
+1. On addons.mozilla.org, open the [API keys page](https://addons.mozilla.org/developers/addon/api/key/) and generate credentials.
+2. Add them as the repository secrets `FIREFOX_JWT_ISSUER` (the JWT issuer) and `FIREFOX_JWT_SECRET` (the JWT secret).
+
+To upload from your own machine instead, add the same two values to `.env.submit` and run `pnpm zip:firefox && pnpm submit:firefox`. The manifest declares online sharing as optional data collection (`websiteActivity`). On Firefox 140 and newer, turning on sharing in the options page shows Firefox's own consent prompt.
+
+### Dropbox
+
+Dropbox export and import use the OAuth authorization code flow with PKCE and offline access. The user logs in once, and the extension refreshes its token by itself. No app secret is needed or stored. To set up the Dropbox app, in the [Dropbox App Console](https://www.dropbox.com/developers/apps):
+
+1. Create an app (or open the existing one) with **Scoped access** and **App folder** access. Exports are written to and read from the root of that folder.
+2. On the **Permissions** tab, enable `files.metadata.read` (to list the exports), `files.content.read` and `files.content.write`, then click **Submit**. A user who logged in before a permission was added must log in again to get it.
+3. On the **Settings** tab:
+   - Copy the **App key** into `CLIENT_ID` in `src/lib/dropbox.ts`.
+   - Set **Allow public clients (Implicit Grant & PKCE)** to **Allow**.
+   - Under **OAuth 2 > Redirect URIs**, add one URI per extension. Each URI is what `browser.identity.getRedirectURL()` returns, and it must match exactly, including the trailing `/`:
+     - Chrome: `https://knnlnielflnfhdohmihofhdelgahgjdb.chromiumapp.org/`
+     - Chrome beta: `https://moboafdnejnjnppicfiadaalobjeemec.chromiumapp.org/`
+     - Firefox: `https://<hash>.extensions.allizom.org/`. The hash comes from the add-on ID. To get it, load the extension, open its console from `about:debugging`, and run `browser.identity.getRedirectURL()`.
+4. An app in **Development** status accepts at most 500 users. Above that, use **Apply for production** on the Settings tab.
+
+The Chrome IDs come from the `key` values in `wxt.config.ts`, so unpacked builds get the same IDs as the store versions.
