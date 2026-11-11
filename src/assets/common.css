@@ -88,6 +88,37 @@ a {
 	color: var(--accent);
 }
 
+.card-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.card-title h2 {
+	margin: 0;
+}
+
+/* Round "?" link to a help page; its title is the tooltip. */
+.help {
+	display: inline-grid;
+	place-items: center;
+	width: 22px;
+	height: 22px;
+	border: 1px solid var(--border);
+	border-radius: 50%;
+	color: var(--muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.help:hover {
+	color: var(--accent);
+	border-color: var(--accent);
+}
+
 .card.warn {
 	background: var(--warn-bg);
 }
