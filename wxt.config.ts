@@ -10,6 +10,8 @@ export default defineConfig({
 	targetBrowsers: ['chrome', 'firefox'],
 	// The AMO sources zip only needs what builds the extension.
 	zip: {excludeSources: ['extras/**', 'JOURNAL.md', 'PLAN.md']},
+	// Vite's default dev-server CORS only allows localhost pages, so extension pages could not load their scripts in `pnpm dev`.
+	vite: () => ({server: {cors: {origin: [/^chrome-extension:\/\//, /^moz-extension:\/\//]}}}),
 	manifest: ({browser, mode}) => {
 		const beta = mode === 'beta';
 		return {
