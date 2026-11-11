@@ -73,6 +73,13 @@ action('dropboxDisconnect', async () => {
 	alert('Dropbox login forgotten');
 });
 
+// Only offered while a Dropbox login is saved; updates after a login or a disconnect.
+const showDisconnect = (token: string | null) => {
+	byId('dropboxDisconnect').hidden = token === null;
+};
+showDisconnect(await items.dropboxRefreshToken.getValue());
+items.dropboxRefreshToken.watch(showDisconnect);
+
 action('importTakeout', async () => {
 	const text = await readFile('importTakeout');
 	if (text === undefined) {

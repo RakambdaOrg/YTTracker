@@ -39,6 +39,11 @@
 	box-sizing: border-box;
 }
 
+/* Keeps the hidden attribute working on elements given a display, like buttons. */
+[hidden] {
+	display: none !important;
+}
+
 body {
 	margin: 0;
 	background: var(--bg);
