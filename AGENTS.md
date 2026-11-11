@@ -88,7 +88,8 @@ pnpm release:chrome         # check + zip + upload to the Chrome Web Store (serv
 - TypeScript is pinned to 6.0 because typescript-eslint does not support TypeScript 7 yet.
 - Firefox releases are uploaded by hand to addons.mozilla.org, with `Mozilla-libs.txt` as the reviewer note.
 - The version comes from `package.json`. Each release needs a matching `CHANGELOG.md` entry.
-- There is no CI workflow. The `.github/` files are synced from `RakambdaOrg/rakambda-github-files` and should not be edited here.
+- CI (`.github/workflows/ci.yml`) runs `pnpm check` and builds both zips on every pull request and on pushes to `main`. Actions are pinned by commit SHA, like the shared `RakambdaOrg/rakambda-github-workflows`.
+- `CODEOWNERS`, `dependabot.yml` and `ISSUE_TEMPLATE/` are synced from `RakambdaOrg/rakambda-github-files` and should not be edited here.
 
 ## Commits
 
