@@ -1,5 +1,24 @@
 version: 2
 updates:
+  - package-ecosystem: github-actions
+    directory: /
+    assignees:
+      - Rakambda
+    schedule:
+      interval: cron
+      cronjob: 0 6 * * *
+      timezone: Europe/Paris
+    pull-request-branch-name:
+      separator: '-'
+      word-separator: '-'
+      branch-name-case: lowercase
+    groups:
+      docker:
+        patterns:
+          - docker/*
+      actions:
+        patterns:
+          - actions/*
   - package-ecosystem: npm
     directory: /
     assignees:
