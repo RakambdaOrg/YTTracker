@@ -19,7 +19,6 @@
     "zip:firefox": "wxt zip -b firefox",
     "zip:beta": "wxt zip --mode beta",
     "submit:chrome": "wxt submit --chrome-api-version v2 --chrome-extension-id knnlnielflnfhdohmihofhdelgahgjdb --chrome-zip .output/*-chrome.zip",
-    "release:chrome": "pnpm check && pnpm zip && pnpm submit:chrome",
     "compile": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",

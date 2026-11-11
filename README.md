@@ -50,13 +50,22 @@ If you have any problems with the extension, you can describe the issue [here](h
 
 ### Publishing to the Chrome Web Store
 
-`pnpm release:chrome` runs the checks, builds the zip and uploads it with the Chrome Web Store API v2, which authenticates with a Google Cloud service account. The older OAuth client ID, client secret and refresh token are only accepted by the deprecated v1.1 API. One-time setup:
+Releases are made by GitHub Actions (`.github/workflows/release.yml`). Pushing a tag such as `4.0.0` (or `v4.0.0`) releases that version: the tag sets the extension version, overriding `package.json`. The workflow checks that the tag is a valid extension version (1 to 4 dot-separated numbers) and that `CHANGELOG.md` has an entry for it, runs the checks, builds the zips, attaches them to a GitHub release, then uploads the Chrome zip to the Chrome Web Store and submits it for review.
+
+The upload uses the Chrome Web Store API v2, which authenticates with a Google Cloud service account. The older OAuth client ID, client secret and refresh token are only accepted by the deprecated v1.1 API. One-time setup:
 
 1. In the [Google Cloud console](https://console.cloud.google.com/), create or pick a project, then search for **Chrome Web Store API** and enable it.
 2. Under **IAM & Admin > Service accounts**, create a service account. It needs no roles. Open it, go to **Keys > Add key > Create new key > JSON**, and keep the downloaded file safe.
 3. In the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole/), open **Account**, and add the service account's email address. A publisher can have only one service account.
 4. Still in the dashboard, copy your publisher ID from **Publisher > Settings**.
-5. Give the credentials to the upload, either as environment variables or in a `.env.submit` file at the repository root (git-ignored):
+5. In the GitHub repository, open **Settings > Secrets and variables > Actions** and add three repository secrets:
+   - `CHROME_PUBLISHER_ID`: the publisher ID.
+   - `CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL`: `client_email` from the JSON key.
+   - `CHROME_SERVICE_ACCOUNT_PRIVATE_KEY`: the key itself, with real line breaks, as printed by `jq -r .private_key key.json`.
+
+   Then delete the JSON key file, or keep it in a password manager.
+
+To upload from your own machine instead (`pnpm zip && pnpm submit:chrome`), put the credentials in a `.env.submit` file at the repository root (git-ignored):
 
    ```
    CHROME_PUBLISHER_ID=<publisher ID>
