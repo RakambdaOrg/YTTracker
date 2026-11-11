@@ -43,7 +43,7 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 - `storage.local`:
   - `day:YYYY-MM-DD`: one day's `DayStats` `{count, watchedMs, openedMs}`, in plain milliseconds.
   - `total`: an all-time `DayStats`. It is kept up to date separately from the days, not computed from them.
-  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `weirdThreshold` (default 48h), `username`, `dropboxRefreshToken`.
+  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `weirdThreshold` (default 48h), `dismissedWeirdDays` (days marked as correct on the edit page), `username`, `dropboxRefreshToken`.
 - `storage.session`: `activePlayers`, `dropboxAccess` (the short-lived Dropbox access token).
 - **Migration** (`src/lib/migration.ts`): `migrateStorage()` runs on every background start. When the schema is current, it costs one small read. It converts the v1 format (`day<dayOfYear><YYYY>` keys, `YTTDuration` objects, `YTT_*` keys) and writes `schemaVersion` last, so an interrupted run simply starts over. Any future change to a key or a stored shape needs a new schema version and a step there.
 - **Export/import**: an export is `{version: 2, data}`, without the Dropbox token. Import takes v2 files and old v1 files (`parseImport`), validates every value, and replaces all data while keeping the current `userId` when the file has none.
@@ -53,8 +53,8 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 Pages are vanilla TypeScript, without a framework. Use `el()`/`byId()` from `src/lib/dom.ts` and never `innerHTML` (ESLint `no-unsanitized` enforces this). The shared styles are in `src/assets/common.css`, with light and dark themes through CSS variables.
 
 - `popup`: today's stats, the totals and the start date.
-- `chart` (unlisted): a Chart.js chart, with totals, averages, a period selector, and an alert for days above `weirdThreshold`.
-- `edit` (unlisted): lowers days above the threshold and adjusts `total` by the same amount.
+- `chart` (unlisted): a Chart.js chart, with totals, averages, a period selector, a vertical line on the hovered day, and an alert for days whose watched time is above `weirdThreshold` (`weirdDays()`; opened time is never flagged, since opening long videos is normal).
+- `edit` (unlisted): lowers the watched time of flagged days and adjusts `total` by the same amount, or marks a day as correct so it is not flagged again.
 - `options`: export and import (file or Dropbox), the Google Takeout import (counts only, and only for days with no data), a reset that keeps `userId`, the share toggle and username, and debug mode (console logs, plus notifications if the optional permission is granted).
 
 ## Online sharing (opt-in)

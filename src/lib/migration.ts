@@ -13,7 +13,7 @@ const LEGACY_KEYS = new Set([
 ]);
 
 /** Keys an export or import may carry in the current format. */
-const EXPORTED_KEYS = ['total', 'userId', 'startTime', 'openedIds', 'shareOnline', 'failedShare', 'debug', 'weirdThreshold', 'username'];
+const EXPORTED_KEYS = ['total', 'userId', 'startTime', 'openedIds', 'shareOnline', 'failedShare', 'debug', 'weirdThreshold', 'username', 'dismissedWeirdDays'];
 
 const isObject = (value: unknown): value is Raw => typeof value === 'object' && value !== null && !Array.isArray(value);
 const num = (value: unknown): number => (typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0);
@@ -128,6 +128,9 @@ export function cleanCurrent(data: Raw): Raw {
 		if (typeof data[key] === 'string') {
 			result[key] = data[key];
 		}
+	}
+	if (Array.isArray(data.dismissedWeirdDays)) {
+		result.dismissedWeirdDays = data.dismissedWeirdDays.filter((day): day is string => typeof day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(day));
 	}
 	for (const key of ['startTime', 'weirdThreshold'] as const) {
 		if (num(data[key])) {

@@ -123,6 +123,11 @@ describe('import and export', () => {
 		expect(cleaned).not.toHaveProperty('day:../x');
 	});
 
+	it('keeps only valid dismissed days', () => {
+		const cleaned = parseImport(JSON.stringify({version: 2, data: {dismissedWeirdDays: ['2026-11-10', 3, '../x']}}));
+		expect(cleaned.dismissedWeirdDays).toEqual(['2026-11-10']);
+	});
+
 	it('keeps the current user ID when the file has none', async () => {
 		await browser.storage.local.set({userId: 'me', 'day:2020-01-01': {count: 1, watchedMs: 1, openedMs: 1}});
 		await applyImport({'day:2026-11-10': {count: 1, watchedMs: 2, openedMs: 3}});

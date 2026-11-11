@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {dayKey, registerOpened, splitByDay, summarize} from './stats';
+import {dayKey, registerOpened, splitByDay, summarize, weirdDays} from './stats';
 
 const at = (iso: string) => new Date(iso).getTime();
 
@@ -62,5 +62,13 @@ describe('summarize', () => {
 			count: 6, watchedMs: 350, openedMs: 200, days: 2, avgWatchedMs: 175, avgOpenedMs: 100, avgCount: 3, avgRatio: 0.75,
 		});
 		expect(summarize([]).avgRatio).toBe(0);
+	});
+});
+
+describe('weirdDays', () => {
+	const day = (watchedMs: number, openedMs: number) => ({count: 1, watchedMs, openedMs});
+	it('flags only a high watched time that was not dismissed', () => {
+		const days: [string, ReturnType<typeof day>][] = [['2026-01-01', day(10, 0)], ['2026-01-02', day(0, 10)], ['2026-01-03', day(10, 0)], ['2026-01-04', day(5, 0)]];
+		expect(weirdDays(days, 5, ['2026-01-03']).map(([d]) => d)).toEqual(['2026-01-01']);
 	});
 });

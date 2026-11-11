@@ -27,6 +27,8 @@ export const items = {
 	failedShare: storage.defineItem<PendingShare[]>('local:failedShare', {fallback: []}),
 	debug: storage.defineItem<boolean>('local:debug', {fallback: false}),
 	weirdThreshold: storage.defineItem<number>('local:weirdThreshold', {fallback: DEFAULT_WEIRD_THRESHOLD_MS}),
+	// Days the user marked as correct on the edit page, so they are not flagged again.
+	dismissedWeirdDays: storage.defineItem<string[]>('local:dismissedWeirdDays', {fallback: []}),
 	username: storage.defineItem<string>('local:username', {fallback: ''}),
 	dropboxRefreshToken: storage.defineItem<string | null>('local:dropboxRefreshToken', {fallback: null}),
 	dropboxAccess: storage.defineItem<{token: string; expiresAt: number} | null>('session:dropboxAccess', {fallback: null}),

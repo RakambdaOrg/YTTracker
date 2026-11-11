@@ -1,8 +1,8 @@
 import '@/assets/common.css';
-import {CategoryScale, Chart, Legend, LinearScale, LineController, LineElement, PointElement, Tooltip} from 'chart.js';
+import {CategoryScale, Chart, Legend, LinearScale, LineController, LineElement, type Plugin, PointElement, Tooltip} from 'chart.js';
 import {byId, el, showStats} from '@/lib/dom';
 import {formatDuration} from '@/lib/format';
-import {dayKey, type DayStats, summarize, type Summary} from '@/lib/stats';
+import {dayKey, type DayStats, summarize, type Summary, weirdDays} from '@/lib/stats';
 import {getAllDays, items} from '@/lib/storage';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
@@ -30,14 +30,33 @@ function fillSummary(target: HTMLElement, summary: Summary): void {
 showStats('today', days.find(([day]) => day === dayKey(Date.now()))?.[1] ?? null);
 fillSummary(byId('allStats'), summarize(days.map(([, stats]) => stats)));
 
-const weird = days.filter(([, d]) => d.watchedMs > threshold || d.openedMs > threshold);
+const weird = weirdDays(days, threshold, await items.dismissedWeirdDays.getValue());
 if (weird.length > 0) {
 	byId('weirdCount').textContent = String(weird.length);
 	byId('weirdThreshold').textContent = formatDuration(threshold);
 	byId('weirdAlert').hidden = false;
 }
 
+// Vertical line under the cursor, on the day the tooltip shows.
+const hoverLine: Plugin<'line'> = {
+	id: 'hoverLine',
+	afterDatasetsDraw: ({ctx, chartArea, tooltip}) => {
+		const x = tooltip?.getActiveElements()[0]?.element.x;
+		if (x === undefined) {
+			return;
+		}
+		ctx.save();
+		ctx.strokeStyle = token('--muted');
+		ctx.beginPath();
+		ctx.moveTo(x, chartArea.top);
+		ctx.lineTo(x, chartArea.bottom);
+		ctx.stroke();
+		ctx.restore();
+	},
+};
+
 const chart = new Chart<'line', number[], string>(byId('chart') as HTMLCanvasElement, {
+	plugins: [hoverLine],
 	type: 'line',
 	data: {
 		labels: [],

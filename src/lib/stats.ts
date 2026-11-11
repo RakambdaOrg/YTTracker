@@ -61,6 +61,14 @@ export function splitByDay(startMs: number, endMs: number): DaySlice[] {
 }
 
 /**
+ * Days whose watched time is above the threshold and not dismissed, likely a tracking bug.
+ * Opened time is not checked: opening several long videos in a day is normal.
+ */
+export function weirdDays(days: [string, DayStats][], threshold: number, dismissed: string[]): [string, DayStats][] {
+	return days.filter(([day, stats]) => stats.watchedMs > threshold && !dismissed.includes(day));
+}
+
+/**
  * Drops video IDs counted more than an hour ago, then tells whether this video
  * should be counted as opened. Returns the updated map.
  */
