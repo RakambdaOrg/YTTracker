@@ -35,7 +35,7 @@ youtube-hook.content.ts  --postMessage-->  youtube.content.ts  --runtime.sendMes
 2. The hook runs in the page's main world, because the player API is only reachable there. It polls for `#movie_player` every 250 ms until it appears, then posts `HookEvent`s (`opened`, `play`, `stop`) with `window.postMessage`. "Opened" is sent once per video, as soon as its duration is known, or when it plays (live streams).
 3. The isolated script checks each event with `toMessage()` (`src/lib/messages.ts`), because the page can forge them, then forwards it to the background.
 4. The background identifies the player as `tabId:frameId` and runs each message through `lib/tracker.ts`. All storage updates go through one serial queue (`lib/serial.ts`), so concurrent events never overwrite each other.
-5. The start time of each playing player is kept in `storage.session` (`activePlayers`). It survives Chrome service-worker restarts and is cleared with the browser. The badge shows `P` while something plays.
+5. The start time of each playing player is kept in `storage.session` (`activePlayers`). It survives Chrome service-worker restarts and is cleared with the browser. The badge shows `P` while something plays, and the toolbar icon is grayed out while tracking is paused (`src/lib/icon.ts`, drawn at runtime from the normal icons).
 
 ## Storage
 
