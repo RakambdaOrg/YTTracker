@@ -52,6 +52,8 @@ async function login(): Promise<string> {
 		code_challenge: challenge,
 		code_challenge_method: 'S256',
 		token_access_type: 'offline',
+		// A login only happens on first use or after "Forget": always show the page, or Dropbox reuses its session silently.
+		force_reapprove: 'true',
 		state,
 	}).toString();
 	const redirect = await browser.identity.launchWebAuthFlow({url: url.toString(), interactive: true});
@@ -137,9 +139,12 @@ export async function downloadLatestExport(): Promise<string | null> {
 
 /** Revokes the login at Dropbox (best effort) and forgets it locally. */
 export async function disconnect(): Promise<void> {
-	const cached = await items.dropboxAccess.getValue();
-	if (cached) {
-		await fetch('https://api.dropboxapi.com/2/auth/token/revoke', {method: 'POST', headers: {Authorization: `Bearer ${cached.token}`}}).catch(() => undefined);
+	const refreshToken = await items.dropboxRefreshToken.getValue();
+	// Revoking an access token also revokes its refresh token, so get one when none is cached.
+	const token = (await items.dropboxAccess.getValue())?.token
+		?? (refreshToken ? await requestToken({grant_type: 'refresh_token', refresh_token: refreshToken}).then(t => t.access_token).catch(() => null) : null);
+	if (token) {
+		await fetch('https://api.dropboxapi.com/2/auth/token/revoke', {method: 'POST', headers: {Authorization: `Bearer ${token}`}}).catch(() => undefined);
 	}
 	await items.dropboxRefreshToken.setValue(null);
 	await items.dropboxAccess.setValue(null);

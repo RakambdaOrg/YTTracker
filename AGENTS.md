@@ -63,7 +63,7 @@ When `shareOnline` is on (and, on Firefox 140+, the `websiteActivity` data conse
 
 ## Dropbox
 
-`src/lib/dropbox.ts` calls the Dropbox HTTP API directly, without the SDK. It logs in with the OAuth authorization code flow with PKCE and `token_access_type=offline`, through `identity.launchWebAuthFlow`. The refresh token is kept in `storage.local`, so the user logs in once. The redirect URI (`identity.getRedirectURL()`) must be registered in the Dropbox app. A 401 response triggers one token refresh, then a new login if the refresh token was revoked. The old v1 access token is not migrated. Exports are named `YTTracker.<timestamp>.json`, and import takes the newest one.
+`src/lib/dropbox.ts` calls the Dropbox HTTP API directly, without the SDK. It logs in with the OAuth authorization code flow with PKCE and `token_access_type=offline`, through `identity.launchWebAuthFlow`. The refresh token is kept in `storage.local`, so the user logs in once. The redirect URI (`identity.getRedirectURL()`) must be registered in the Dropbox app. A 401 response triggers one token refresh, then a new login if the refresh token was revoked. Each login passes `force_reapprove`, so after "Forget Dropbox login" (which revokes the token at Dropbox) the user sees the Dropbox page again instead of a silent re-login. The old v1 access token is not migrated. Exports are named `YTTracker.<timestamp>.json`, and import takes the newest one.
 
 ## Layout
 
