@@ -89,3 +89,8 @@ pnpm release:chrome         # check + zip + upload to the Chrome Web Store (serv
 - Firefox releases are uploaded by hand to addons.mozilla.org, with `Mozilla-libs.txt` as the reviewer note.
 - The version comes from `package.json`. Each release needs a matching `CHANGELOG.md` entry.
 - There is no CI workflow. The `.github/` files are synced from `RakambdaOrg/rakambda-github-files` and should not be edited here.
+
+## Commits
+
+- Make one commit per functional change, so each one can be reviewed on its own. When a request lists several changes (for example five UI tweaks), commit each one separately instead of grouping them.
+- Each commit must pass `pnpm check`, and include the tests and docs for its own change.
