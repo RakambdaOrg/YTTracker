@@ -44,3 +44,5 @@ jobs:
           name: extension-zips
           path: .output/*.zip
           if-no-files-found: error
+          # .output is a hidden folder, skipped by default.
+          include-hidden-files: true
