@@ -1,6 +1,8 @@
 # Changelog
 
-## [4.0.0] - Unreleased
+From 4.0.0 on, release notes are on [GitHub Releases](https://github.com/RakambdaOrg/YTTracker/releases), generated from the merged pull requests.
+
+## [4.0.0]
 
 - Rewrite in TypeScript with WXT: one codebase for Chrome and Firefox
 - Stored data moves to a simpler format; it is migrated automatically and old export files can still be imported

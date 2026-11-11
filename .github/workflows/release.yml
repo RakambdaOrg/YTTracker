@@ -1,12 +1,12 @@
 name: Release
 
-# Pushing a tag such as 4.0.0 (or v4.0.0) releases that version: the tag sets the extension version.
+# Publishing a GitHub release releases that version: its tag (like 4.0.0 or v4.0.0) sets the extension version,
+# and its notes (generated from the merged pull requests, see .github/release.yml) become the AMO release notes.
 # Each store has its own job, so a failed upload can be re-run without uploading to the other store again.
 on:
-  push:
-    tags:
-      - '[0-9]*'
-      - 'v[0-9]*'
+  release:
+    types:
+      - published
 
 permissions:
   contents: write
@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build and create the GitHub release
+    name: Build and attach the zips to the release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -32,15 +32,13 @@ jobs:
           node-version: 26
           cache: pnpm
       - name: Set the version from the tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${TAG#v}"
           # Browsers only accept 1 to 4 dot-separated integers, without a pre-release suffix.
           if [[ ! "$version" =~ ^[0-9]+(\.[0-9]+){0,3}$ ]]; then
-            echo "::error::Tag $GITHUB_REF_NAME is not a valid extension version (like 4.0.0)"
-            exit 1
-          fi
-          if ! grep -qF "## [$version]" CHANGELOG.md; then
-            echo "::error::CHANGELOG.md has no entry for $version"
+            echo "::error::Tag $TAG is not a valid extension version (like 4.0.0)"
             exit 1
           fi
           npm pkg set version="$version"
@@ -54,9 +52,13 @@ jobs:
           pnpm zip
           pnpm zip:firefox
       - name: Write the AMO metadata (reviewer notes and release notes)
+        env:
+          # Passed through the environment, never pasted into the script: the notes are free text.
+          NOTES: ${{ github.event.release.body }}
+          URL: ${{ github.event.release.html_url }}
         run: |
-          # This version's CHANGELOG.md section, without the heading.
-          awk -v head="## [$VERSION]" 'index($0, head) == 1 {found = 1; next} found && /^## \[/ {exit} found' CHANGELOG.md | sed '/./,$!d' > release-notes.txt
+          # GitHub adds an HTML comment at the top of generated notes; AMO would show it as text.
+          { printf '%s\n' "$NOTES" | grep -v '^<!--'; printf '\nChangelog on GitHub: %s\n' "$URL"; } | sed '/./,$!d' > release-notes.txt
           jq -n --rawfile approval Mozilla-libs.txt --rawfile release release-notes.txt \
             '{version: {approval_notes: $approval, release_notes: {"en-US": $release}}}' > amo-metadata.json
       - name: Keep the build for the store jobs
@@ -69,12 +71,11 @@ jobs:
           if-no-files-found: error
           # .output is a hidden folder, skipped by default.
           include-hidden-files: true
-      - name: Create the GitHub release
-        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
-        with:
-          fail_on_unmatched_files: true
-          generate_release_notes: true
-          files: .output/*.zip
+      - name: Attach the zips to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" .output/*.zip --clobber
 
   chrome:
     name: Submit to the Chrome Web Store

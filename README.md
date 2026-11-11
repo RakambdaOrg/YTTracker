@@ -50,7 +50,12 @@ If you have any problems with the extension, you can describe the issue [here](h
 
 ### Publishing to the Chrome Web Store
 
-Releases are made by GitHub Actions (`.github/workflows/release.yml`). Pushing a tag such as `4.0.0` (or `v4.0.0`) releases that version: the tag sets the extension version, overriding `package.json`. The workflow checks that the tag is a valid extension version (1 to 4 dot-separated numbers) and that `CHANGELOG.md` has an entry for it, runs the checks, builds the zips, attaches them to a GitHub release, then uploads the Chrome zip to the Chrome Web Store and submits it for review.
+Releases are made by GitHub Actions (`.github/workflows/release.yml`), when a GitHub release is published:
+
+1. On GitHub, open **Releases > Draft a new release**, type a new tag such as `4.0.0` (or `v4.0.0`) on `main`, and click **Generate release notes**. The notes list the pull requests merged since the last release, grouped by label (`Enhancement`, `Bug`, others; see `.github/release.yml`). Edit them if needed.
+2. Click **Publish release**. The tag sets the extension version, overriding `package.json`, and must be 1 to 4 dot-separated numbers.
+
+The workflow then runs the checks, builds the zips, attaches them to the release, and uploads them to both stores, each submitted for review.
 
 The upload uses the Chrome Web Store API v2, which authenticates with a Google Cloud service account. The older OAuth client ID, client secret and refresh token are only accepted by the deprecated v1.1 API. One-time setup:
 
@@ -77,7 +82,7 @@ To upload from your own machine instead (`pnpm zip && pnpm submit:chrome`), put 
 
 ### Publishing to Firefox
 
-The release workflow also uploads the Firefox zip and the sources zip (which reviewers need, since the code is bundled) to addons.mozilla.org and submits them for review. `Mozilla-libs.txt` is sent as the note to reviewers, and this version's `CHANGELOG.md` section as the public release notes. One-time setup:
+The release workflow also uploads the Firefox zip and the sources zip (which reviewers need, since the code is bundled) to addons.mozilla.org and submits them for review. `Mozilla-libs.txt` is sent as the note to reviewers, and the GitHub release notes as the public release notes. One-time setup:
 
 1. On addons.mozilla.org, open the [API keys page](https://addons.mozilla.org/developers/addon/api/key/) and generate credentials.
 2. Add them as the repository secrets `FIREFOX_JWT_ISSUER` (the JWT issuer) and `FIREFOX_JWT_SECRET` (the JWT secret).
