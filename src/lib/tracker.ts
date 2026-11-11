@@ -26,6 +26,9 @@ async function updateBadge(): Promise<void> {
 }
 
 async function onOpened(videoId: string, durationSec: number, now: number): Promise<void> {
+	if (await items.paused.getValue()) {
+		return;
+	}
 	const {ids, isNew} = registerOpened(await items.openedIds.getValue(), videoId, now);
 	await items.openedIds.setValue(ids);
 	if (!isNew) {
@@ -47,6 +50,9 @@ async function onOpened(videoId: string, durationSec: number, now: number): Prom
 }
 
 async function onPlay(player: string, videoId: string, title: string | undefined, now: number): Promise<void> {
+	if (await items.paused.getValue()) {
+		return;
+	}
 	await items.activePlayers.setValue({...(await items.activePlayers.getValue()), [player]: {videoId, startedAt: now, ...(title ? {title} : {})}});
 	await updateBadge();
 	await logDebug('Started playing', player, videoId);
@@ -59,6 +65,10 @@ async function onStop(player: string, now: number): Promise<void> {
 	}
 	await items.activePlayers.setValue(others);
 	await updateBadge();
+	// A video that started playing before the pause is dropped.
+	if (await items.paused.getValue()) {
+		return;
+	}
 
 	const slices = splitByDay(active.startedAt, now);
 	if (slices.length === 0) {

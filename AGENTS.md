@@ -17,6 +17,7 @@ Data is stored per local day, plus a running total:
 - An opened video is counted at most once per hour per video ID (`openedIds` holds the time of each ID's last count). This keeps reloads from inflating the stats.
 - A watched interval that crosses midnight is split on real local midnights, so DST is handled (`splitByDay`).
 - Intervals of 500 ms or less are dropped.
+- While tracking is paused (popup toggle), opened and played videos are ignored, and a video that started playing before the pause is dropped when it stops.
 - "Stop" means: paused, ended or buffering; a video change in the same player; an ad starting; the page being hidden (`pagehide`); or the tab closing.
 - Ads don't count: while `#movie_player` has the `ad-showing` class, play events count as a stop, and video changes are ignored.
 - Embedded players (other sites, youtube-nocookie) and music.youtube.com are tracked. Only `#movie_player` is hooked, so homepage hover previews should not count.
@@ -34,7 +35,7 @@ youtube-hook.content.ts  --postMessage-->  youtube.content.ts  --runtime.sendMes
 2. The hook runs in the page's main world, because the player API is only reachable there. It polls for `#movie_player` every 250 ms until it appears, then posts `HookEvent`s (`opened`, `play`, `stop`) with `window.postMessage`. "Opened" is sent once per video, as soon as its duration is known, or when it plays (live streams).
 3. The isolated script checks each event with `toMessage()` (`src/lib/messages.ts`), because the page can forge them, then forwards it to the background.
 4. The background identifies the player as `tabId:frameId` and runs each message through `lib/tracker.ts`. All storage updates go through one serial queue (`lib/serial.ts`), so concurrent events never overwrite each other.
-5. The start time of each playing player is kept in `storage.session` (`activePlayers`). It survives Chrome service-worker restarts and is cleared with the browser. The badge shows `P` while something plays.
+5. The start time of each playing player is kept in `storage.session` (`activePlayers`). It survives Chrome service-worker restarts and is cleared with the browser. The badge shows `P` while something plays, and the toolbar icon is grayed out while tracking is paused (`src/lib/icon.ts`, drawn at runtime from the normal icons).
 
 ## Storage
 
@@ -43,7 +44,7 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 - `storage.local`:
   - `day:YYYY-MM-DD`: one day's `DayStats` `{count, watchedMs, openedMs}`, in plain milliseconds.
   - `total`: an all-time `DayStats`. It is kept up to date separately from the days, not computed from them.
-  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `weirdThreshold` (default 48h), `dismissedWeirdDays` (days marked as correct on the edit page), `username`, `dropboxRefreshToken`.
+  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `paused` (tracking paused from the popup), `weirdThreshold` (default 48h), `dismissedWeirdDays` (days marked as correct on the edit page), `username`, `dropboxRefreshToken`.
 - `storage.session`: `activePlayers`, `dropboxAccess` (the short-lived Dropbox access token).
 - **Migration** (`src/lib/migration.ts`): `migrateStorage()` runs on every background start. When the schema is current, it costs one small read. It converts the v1 format (`day<dayOfYear><YYYY>` keys, `YTTDuration` objects, `YTT_*` keys) and writes `schemaVersion` last, so an interrupted run simply starts over. Any future change to a key or a stored shape needs a new schema version and a step there.
 - **Export/import**: an export is `{version: 2, data}`, without the Dropbox token. Import takes v2 files and old v1 files (`parseImport`), validates every value, and replaces all data while keeping the current `userId` when the file has none.
@@ -52,7 +53,7 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 
 Pages are vanilla TypeScript, without a framework. Use `el()`/`byId()` from `src/lib/dom.ts` and never `innerHTML` (ESLint `no-unsanitized` enforces this). The shared styles are in `src/assets/common.css`, with light and dark themes through CSS variables.
 
-- `popup`: the videos playing now (from `activePlayers`, with the title sent by the hook; clicking one focuses its tab), today's stats, the totals and the start date.
+- `popup`: a toggle to pause tracking, the videos playing now (from `activePlayers`, with the title sent by the hook; clicking one focuses its tab), today's stats, the totals and the start date.
 - `chart` (unlisted): a Chart.js chart, with totals, averages, a period selector, a vertical line on the hovered day, and an alert for days whose watched time is above `weirdThreshold` (`weirdDays()`; opened time is never flagged, since opening long videos is normal).
 - `edit` (unlisted): lowers the watched time of flagged days and adjusts `total` by the same amount, or marks a day as correct so it is not flagged again.
 - `options`: export and import (file or Dropbox), the Google Takeout import (counts only, and only for days with no data), a reset that keeps `userId`, the share toggle and username, and debug mode (console logs, plus notifications if the optional permission is granted).

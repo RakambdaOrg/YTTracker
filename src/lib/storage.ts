@@ -28,6 +28,8 @@ export const items = {
 	shareOnline: storage.defineItem<boolean>('local:shareOnline', {fallback: false}),
 	failedShare: storage.defineItem<PendingShare[]>('local:failedShare', {fallback: []}),
 	debug: storage.defineItem<boolean>('local:debug', {fallback: false}),
+	// Set from the popup: while true, nothing is recorded.
+	paused: storage.defineItem<boolean>('local:paused', {fallback: false}),
 	weirdThreshold: storage.defineItem<number>('local:weirdThreshold', {fallback: DEFAULT_WEIRD_THRESHOLD_MS}),
 	// Days the user marked as correct on the edit page, so they are not flagged again.
 	dismissedWeirdDays: storage.defineItem<string[]>('local:dismissedWeirdDays', {fallback: []}),
