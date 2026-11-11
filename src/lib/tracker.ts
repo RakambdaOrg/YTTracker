@@ -46,8 +46,8 @@ async function onOpened(videoId: string, durationSec: number, now: number): Prom
 	}
 }
 
-async function onPlay(player: string, videoId: string, now: number): Promise<void> {
-	await items.activePlayers.setValue({...(await items.activePlayers.getValue()), [player]: {videoId, startedAt: now}});
+async function onPlay(player: string, videoId: string, title: string | undefined, now: number): Promise<void> {
+	await items.activePlayers.setValue({...(await items.activePlayers.getValue()), [player]: {videoId, startedAt: now, ...(title ? {title} : {})}});
 	await updateBadge();
 	await logDebug('Started playing', player, videoId);
 }
@@ -86,7 +86,7 @@ export function handleMessage(message: Message, player: string, now = Date.now()
 				await onOpened(message.videoId, message.durationSec, now);
 				break;
 			case 'play':
-				await onPlay(player, message.videoId, now);
+				await onPlay(player, message.videoId, message.title, now);
 				break;
 			case 'stop':
 				await onStop(player, now);

@@ -11,6 +11,7 @@
 - Fix editing high values: the total now follows the edit
 - Fix watch time that could be lost when the Chrome background restarts, or when several embedded players play in one tab
 - Ads no longer count as watched time
+- The popup lists the videos playing right now; click one to switch to its tab
 - The player is found even when a video is opened long after the page loaded
 - Chart page uses Chart.js, with a period selector; pages follow the system dark mode
 - Firefox 128 or newer is required

@@ -15,6 +15,8 @@ export interface PendingShare {
 export interface ActivePlayer {
 	videoId: string;
 	startedAt: number;
+	/** Shown in the popup; missing when the player gave none. */
+	title?: string;
 }
 
 export const items = {

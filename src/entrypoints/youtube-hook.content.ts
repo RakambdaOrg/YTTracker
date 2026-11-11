@@ -4,7 +4,7 @@ import {YOUTUBE_MATCHES} from '@/lib/youtube';
 
 /** The parts of YouTube's player API used here. */
 interface YouTubePlayer extends HTMLElement {
-	getVideoData(): {video_id?: string};
+	getVideoData(): {video_id?: string; title?: string};
 	getDuration(): number;
 	getPlayerState(): number;
 	addEventListener(event: 'onStateChange', listener: (state: number) => void): void;
@@ -60,7 +60,7 @@ function hook(player: YouTubePlayer): void {
 		// Ads play in the same player; they must not count as watched time.
 		if (state === PLAYING && videoId && !player.classList.contains('ad-showing')) {
 			open(true);
-			post({kind: 'play', videoId});
+			post({kind: 'play', videoId, title: player.getVideoData().title ?? ''});
 		} else if (state === PLAYING || STOPPED.has(state)) {
 			post({kind: 'stop'});
 		}

@@ -40,6 +40,11 @@ describe('tracker', () => {
 		expect(browser.action.setBadgeText).toHaveBeenLastCalledWith({text: 'P'});
 	});
 
+	it('keeps the title of a playing video for the popup', async () => {
+		await handleMessage({type: 'play', videoId: 'v1', title: 'A video'}, '1:0', 1000);
+		expect(await items.activePlayers.getValue()).toEqual({'1:0': {videoId: 'v1', startedAt: 1000, title: 'A video'}});
+	});
+
 	it('finishes the players of a closed tab', async () => {
 		const start = at('2026-11-10T10:00:00');
 		await handleMessage({type: 'play', videoId: 'v1'}, '7:3', start);

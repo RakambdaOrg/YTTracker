@@ -52,7 +52,7 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 
 Pages are vanilla TypeScript, without a framework. Use `el()`/`byId()` from `src/lib/dom.ts` and never `innerHTML` (ESLint `no-unsanitized` enforces this). The shared styles are in `src/assets/common.css`, with light and dark themes through CSS variables.
 
-- `popup`: today's stats, the totals and the start date.
+- `popup`: the videos playing now (from `activePlayers`, with the title sent by the hook; clicking one focuses its tab), today's stats, the totals and the start date.
 - `chart` (unlisted): a Chart.js chart, with totals, averages, a period selector, a vertical line on the hovered day, and an alert for days whose watched time is above `weirdThreshold` (`weirdDays()`; opened time is never flagged, since opening long videos is normal).
 - `edit` (unlisted): lowers the watched time of flagged days and adjusts `total` by the same amount, or marks a day as correct so it is not flagged again.
 - `options`: export and import (file or Dropbox), the Google Takeout import (counts only, and only for days with no data), a reset that keeps `userId`, the share toggle and username, and debug mode (console logs, plus notifications if the optional permission is granted).
