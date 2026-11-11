@@ -7,6 +7,8 @@
 	--border: #dde1e6;
 	--accent: #c4302b;
 	--accent-text: #ffffff;
+	--info: #2f6fdb;
+	--danger: #c62828;
 	--warn-bg: #fff4d6;
 	--radius: 8px;
 	--series-watched: #2e8540;
@@ -24,6 +26,8 @@
 		--muted: #9aa3ad;
 		--border: #343a41;
 		--accent: #e5534b;
+		--info: #3b74d9;
+		--danger: #d0393c;
 		--warn-bg: #3a3118;
 		--series-watched: #4fbf67;
 		--series-opened: #f06a63;
@@ -118,6 +122,8 @@ button,
 	background: var(--surface);
 	color: var(--text);
 	cursor: pointer;
+	line-height: 1.25;
+	text-align: center;
 	text-decoration: none;
 	display: inline-block;
 }
@@ -127,6 +133,19 @@ button.primary,
 	background: var(--accent);
 	border-color: var(--accent);
 	color: var(--accent-text);
+}
+
+button.info,
+.button.info {
+	background: var(--info);
+	border-color: var(--info);
+	color: #ffffff;
+}
+
+button.danger {
+	background: var(--danger);
+	border-color: var(--danger);
+	color: #ffffff;
 }
 
 button:focus-visible,
@@ -139,7 +158,8 @@ select:focus-visible {
 input,
 select {
 	font: inherit;
-	padding: 4px 8px;
+	padding: 6px 8px;
+	line-height: 1.25;
 	border-radius: var(--radius);
 	border: 1px solid var(--border);
 	background: var(--bg);
@@ -164,3 +184,19 @@ input.short { width: 5.5em; }
 	margin-top: 12px;
 }
 .options footer { padding: 0 4px; }
+
+/* Export, import and extra actions in aligned columns. */
+.button-grid {
+	display: grid;
+	grid-template-columns: repeat(3, max-content);
+	gap: 8px;
+}
+
+@media (max-width: 560px) {
+	.button-grid {
+		grid-template-columns: 1fr;
+	}
+	.button-grid span {
+		display: none;
+	}
+}

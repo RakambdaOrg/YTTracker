@@ -9,25 +9,24 @@
 <body>
 <nav>
 	<img src="/assets/icon128.png" alt="">
-	<a href="/chart.html">Back to chart</a>
+	<a class="button" href="/chart.html"><span aria-hidden="true">←</span> Back to chart</a>
 </nav>
 <main class="options">
 	<section class="card">
 		<h2>Backup</h2>
 		<p class="muted">See <a href="https://github.com/RakambdaOrg/YTTracker/wiki/Import-Export" target="_blank">the wiki</a>. Importing <strong>replaces all your current data</strong> with the file's data. Files from older versions of the extension work too.</p>
-		<div class="row">
-			<button type="button" class="primary" id="exportFile">Export to file</button>
-			<label class="button">Import from file<input type="file" accept=".json,application/json" id="importFile" hidden></label>
-		</div>
-		<div class="row">
-			<button type="button" class="primary" id="exportDropbox">Export to Dropbox</button>
-			<button type="button" id="importDropbox">Import from Dropbox</button>
+		<div class="button-grid">
+			<button type="button" class="info" id="exportFile">Export to file</button>
+			<label class="button info">Import from file<input type="file" accept=".json,application/json" id="importFile" hidden></label>
+			<span></span>
+			<button type="button" class="info" id="exportDropbox">Export to Dropbox</button>
+			<button type="button" class="info" id="importDropbox">Import from Dropbox</button>
 			<button type="button" id="dropboxDisconnect">Forget Dropbox login</button>
 		</div>
 	</section>
 	<section class="card">
 		<h2>YouTube history</h2>
-		<p class="muted">Import the video count from a Google Takeout export of your YouTube history, <code>watch-history.json</code> (see <a href="https://github.com/RakambdaOrg/YTTracker/wiki/Import-YouTube-history" target="_blank">the wiki</a>). Only days with no data are imported, since Takeout only gives the number of videos opened.</p>
+		<p class="muted">Import the video count from a Google Takeout export of your YouTube history, <code>watch-history.json</code> (see <a href="https://github.com/RakambdaOrg/YTTracker/wiki/Import-YouTube-history" target="_blank">the wiki</a>). Takeout has no durations, so only the number of videos is imported. Days the extension has already tracked are skipped, so nothing is counted twice.</p>
 		<label class="button">Import YouTube history<input type="file" accept=".json,application/json" id="importTakeout" hidden></label>
 	</section>
 	<section class="card">
@@ -42,7 +41,7 @@
 	<section class="card">
 		<h2>Danger zone</h2>
 		<p class="muted">Deletes all the data saved by this extension. This cannot be undone.</p>
-		<button type="button" id="reset">Reset all data</button>
+		<button type="button" class="danger" id="reset">Reset all data</button>
 	</section>
 	<footer class="row muted">
 		<span>UUID: <span id="userId"></span></span>
