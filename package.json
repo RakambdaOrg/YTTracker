@@ -27,7 +27,7 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
-    "@types/node": "24.19.2",
+    "@types/node": "26.6.6",
     "eslint": "10.14.0",
     "eslint-plugin-no-unsanitized": "4.1.5",
     "typescript": "6.0.3",
