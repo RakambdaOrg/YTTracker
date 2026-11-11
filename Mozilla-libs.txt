@@ -1,6 +1,6 @@
 Built with WXT (https://wxt.dev) and Vite from the TypeScript sources in the attached sources zip.
 
-To rebuild: install Node.js 24+ and pnpm, then run `pnpm install` and `pnpm zip:firefox`. The output is in .output/.
+To rebuild: install Node.js 26 and pnpm 12.18 (the versions used to build this release), then run `pnpm install` and `pnpm zip:firefox`. The output is in .output/.
 
 Bundled library:
 
