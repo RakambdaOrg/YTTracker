@@ -77,7 +77,12 @@ To upload from your own machine instead (`pnpm zip && pnpm submit:chrome`), put 
 
 ### Publishing to Firefox
 
-`pnpm zip:firefox` builds the extension zip and the sources zip that addons.mozilla.org asks for. Upload both by hand, with `Mozilla-libs.txt` as the note to reviewers. The manifest declares online sharing as optional data collection (`websiteActivity`). On Firefox 140 and newer, turning on sharing in the options page shows Firefox's own consent prompt.
+The release workflow also uploads the Firefox zip and the sources zip (which reviewers need, since the code is bundled) to addons.mozilla.org and submits them for review. `Mozilla-libs.txt` is sent as the note to reviewers, and this version's `CHANGELOG.md` section as the public release notes. One-time setup:
+
+1. On addons.mozilla.org, open the [API keys page](https://addons.mozilla.org/developers/addon/api/key/) and generate credentials.
+2. Add them as the repository secrets `FIREFOX_JWT_ISSUER` (the JWT issuer) and `FIREFOX_JWT_SECRET` (the JWT secret).
+
+To upload from your own machine instead, add the same two values to `.env.submit` and run `pnpm zip:firefox && pnpm submit:firefox`. The manifest declares online sharing as optional data collection (`websiteActivity`). On Firefox 140 and newer, turning on sharing in the options page shows Firefox's own consent prompt.
 
 ### Dropbox
 

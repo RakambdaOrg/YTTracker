@@ -85,8 +85,7 @@ pnpm zip / zip:firefox / zip:beta         # store zips (Firefox also gets a sour
 
 - Tests use WXT's fake browser and run in the `Europe/Paris` time zone (set in `vitest.config.ts`), so that DST cases are tested.
 - TypeScript is pinned to 6.0 because typescript-eslint does not support TypeScript 7 yet.
-- Firefox releases are uploaded by hand to addons.mozilla.org, with `Mozilla-libs.txt` as the reviewer note.
-- Releases: pushing a tag like `4.0.0` runs `.github/workflows/release.yml`. The tag sets the version (the `package.json` version is only used for local builds), `CHANGELOG.md` must have a matching entry, and the Chrome zip is uploaded and submitted for review with the service-account secrets (see README "Technical notes"). Firefox zips are attached to the GitHub release, to upload by hand.
+- Releases: pushing a tag like `4.0.0` runs `.github/workflows/release.yml`. The tag sets the version (the `package.json` version is only used for local builds), `CHANGELOG.md` must have a matching entry, and each store has its own job: the Chrome zip is submitted with the service-account secrets, and the Firefox and sources zips go to addons.mozilla.org with the AMO API secrets, with `Mozilla-libs.txt` as the reviewer note and the changelog section as release notes (see README "Technical notes").
 - CI (`.github/workflows/ci.yml`) runs `pnpm check` and builds both zips on every pull request and on pushes to `main`. Actions are pinned by commit SHA, like the shared `RakambdaOrg/rakambda-github-workflows`.
 - `CODEOWNERS`, `dependabot.yml` and `ISSUE_TEMPLATE/` are synced from `RakambdaOrg/rakambda-github-files` and should not be edited here.
 

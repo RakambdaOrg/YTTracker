@@ -1,6 +1,7 @@
 name: Release
 
 # Pushing a tag such as 4.0.0 (or v4.0.0) releases that version: the tag sets the extension version.
+# Each store has its own job, so a failed upload can be re-run without uploading to the other store again.
 on:
   push:
     tags:
@@ -15,8 +16,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: Release
+  build:
+    name: Build and create the GitHub release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -43,6 +44,7 @@ jobs:
             exit 1
           fi
           npm pkg set version="$version"
+          echo "VERSION=$version" >> "$GITHUB_ENV"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Type check, lint and test
@@ -51,15 +53,83 @@ jobs:
         run: |
           pnpm zip
           pnpm zip:firefox
+      - name: Write the AMO metadata (reviewer notes and release notes)
+        run: |
+          # This version's CHANGELOG.md section, without the heading.
+          awk -v head="## [$VERSION]" 'index($0, head) == 1 {found = 1; next} found && /^## \[/ {exit} found' CHANGELOG.md | sed '/./,$!d' > release-notes.txt
+          jq -n --rawfile approval Mozilla-libs.txt --rawfile release release-notes.txt \
+            '{version: {approval_notes: $approval, release_notes: {"en-US": $release}}}' > amo-metadata.json
+      - name: Keep the build for the store jobs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release
+          path: |
+            .output/*.zip
+            amo-metadata.json
+          if-no-files-found: error
+          # .output is a hidden folder, skipped by default.
+          include-hidden-files: true
       - name: Create the GitHub release
         uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         with:
           fail_on_unmatched_files: true
           generate_release_notes: true
           files: .output/*.zip
-      - name: Upload to the Chrome Web Store and submit for review
+
+  chrome:
+    name: Submit to the Chrome Web Store
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup PNPM
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.18.0
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Get the build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+      - name: Upload and submit for review
         run: pnpm submit:chrome
         env:
           CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
           CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+
+  firefox:
+    name: Submit to addons.mozilla.org
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup PNPM
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.18.0
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Get the build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+      - name: Upload and submit for review
+        run: pnpm submit:firefox
+        env:
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_AMO_METADATA_FILE: amo-metadata.json

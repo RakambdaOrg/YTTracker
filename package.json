@@ -19,6 +19,7 @@
     "zip:firefox": "wxt zip -b firefox",
     "zip:beta": "wxt zip --mode beta",
     "submit:chrome": "wxt submit --chrome-api-version v2 --chrome-extension-id knnlnielflnfhdohmihofhdelgahgjdb --chrome-zip .output/*-chrome.zip",
+    "submit:firefox": "wxt submit --firefox-extension-id yttracker@mrcraftcod.fr --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip",
     "compile": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
