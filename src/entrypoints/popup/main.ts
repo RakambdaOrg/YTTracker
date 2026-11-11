@@ -10,6 +10,17 @@ byId('openOptions').addEventListener('click', () => {
 	void browser.runtime.openOptionsPage();
 });
 
+const tracking = byId('tracking') as HTMLInputElement;
+function showTracking(paused: boolean): void {
+	tracking.checked = !paused;
+	byId('trackingLabel').textContent = paused ? 'Tracking paused' : 'Tracking enabled';
+}
+showTracking(await items.paused.getValue());
+tracking.addEventListener('change', () => {
+	void items.paused.setValue(!tracking.checked);
+});
+items.paused.watch(showTracking);
+
 showStats('today', await findDay(dayKey(Date.now())));
 showStats('total', await items.total.getValue());
 byId('startDate').textContent = formatDate(await items.startTime.getValue());

@@ -45,6 +45,26 @@ describe('tracker', () => {
 		expect(await items.activePlayers.getValue()).toEqual({'1:0': {videoId: 'v1', startedAt: 1000, title: 'A video'}});
 	});
 
+	it('records nothing while paused', async () => {
+		const now = at('2026-11-10T12:00:00');
+		await items.paused.setValue(true);
+		await handleMessage({type: 'opened', videoId: 'v1', durationSec: 60}, '1:0', now);
+		await handleMessage({type: 'play', videoId: 'v1'}, '1:0', now);
+		await handleMessage({type: 'stop'}, '1:0', now + 60_000);
+		expect(await getDay('2026-11-10')).toEqual({count: 0, watchedMs: 0, openedMs: 0});
+		expect(await items.activePlayers.getValue()).toEqual({});
+	});
+
+	it('drops a video that started playing before the pause', async () => {
+		const now = at('2026-11-10T12:00:00');
+		await handleMessage({type: 'play', videoId: 'v1'}, '1:0', now);
+		await items.paused.setValue(true);
+		await handleMessage({type: 'stop'}, '1:0', now + 60_000);
+		expect((await getDay('2026-11-10')).watchedMs).toBe(0);
+		expect(await items.activePlayers.getValue()).toEqual({});
+		expect(browser.action.setBadgeText).toHaveBeenLastCalledWith({text: ''});
+	});
+
 	it('finishes the players of a closed tab', async () => {
 		const start = at('2026-11-10T10:00:00');
 		await handleMessage({type: 'play', videoId: 'v1'}, '7:3', start);
