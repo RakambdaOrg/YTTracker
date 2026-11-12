@@ -96,9 +96,10 @@ describe('import and export', () => {
 	it('round-trips an export, without the Dropbox login', async () => {
 		await browser.storage.local.set(legacy);
 		await migrateStorage();
-		await browser.storage.local.set({dropboxRefreshToken: 'secret'});
+		await browser.storage.local.set({dropboxRefreshToken: 'secret', userKey: 'key-1', keyRejected: true});
 		const exported = await buildExport();
 		expect(exported.data).not.toHaveProperty('dropboxRefreshToken');
+		expect(exported.data).not.toHaveProperty('keyRejected');
 		expect(exported.data).not.toHaveProperty('schemaVersion');
 
 		await browser.storage.local.clear();
@@ -106,6 +107,7 @@ describe('import and export', () => {
 		const all = await browser.storage.local.get(null);
 		expect(all['day:2026-11-10']).toEqual({count: 3, watchedMs: 14_582_001, openedMs: 90_000});
 		expect(all.userId).toBe('uuid-1');
+		expect(all.userKey).toBe('key-1');
 	});
 
 	it('imports an old export file', () => {
@@ -132,5 +134,13 @@ describe('import and export', () => {
 		await browser.storage.local.set({userId: 'me', 'day:2020-01-01': {count: 1, watchedMs: 1, openedMs: 1}});
 		await applyImport({'day:2026-11-10': {count: 1, watchedMs: 2, openedMs: 3}});
 		expect(await browser.storage.local.get(null)).toEqual({userId: 'me', schemaVersion: 2, 'day:2026-11-10': {count: 1, watchedMs: 2, openedMs: 3}});
+	});
+
+	it('keeps the current key only with the current user ID', async () => {
+		await browser.storage.local.set({userId: 'me', userKey: 'my-key'});
+		await applyImport({});
+		expect(await browser.storage.local.get(['userId', 'userKey'])).toEqual({userId: 'me', userKey: 'my-key'});
+		await applyImport({userId: 'other'});
+		expect(await browser.storage.local.get(['userId', 'userKey'])).toEqual({userId: 'other'});
 	});
 });

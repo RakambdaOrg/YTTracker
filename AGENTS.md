@@ -44,10 +44,10 @@ Typed items are in `src/lib/storage.ts`, written with `wxt/utils/storage`.
 - `storage.local`:
   - `day:YYYY-MM-DD`: one day's `DayStats` `{count, watchedMs, openedMs}`, in plain milliseconds.
   - `total`: an all-time `DayStats`. It is kept up to date separately from the days, not computed from them.
-  - `schemaVersion` (currently 2), `userId` (a random UUID), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `paused` (tracking paused from the popup), `weirdThreshold` (default 48h), `dismissedWeirdDays` (days marked as correct on the edit page), `username`, `dropboxRefreshToken`.
+  - `schemaVersion` (currently 2), `userId` (a random UUID), `userKey` (a random secret sent with every write, created on setup when missing), `keyRejected` (the server refused `userKey`), `startTime`, `openedIds`, `shareOnline`, `failedShare` (the retry queue), `debug`, `paused` (tracking paused from the popup), `weirdThreshold` (default 48h), `dismissedWeirdDays` (days marked as correct on the edit page), `username`, `dropboxRefreshToken`.
 - `storage.session`: `activePlayers`, `dropboxAccess` (the short-lived Dropbox access token).
 - **Migration** (`src/lib/migration.ts`): `migrateStorage()` runs on every background start. When the schema is current, it costs one small read. It converts the v1 format (`day<dayOfYear><YYYY>` keys, `YTTDuration` objects, `YTT_*` keys) and writes `schemaVersion` last, so an interrupted run simply starts over. Any future change to a key or a stored shape needs a new schema version and a step there.
-- **Export/import**: an export is `{version: 2, data}`, without the Dropbox token. Import takes v2 files and old v1 files (`parseImport`), validates every value, and replaces all data while keeping the current `userId` when the file has none.
+- **Export/import**: an export is `{version: 2, data}`, without the Dropbox token. Import takes v2 files and old v1 files (`parseImport`), validates every value, and replaces all data while keeping the current `userId` and `userKey` when the file has no `userId` (a key never gets paired with another ID). Exports carry `userKey`, so a restore keeps the user's spot on the server.
 
 ## Pages
 
@@ -56,11 +56,11 @@ Pages are vanilla TypeScript, without a framework. Use `el()`/`byId()` from `src
 - `popup`: a toggle to pause tracking, the videos playing now (from `activePlayers`, with the title sent by the hook; clicking one focuses its tab), today's stats, the totals and the start date.
 - `chart` (unlisted): a Chart.js chart, with totals, averages, a period selector, a vertical line on the hovered day, and an alert for days whose watched time is above `weirdThreshold` (`weirdDays()`; opened time is never flagged, since opening long videos is normal).
 - `edit` (unlisted): lowers the watched time of flagged days and adjusts `total` by the same amount, or marks a day as correct so it is not flagged again.
-- `options`: export and import (file or Dropbox), the Google Takeout import (counts only, and only for days with no data), a reset that keeps `userId`, the share toggle and username, and debug mode (console logs, plus notifications if the optional permission is granted).
+- `options`: export and import (file or Dropbox), the Google Takeout import (counts only, and only for days with no data), a reset that keeps `userId` and `userKey`, the share toggle and username, and debug mode (console logs, plus notifications if the optional permission is granted).
 
 ## Online sharing (opt-in)
 
-When `shareOnline` is on (and, on Firefox 140+, the `websiteActivity` data consent is granted: see `canShare()`), each opened or watched duration is POSTed to `https://yttracker.rakambda.fr/api/v2/<uuid>/stats/add` as `{type, stat: ms, date: "Y-M-D H:m:s"}` (`src/lib/api.ts`). Failed requests are queued in `failedShare` and retried on the next send. The username is read and written through `/api/v2/<uuid>/username`.
+When `shareOnline` is on (and, on Firefox 140+, the `websiteActivity` data consent is granted: see `canShare()`), each opened or watched duration is POSTed to `https://yttracker.rakambda.fr/api/v2/<uuid>/stats/add` as `{type, stat: ms, date: "Y-M-D H:m:s"}` (`src/lib/api.ts`). Every write (stats and username) sends the `X-YTT-Key: <userKey>` header; the server locks a UUID to the first key it receives (trust on first use, see YTTrackerWeb `AGENTS.md`). Failed requests are queued in `failedShare` and retried on the next send, except a 403 (key refused): that share is dropped and `keyRejected` shows a warning on the options page. The username is read and written through `/api/v2/<uuid>/username`.
 
 ## Dropbox
 

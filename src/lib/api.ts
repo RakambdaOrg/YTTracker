@@ -26,6 +26,8 @@ export async function canShare(): Promise<boolean> {
 }
 const serial = createSerialQueue();
 
+const writeHeaders = async (headers: Record<string, string> = {}) => ({...headers, 'X-YTT-Key': await items.userKey.getValue()});
+
 const userUrl = async (path: string) => `${API}/${encodeURIComponent(await items.userId.getValue())}/${path}`;
 
 /** Server date format, kept from the old extension: unpadded "Y-M-D H:m:s". */
@@ -39,9 +41,15 @@ async function send(share: PendingShare): Promise<boolean> {
 	try {
 		const response = await fetch(await userUrl('stats/add'), {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: await writeHeaders({'Content-Type': 'application/json'}),
 			body: JSON.stringify({type: share.type, stat: share.ms, date: serverDate(share.date)}),
 		});
+		await items.keyRejected.setValue(response.status === 403);
+		if (response.status === 403) {
+			// Not retried: it would be refused until the user imports the right key.
+			await notifyDebug(`Server refused the key, ${share.type} time dropped`, details);
+			return true;
+		}
 		if (!response.ok) {
 			throw new Error(`HTTP ${response.status}`);
 		}
@@ -82,7 +90,7 @@ export async function fetchUsername(): Promise<string | null> {
 }
 
 export async function setUsername(username: string): Promise<void> {
-	const response = await fetch(await userUrl('username'), {method: 'POST', body: new URLSearchParams({username})});
+	const response = await fetch(await userUrl('username'), {method: 'POST', headers: await writeHeaders(), body: new URLSearchParams({username})});
 	if (!response.ok) {
 		throw new Error(`HTTP ${response.status}`);
 	}

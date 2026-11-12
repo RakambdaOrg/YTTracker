@@ -13,7 +13,7 @@ const LEGACY_KEYS = new Set([
 ]);
 
 /** Keys an export or import may carry in the current format. */
-const EXPORTED_KEYS = ['total', 'userId', 'startTime', 'openedIds', 'shareOnline', 'failedShare', 'debug', 'weirdThreshold', 'username', 'dismissedWeirdDays'];
+const EXPORTED_KEYS = ['total', 'userId', 'userKey', 'startTime', 'openedIds', 'shareOnline', 'failedShare', 'debug', 'weirdThreshold', 'username', 'dismissedWeirdDays'];
 
 const isObject = (value: unknown): value is Raw => typeof value === 'object' && value !== null && !Array.isArray(value);
 const num = (value: unknown): number => (typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0);
@@ -124,7 +124,7 @@ export function cleanCurrent(data: Raw): Raw {
 	result.failedShare = cleanShares(data.failedShare);
 	result.shareOnline = data.shareOnline === true;
 	result.debug = data.debug === true;
-	for (const key of ['userId', 'username'] as const) {
+	for (const key of ['userId', 'userKey', 'username'] as const) {
 		if (typeof data[key] === 'string') {
 			result[key] = data[key];
 		}
@@ -161,9 +161,10 @@ export async function buildExport(): Promise<{version: number; data: Raw}> {
 	return {version: SCHEMA_VERSION, data};
 }
 
-/** Replaces all stored data with the imported entries, keeping the current user ID when the file has none. */
+/** Replaces all stored data with the imported entries, keeping the current user ID and key when the file has no ID. */
 export async function applyImport(entries: Raw): Promise<void> {
-	const current = await browser.storage.local.get('userId');
+	// The key belongs to its ID: never pair the current key with the file's ID.
+	const current = 'userId' in entries ? {} : await browser.storage.local.get(['userId', 'userKey']);
 	await browser.storage.local.clear();
 	await browser.storage.local.set({...current, ...entries, schemaVersion: SCHEMA_VERSION});
 }

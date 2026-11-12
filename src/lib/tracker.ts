@@ -17,6 +17,10 @@ export function setup(): Promise<void> {
 		if (!(await items.userId.getValue())) {
 			await items.userId.setValue(crypto.randomUUID());
 		}
+		// Also creates it for users from before the key existed.
+		if (!(await items.userKey.getValue())) {
+			await items.userKey.setValue(crypto.randomUUID());
+		}
 	});
 }
 
