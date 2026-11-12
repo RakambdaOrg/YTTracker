@@ -112,9 +112,9 @@ action('reset', async () => {
 	if (!confirm('This will delete all your data!\nContinue?')) {
 		return;
 	}
-	const userId = await items.userId.getValue();
+	const {userId, userKey} = await browser.storage.local.get(['userId', 'userKey']);
 	await browser.storage.local.clear();
-	await browser.storage.local.set({userId, schemaVersion: SCHEMA_VERSION});
+	await browser.storage.local.set({userId, userKey, schemaVersion: SCHEMA_VERSION});
 	location.reload();
 });
 
@@ -158,6 +158,7 @@ byId('usernameForm').addEventListener('submit', event => {
 		});
 });
 
+byId('keyRejected').hidden = !(await items.keyRejected.getValue());
 byId('userId').textContent = (await items.userId.getValue()) || 'Unknown';
 byId('version').textContent = browser.runtime.getManifest().version;
 

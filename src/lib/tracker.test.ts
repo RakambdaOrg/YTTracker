@@ -15,6 +15,15 @@ describe('tracker', () => {
 
 	it('creates a user ID on setup', async () => {
 		expect(await items.userId.getValue()).toMatch(/^[0-9a-f-]{36}$/);
+		expect(await items.userKey.getValue()).toMatch(/^[0-9a-f-]{36}$/);
+	});
+
+	it('adds a key for a user from before keys, keeping the ID', async () => {
+		fakeBrowser.reset();
+		await browser.storage.local.set({schemaVersion: 2, userId: 'old-user'});
+		await setup();
+		expect(await items.userId.getValue()).toBe('old-user');
+		expect(await items.userKey.getValue()).toMatch(/^[0-9a-f-]{36}$/);
 	});
 
 	it('counts an opened video once per hour', async () => {

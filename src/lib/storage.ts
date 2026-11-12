@@ -22,6 +22,10 @@ export interface ActivePlayer {
 export const items = {
 	schemaVersion: storage.defineItem<number>('local:schemaVersion', {fallback: 0}),
 	userId: storage.defineItem<string>('local:userId', {fallback: ''}),
+	// Secret sent with every write; the server locks userId to the first key it sees.
+	userKey: storage.defineItem<string>('local:userKey', {fallback: ''}),
+	// Set when the server refused userKey (another key owns userId), shown on the options page.
+	keyRejected: storage.defineItem<boolean>('local:keyRejected', {fallback: false}),
 	startTime: storage.defineItem<number | null>('local:startTime', {fallback: null}),
 	total: storage.defineItem<DayStats>('local:total', {fallback: emptyDay()}),
 	openedIds: storage.defineItem<Record<string, number>>('local:openedIds', {fallback: {}}),
